@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quareo — Тарифы</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .page-hero { padding-top: 108px; padding-bottom: 2rem; }
+  .page-hero-center { text-align: center; }
+  .page-hero-center .section-tag { justify-content: center; }
+  .page-hero-center h1 { font-size: clamp(2.4rem, 4.4vw, 3.5rem); margin-bottom: 1.25rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .page-hero-center p { color: var(--text-2); max-width: 600px; font-size: 1.15rem; margin-left: auto; margin-right: auto; }
+
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .price-card {
+    border: 1px solid var(--border); border-radius: var(--radius-xl);
+    background: var(--bg); padding: 2.5rem 2rem;
+    display: flex; flex-direction: column;
+    position: relative; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--brand-mid); }
+  
+  .price-card.featured {
+    border: 2px solid var(--brand);
+    background: linear-gradient(180deg, var(--brand-light) 0%, var(--bg) 20%);
+  }
+  .price-popular {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--brand); color: #fff;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    padding: 6px 16px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  }
+  .price-tier { font-family: var(--font-body); font-size: 1.25rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+  .price-amount { font-family: var(--font-display); font-size: 3rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text); letter-spacing: -0.02em; }
+  .price-period { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-3); margin-bottom: 1.25rem; }
+  .price-desc { font-size: 14.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 2.5rem; flex: 1; }
+  .price-features li { font-size: 14.5px; color: var(--text-2); display: flex; align-items: flex-start; gap: 12px; font-weight: 500; }
+  .feat-check { font-family: var(--font-mono); color: var(--brand); flex-shrink: 0; font-weight: 700; font-size: 16px; margin-top: -2px; }
+
+  .pricing-faq { margin-top: 6rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .faq-list { margin-top: 3rem; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item:first-child { border-top: 1px solid var(--border); }
+  .faq-question {
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; padding: 1.5rem 0; font-size: 1.1rem; font-weight: 600;
+    font-family: var(--font-display); color: var(--text); transition: color 0.15s;
+  }
+  .faq-question:hover { color: var(--brand); }
+  .faq-arrow { font-family: var(--font-mono); color: var(--brand); transition: transform 0.3s cubic-bezier(.2,.8,.2,1); font-size: 20px; font-weight: 400; }
+  .faq-item.open .faq-arrow { transform: rotate(45deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(.2,.8,.2,1); }
+  .faq-item.open .faq-answer { max-height: 300px; }
+  .faq-answer p { color: var(--text-2); font-size: 15px; padding-bottom: 1.5rem; line-height: 1.7; }
+
+  @media (max-width: 860px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin-left: auto; margin-right: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      Quareo
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-i="nav_home">Главная</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер</a>
+      <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+      <a href="pools.html" data-i="nav_pools">Пулы</a>
+      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+      <a href="pricing.html" class="active" data-i="nav_pricing">Тарифы</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+        <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+      </div>
+      <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
+      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="page-hero page-hero-center">
+    <div class="container-narrow">
+      <div class="section-tag" data-i="ph_eyebrow">Тарифы</div>
+      <h1 data-i="ph_title">Выберите план для вашего масштаба</h1>
+      <p data-i="ph_sub">Начните с разведки одной ниши или подключите весь синдикат — цена растёт вместе с вашим бизнесом.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="price-card" data-reveal>
+          <div class="price-tier" data-i="tier1">Старт</div>
+          <div class="price-amount">8 000 ₸</div>
+          <div class="price-period" data-i="per_month">/ месяц</div>
+          <div class="price-desc" data-i="tier1_desc">Для начинающих продавцов, которые хотят найти первую прибыльную нишу.</div>
+          <ul class="price-features">
+            <li><span class="feat-check">✓</span><span data-i="t1f1">50 сканирований ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t1f2">20 регистраций карточек NTIN</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t1f3">Создание накладных для термопринтера</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t1f4">Участие в пулах совместных закупок</span></li>
+          </ul>
+          <a class="btn-secondary btn-block" href="checkout.html?plan=Старт&price=8000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
+        </div>
+
+        <div class="price-card featured" data-reveal>
+          <div class="price-popular" data-i="popular">Популярный</div>
+          <div class="price-tier" data-i="tier2">Бизнес</div>
+          <div class="price-amount">15 000 ₸</div>
+          <div class="price-period" data-i="per_month">/ месяц</div>
+          <div class="price-desc" data-i="tier2_desc">Для активных продавцов, которые работают сразу на нескольких площадках.</div>
+          <ul class="price-features">
+            <li><span class="feat-check">✓</span><span data-i="t2f1">200 сканирований ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f2">100 регистраций карточек NTIN</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f3">Создание накладных для термопринтера</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f4">Участие в неограниченных пулах</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f5">Аналитика офлайн остатков</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f6">Приоритетная поддержка</span></li>
+          </ul>
+          <a class="btn-primary btn-block" href="checkout.html?plan=Бизнес&price=15000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
+        </div>
+
+        <div class="price-card" data-reveal>
+          <div class="price-tier" data-i="tier3">Безлимит</div>
+          <div class="price-amount">20 000 ₸</div>
+          <div class="price-period" data-i="per_month">/ месяц</div>
+          <div class="price-desc" data-i="tier3_desc">Для агентств и крупных продавцов, управляющих несколькими магазинами.</div>
+          <ul class="price-features">
+            <li><span class="feat-check">✓</span><span data-i="t3f1">Безлимитные сканирования ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t3f2">200 регистраций карточек NTIN</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t3f3">Доступ к Telegram-боту</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t3f4">Создание накладных для термопринтера</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t3f5">Whitelabel отчёты</span></li>
+          </ul>
+          <a class="btn-secondary btn-block" href="checkout.html?plan=Безлимит&price=20000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
+        </div>
+      </div>
+
+      <div class="pricing-faq">
+        <div class="section-tag" data-i="faq_eyebrow" style="justify-content: center; display: flex;">FAQ</div>
+        <h2 class="section-title" data-i="faq_title" style="text-align: center; margin-left: auto; margin-right: auto;">Частые вопросы</h2>
+        <div class="faq-list" id="faqList" data-reveal></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Quareo</div>
+      <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_product">Продукт</div>
+      <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+      <a href="pools.html" data-i="footer_l_pools">Co-Buying пулы</a>
+      <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+      <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_company">Компания</div>
+      <a href="#" data-i="footer_l_about">О проекте</a>
+      <a href="#" data-i="footer_l_contact">Контакты</a>
+      <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_legal">Документы</div>
+      <a href="#" data-i="footer_l_privacy">Политика конфиденциальности</a>
+      <a href="#" data-i="footer_l_terms">Условия использования</a>
+      <a href="#" data-i="footer_l_offer">Публичная оферта</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
+    <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
+  </div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script>
+const PAGE_I18N = {
+  ru: {
+    ph_eyebrow: "Тарифы", ph_title: "Выберите план для вашего масштаба",
+    ph_sub: "Начните с разведки одной ниши или подключите весь синдикат — цена растёт вместе с вашим бизнесом.",
+    tier1: "Старт", tier2: "Бизнес", tier3: "Безлимит", per_month: "/ месяц", popular: "Популярный",
+    tier1_desc: "Для начинающих продавцов, которые хотят найти первую прибыльную нишу.",
+    tier2_desc: "Для активных продавцов, которые работают сразу на нескольких площадках.",
+    tier3_desc: "Для агентств и крупных продавцов, управляющих несколькими магазинами.",
+    t1f1:"50 сканирований ниши",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",t1f4:"Участие в пулах совместных закупок",
+    t2f1:"200 сканирований ниши",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f4:"Участие в неограниченных пулах",t2f5:"Аналитика офлайн остатков",t2f6:"Приоритетная поддержка",
+    t3f1:"Безлимитные сканирования ниши",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",t3f5:"Whitelabel отчёты",
+    choose_plan: "Выбрать план",
+    faq_eyebrow: "FAQ", faq_title: "Частые вопросы",
+    faqs: [
+      {q:"Как быстро я увижу первые инсайты?",a:"После регистрации Scouting Engine начинает сканирование немедленно. Первые алерты в Telegram приходят уже в течение нескольких часов."},
+      {q:"Сколько человек нужно для открытия закупочного пула?",a:"Минимум 3 участника. Как только набирается нужное количество, бот автоматически генерирует счета и организует единый заказ."},
+      {q:"Работает ли платформа только с Kaspi?",a:"Niche Scanner сфокусирован на Kaspi.kz как главном маркетплейсе Казахстана. Карточки товаров генерируются сразу для Kaspi, Wildberries и Ozon."},
+      {q:"Можно ли отменить подписку?",a:"Да, в любой момент без штрафов. Доступ сохраняется до конца оплаченного периода."},
+      {q:"Как работает Success Fee?",a:"3–5% взимается только при успешном завершении совместной закупки. Если пул не собрался — комиссия не берётся."},
+    ]
+  },
+  en: {
+    ph_eyebrow: "Pricing", ph_title: "Choose a plan for your scale",
+    ph_sub: "Start by scouting a single niche, or connect your whole syndicate — price grows with your business.",
+    tier1: "Starter", tier2: "Business", tier3: "Unlimited", per_month: "/ month", popular: "Most popular",
+    tier1_desc: "For new sellers looking for their first profitable niche.",
+    tier2_desc: "For active sellers working across multiple marketplaces.",
+    tier3_desc: "For agencies and large sellers managing multiple stores.",
+    t1f1:"50 Niche Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",t1f4:"Co-buying pool access",
+    t2f1:"200 Niche Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f4:"Unlimited pool access",t2f5:"Offline analytics",t2f6:"Priority support",
+    t3f1:"Unlimited Niche Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",t3f5:"Whitelabel reports",
+    choose_plan: "Choose plan",
+    faq_eyebrow: "FAQ", faq_title: "Frequently asked questions",
+    faqs: [
+      {q:"How quickly will I see first insights?",a:"After registration, the Scouting Engine starts scanning immediately. First Telegram alerts arrive within hours."},
+      {q:"How many people are needed to open a buying pool?",a:"Minimum 3 participants. Once reached, the bot automatically generates invoices and organizes a single order."},
+      {q:"Does the platform only work with Kaspi?",a:"The Niche Scanner is focused on Kaspi.kz. Product cards are generated for Kaspi, Wildberries and Ozon simultaneously."},
+      {q:"Can I cancel my subscription?",a:"Yes, anytime with no penalties. Access continues until the end of the paid period."},
+      {q:"How does the Success Fee work?",a:"3–5% is charged only upon successful completion of a co-purchase. If the pool doesn't form — no fee is charged."},
+    ]
+  }
+};
+Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+
+function renderFAQ() {
+  const faqs = RP_I18N[RP_LANG].faqs;
+  const list = document.getElementById('faqList');
+  list.innerHTML = faqs.map(f => `
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span>${f.q}</span>
+        <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-answer"><p>${f.a}</p></div>
+    </div>
+  `).join('');
+}
+
+function onLangChange() { renderFAQ(); }
+renderFAQ();
+</script>
+</body>
+</html>

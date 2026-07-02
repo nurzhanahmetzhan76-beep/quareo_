@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аналитика магазина — Quareo</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.tool-hero{padding-top:108px;padding-bottom:3rem;text-align:center}
+.tool-hero .section-tag{justify-content:center}
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin:2rem 0}
+.a-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;position:relative;overflow:hidden}
+.a-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--brand),var(--purple))}
+.a-card-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);font-weight:600}
+.a-card-val{font-size:2.2rem;font-weight:700;font-family:var(--font-display);margin:.75rem 0 .25rem}
+.a-card-change{font-size:13px;font-weight:600}
+.a-card-change.up{color:var(--green)}
+.a-card-change.down{color:var(--red)}
+.pnl-bar{display:flex;height:32px;border-radius:8px;overflow:hidden;margin:1.5rem 0}
+.pnl-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.pnl-legend{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:13px;color:var(--text-2)}
+.pnl-dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px}
+.feature-coming{text-align:center;padding:4rem 2rem}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Quareo</a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Главная</a><a href="scanner.html">Сканер</a><a href="ntin.html">NTIN</a><a href="pools.html">Пулы</a><a href="waybills.html">Накладные</a><a href="pricing.html">Тарифы</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch"><button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button><button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button></div>
+      <a href="auth.html?view=register" class="btn-nav-cta">Начать</a>
+      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+<main>
+  <section class="tool-hero">
+    <div class="container-narrow">
+      <div class="section-tag">Аналитика магазина</div>
+      <h1>P&L до копейки. <span style="color:var(--brand)">Без бухгалтера.</span></h1>
+      <p style="color:var(--text-2);font-size:1.1rem;line-height:1.7;max-width:560px;margin:1rem auto">Выручка, комиссии Kaspi, налоги, маржа — всё в одном дашборде.</p>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="analytics-grid" data-reveal>
+        <div class="a-card">
+          <div class="a-card-label">Выручка сегодня</div>
+          <div class="a-card-val" style="color:var(--brand)">847 230 ₸</div>
+          <div class="a-card-change up">▲ +12.3% ко вчера</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label">Заказов</div>
+          <div class="a-card-val">34</div>
+          <div class="a-card-change up">▲ +8 ко вчера</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label">Средний чек</div>
+          <div class="a-card-val" style="color:var(--purple)">24 918 ₸</div>
+          <div class="a-card-change down">▼ -2.1%</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label">Чистая маржа</div>
+          <div class="a-card-val" style="color:var(--green)">18%</div>
+          <div class="a-card-change up">▲ +1.5pp</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:2.5rem;margin-top:2rem" data-reveal>
+        <h3 style="margin-bottom:1.5rem">Структура расходов (P&L)</h3>
+        <div class="pnl-bar">
+          <div class="pnl-seg" style="width:62%;background:var(--brand)">62%</div>
+          <div class="pnl-seg" style="width:12%;background:var(--purple)">12%</div>
+          <div class="pnl-seg" style="width:8%;background:var(--amber)">8%</div>
+          <div class="pnl-seg" style="width:18%;background:var(--green)">18%</div>
+        </div>
+        <div class="pnl-legend">
+          <span><span class="pnl-dot" style="background:var(--brand)"></span>Закупка — 113 600 ₸</span>
+          <span><span class="pnl-dot" style="background:var(--purple)"></span>Комиссия Kaspi — 22 000 ₸</span>
+          <span><span class="pnl-dot" style="background:var(--amber)"></span>Налоги — 14 600 ₸</span>
+          <span><span class="pnl-dot" style="background:var(--green)"></span>Маржа — 32 200 ₸</span>
+        </div>
+      </div>
+
+      <div class="feature-coming" data-reveal style="margin-top:3rem">
+        <div style="font-size:48px;margin-bottom:1rem">📊</div>
+        <h2>Полная аналитика — скоро</h2>
+        <p style="color:var(--text-2);max-width:480px;margin:0 auto 2rem;line-height:1.7">Подключите Kaspi API для получения реальных данных по выручке, заказам и марже в реальном времени.</p>
+        <a href="ntin.html" class="btn-primary" style="padding:14px 32px">Настроить API →</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="footer-grid">
+    <div><div class="footer-brand">Quareo</div><p class="footer-desc">ИИ-радар по Kaspi.kz</p></div>
+    <div class="footer-col"><div class="footer-col-title">Продукт</div><a href="scanner.html">Сканер</a><a href="ntin.html">NTIN</a><a href="pools.html">Пулы</a></div>
+    <div class="footer-col"><div class="footer-col-title">Инструменты</div><a href="kaspi-bot.html">Kaspi-бот</a><a href="analytics.html">Аналитика</a><a href="reviews.html">Отзывы</a><a href="waybills.html">Накладные</a></div>
+    <div class="footer-col"><div class="footer-col-title">Документы</div><a href="#">Конфиденциальность</a><a href="#">Условия</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Quareo.</span><span class="mono">Алматы · Казахстан</span></div>
+</footer>
+<script src="assets/common.js"></script>
+</body>
+</html>

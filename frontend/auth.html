@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quareo — Вход в систему</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  body {
+    background: var(--bg-2);
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  .auth-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .auth-card {
+    width: 100%; max-width: 440px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); padding: 3rem;
+    box-shadow: var(--shadow-lg);
+  }
+  .auth-logo {
+    display: flex; justify-content: center; margin-bottom: 2rem;
+  }
+  .auth-logo a {
+    font-weight: 800; font-size: 24px; font-family: var(--font-display);
+    background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-decoration: none;
+  }
+  .auth-title { text-align: center; font-size: 1.6rem; font-family: var(--font-display); font-weight: 700; margin-bottom: 0.5rem; }
+  .auth-sub { text-align: center; color: var(--text-2); font-size: 14.5px; margin-bottom: 2rem; }
+  
+  .auth-tabs {
+    display: flex; background: var(--bg-3); border-radius: var(--radius-sm);
+    padding: 4px; margin-bottom: 2rem;
+  }
+  .auth-tab {
+    flex: 1; text-align: center; padding: 10px; border-radius: 6px;
+    font-size: 14px; font-weight: 600; cursor: pointer; color: var(--text-3);
+    transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--bg); color: var(--text); box-shadow: var(--shadow-sm); }
+  
+  .auth-form { display: none; }
+  .auth-form.active { display: block; animation: fade-in 0.3s ease; }
+  @keyframes fade-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 13px; color: var(--text-3); }
+  .auth-footer a { color: var(--brand); font-weight: 600; text-decoration: none; }
+  .auth-footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <div class="auth-card" data-reveal>
+    <div class="auth-logo"><a href="index.html">Quareo</a></div>
+    
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')" data-i="auth_tab_login">Вход</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchTab('register')" data-i="auth_tab_register">Регистрация</div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form active" id="formLogin">
+      <h2 class="auth-title" data-i="login_title">С возвращением</h2>
+      <p class="auth-sub" data-i="login_sub">Войдите, чтобы продолжить работу с радаром.</p>
+      
+      <div class="form-group">
+        <label class="form-label" data-i="form_email">Email</label>
+        <input type="email" class="form-input" id="lEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i="form_password">Пароль</label>
+        <input type="password" class="form-input" id="lPassword" placeholder="••••••••">
+      </div>
+      <div class="form-error" id="loginError"></div>
+      
+      <button class="btn-primary btn-block" style="margin-top: 2rem; padding: 14px;" id="btnLogin" onclick="handleLogin()" data-i="login_btn">Войти в систему</button>
+      
+      <div class="auth-footer">
+        <span data-i="login_no_account">Нет аккаунта?</span> <a href="#" onclick="switchTab('register'); return false;" data-i="auth_tab_register">Зарегистрируйтесь</a>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="auth-form" id="formRegister">
+      <h2 class="auth-title" data-i="reg_title">Создать аккаунт</h2>
+      <p class="auth-sub" data-i="reg_sub">Получите доступ к аналитике Kaspi.kz и пулам закупок.</p>
+      
+      <div class="form-group">
+        <label class="form-label" data-i="form_name">Полное имя</label>
+        <input type="text" class="form-input" id="rName" placeholder="Алибек Джаксыбеков">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i="form_email">Email</label>
+        <input type="email" class="form-input" id="rEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i="form_password">Пароль</label>
+        <input type="password" class="form-input" id="rPassword" placeholder="•••••••• (мин. 6 символов)">
+      </div>
+      <div class="form-error" id="regError"></div>
+      <div class="form-success" id="regSuccess"></div>
+      
+      <button class="btn-primary btn-block" style="margin-top: 2rem; padding: 14px;" id="btnRegister" onclick="handleRegister()" data-i="reg_btn">Создать аккаунт</button>
+      
+      <div class="auth-footer">
+        <span data-i="reg_has_account">Уже есть аккаунт?</span> <a href="#" onclick="switchTab('login'); return false;" data-i="auth_tab_login">Войти</a>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<script src="assets/common.js"></script>
+<script>
+const PAGE_I18N = {
+  ru: {
+    auth_tab_login: "Вход", auth_tab_register: "Регистрация",
+    login_title: "С возвращением", login_sub: "Войдите, чтобы продолжить работу с радаром.",
+    reg_title: "Создать аккаунт", reg_sub: "Получите доступ к аналитике Kaspi.kz и пулам закупок.",
+    form_name: "Полное имя", form_email: "Email", form_password: "Пароль",
+    login_btn: "Войти в систему", reg_btn: "Создать аккаунт",
+    login_no_account: "Нет аккаунта?", reg_has_account: "Уже есть аккаунт?",
+    err_fill: "Заполните все поля", err_short_pass: "Пароль должен быть не менее 6 символов",
+    reg_ok: "Аккаунт успешно создан! Выполняем вход...",
+  },
+  en: {
+    auth_tab_login: "Log in", auth_tab_register: "Sign up",
+    login_title: "Welcome back", login_sub: "Log in to continue using the radar.",
+    reg_title: "Create an account", reg_sub: "Get access to Kaspi.kz analytics and buying pools.",
+    form_name: "Full name", form_email: "Email", form_password: "Password",
+    login_btn: "Sign in", reg_btn: "Create account",
+    login_no_account: "Don't have an account?", reg_has_account: "Already have an account?",
+    err_fill: "Please fill all fields", err_short_pass: "Password must be at least 6 characters",
+    reg_ok: "Account created successfully! Logging in...",
+  }
+};
+Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+
+// Check URL params for initial view
+const params = new URLSearchParams(window.location.search);
+if (params.get('view') === 'register') {
+  switchTab('register');
+}
+
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.remove('active');
+  document.getElementById('tabRegister').classList.remove('active');
+  document.getElementById('formLogin').classList.remove('active');
+  document.getElementById('formRegister').classList.remove('active');
+  
+  document.getElementById('loginError').classList.remove('visible');
+  document.getElementById('regError').classList.remove('visible');
+  document.getElementById('regSuccess').classList.remove('visible');
+  
+  if (tab === 'login') {
+    document.getElementById('tabLogin').classList.add('active');
+    document.getElementById('formLogin').classList.add('active');
+    document.title = 'Quareo — ' + RP_I18N[RP_LANG].auth_tab_login;
+  } else {
+    document.getElementById('tabRegister').classList.add('active');
+    document.getElementById('formRegister').classList.add('active');
+    document.title = 'Quareo — ' + RP_I18N[RP_LANG].auth_tab_register;
+  }
+}
+
+async function handleLogin() {
+  const t = RP_I18N[RP_LANG];
+  const email = document.getElementById('lEmail').value.trim();
+  const pwd = document.getElementById('lPassword').value;
+  const errBox = document.getElementById('loginError');
+  const btn = document.getElementById('btnLogin');
+  
+  errBox.classList.remove('visible');
+  if (!email || !pwd) {
+    errBox.textContent = t.err_fill;
+    errBox.classList.add('visible');
+    return;
+  }
+  
+  btn.classList.add('btn-loading');
+  
+  try {
+    const res = await fetch(RP_API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: pwd })
+    });
+    
+    const data = await res.json();
+    if (!res.ok) {
+      let msg = data.detail;
+      if (Array.isArray(msg)) {
+        msg = msg.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
+      } else if (typeof msg === 'object') {
+        msg = JSON.stringify(msg);
+      }
+      throw new Error(msg || 'Login failed');
+    }
+    
+    // Setup session
+    rpSetAuth(data.access_token, data.user);
+    window.location.href = 'scanner.html';
+  } catch (err) {
+    errBox.textContent = err.message;
+    errBox.classList.add('visible');
+  } finally {
+    btn.classList.remove('btn-loading');
+  }
+}
+
+async function handleRegister() {
+  const t = RP_I18N[RP_LANG];
+  const name = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const pwd = document.getElementById('rPassword').value;
+  const errBox = document.getElementById('regError');
+  const sucBox = document.getElementById('regSuccess');
+  const btn = document.getElementById('btnRegister');
+  
+  errBox.classList.remove('visible');
+  sucBox.classList.remove('visible');
+  
+  if (!name || !email || !pwd) {
+    errBox.textContent = t.err_fill;
+    errBox.classList.add('visible');
+    return;
+  }
+  if (pwd.length < 6) {
+    errBox.textContent = t.err_short_pass;
+    errBox.classList.add('visible');
+    return;
+  }
+  
+  btn.classList.add('btn-loading');
+  
+  try {
+    const res = await fetch(RP_API_BASE + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: pwd, full_name: name })
+    });
+    
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Registration failed');
+    
+    sucBox.textContent = t.reg_ok;
+    sucBox.classList.add('visible');
+    
+    // Auto login
+    const logRes = await fetch(RP_API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: pwd })
+    });
+    const logData = await logRes.json();
+    if (logRes.ok) {
+      rpSetAuth(logData.access_token, logData.user);
+      setTimeout(() => { window.location.href = 'scanner.html'; }, 1000);
+    } else {
+      setTimeout(() => { switchTab('login'); }, 1500);
+    }
+  } catch (err) {
+    let msg = err.message;
+    errBox.textContent = msg;
+    errBox.classList.add('visible');
+    btn.classList.remove('btn-loading');
+  }
+}
+
+// Bind enter key
+document.getElementById('lPassword').addEventListener('keyup', (e) => { if(e.key === 'Enter') handleLogin(); });
+document.getElementById('rPassword').addEventListener('keyup', (e) => { if(e.key === 'Enter') handleRegister(); });
+</script>
+</body>
+</html>

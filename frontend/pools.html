@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quareo — Co-Buying Пулы</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .page-hero { padding-top: 108px; padding-bottom: 2rem; }
+  .page-hero h1 { font-size: clamp(2.4rem, 4.4vw, 3.5rem); margin-bottom: 1.25rem; max-width: 720px; }
+  .page-hero p { color: var(--text-2); max-width: 600px; font-size: 1.15rem; }
+
+  /* ── Pool cards ───────────────────────────────────────────── */
+  .pools-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .pool-card {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    background: var(--bg); padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+  .pool-card:hover { border-color: var(--brand-mid); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+  .pool-card-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1rem; gap: 12px;
+  }
+  .pool-card-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; line-height: 1.3; color: var(--text); }
+  .pool-status-pill {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; border-radius: 100px; padding: 4px 12px; white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .pool-status-pill.open { background: var(--brand-light); color: var(--brand); border-color: var(--brand-mid); }
+  .pool-status-pill.closed { background: var(--amber-bg); color: #92400E; border-color: #FDE68A; }
+  
+  .pool-card-meta {
+    font-family: var(--font-mono); font-size: 13px; color: var(--text-3); margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  .progress-track {
+    height: 8px; background: var(--bg-2); border-radius: 100px;
+    overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--brand), var(--purple));
+    transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--font-mono); font-size: 13px; color: var(--text-2); margin-bottom: 1.5rem;
+  }
+  .progress-label strong { color: var(--text); font-size: 15px; font-weight: 700; }
+  
+  .pool-participants {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono); font-size: 13px; color: var(--text-3); margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  .avatar-stack { display: flex; }
+  .avatar-stack span {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--brand-light); color: var(--brand);
+    border: 2px solid var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; margin-left: -8px;
+    font-family: var(--font-mono);
+  }
+  .avatar-stack span:first-child { margin-left: 0; }
+
+  /* ── Fee calculator ───────────────────────────────────────── */
+  .calc-panel {
+    border: 1px solid var(--border); border-radius: var(--radius-xl);
+    background: var(--bg); padding: 3rem;
+    margin-top: 3rem; box-shadow: var(--shadow-lg);
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem;
+  }
+  .calc-inputs { display: flex; flex-direction: column; gap: 2rem; justify-content: center; }
+  .slider-row { display: flex; flex-direction: column; gap: 12px; }
+  .slider-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 14px; font-weight: 500; color: var(--text-2);
+  }
+  .slider-label strong { font-family: var(--font-mono); color: var(--brand); font-size: 16px; font-weight: 700; }
+  
+  .calc-output {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 2.5rem;
+    display: flex; flex-direction: column; justify-content: center; gap: 1.25rem;
+  }
+  .calc-row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    font-size: 15px; color: var(--text-2); font-weight: 500;
+  }
+  .calc-row .calc-row-label { display: flex; align-items: center; gap: 10px; }
+  .calc-row .val { font-family: var(--font-mono); font-weight: 700; color: var(--text); }
+  .calc-row.total {
+    border-top: 1px solid var(--border); padding-top: 1.25rem; margin-top: 0.5rem;
+    font-size: 16px; color: var(--text); font-weight: 600;
+  }
+  .calc-row.total .val { color: var(--brand); font-size: 1.75rem; }
+  .fee-pill {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--brand);
+    background: var(--brand-light); border: 1px solid var(--brand-mid);
+    border-radius: 100px; padding: 2px 10px;
+  }
+
+  @media (max-width: 860px) {
+    .calc-panel { grid-template-columns: 1fr; padding: 2rem; gap: 2.5rem; }
+    .calc-output { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      Quareo
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-i="nav_home">Главная</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер</a>
+      <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+      <a href="pools.html" class="active" data-i="nav_pools">Пулы</a>
+      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+      <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+        <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+      </div>
+      <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
+      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" data-i="ph_eyebrow">Co-Buying Engine</div>
+      <h1 data-i="ph_title">Совместные закупки синдиката</h1>
+      <p data-i="ph_sub">Объединяйтесь с другими продавцами и закупайте товары по цене крупного опта. Платформа автоматически генерирует счета и акты для оплаты.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:1rem; padding-bottom: 2rem;">
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
+      <!-- Create Pool Card -->
+      <div class="pool-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3rem 2.5rem; border: 2px dashed var(--brand-mid); background: var(--brand-light);">
+        <div style="font-size: 3.5rem; margin-bottom: 1.25rem;">🚀</div>
+        <h3 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--text);" data-i="pool_create_card_title">Создать новый пул</h3>
+        <p style="color: var(--text-2); font-size: 15px; margin-bottom: 2.5rem; line-height: 1.6;" data-i="pool_create_card_desc">Инициируйте совместную закупку, установите целевую сумму и пригласите других селлеров.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-bottom: 2rem;">
+          <input type="text" id="createProductName" placeholder="Название товара" class="form-input">
+          <input type="text" id="createSupplierName" placeholder="Продавец / Поставщик" class="form-input">
+          <input type="number" id="createQty" placeholder="Целевое кол-во (шт)" value="500" class="form-input">
+          <input type="number" id="createAmt" placeholder="Целевая сумма (₸)" value="2500000" class="form-input">
+        </div>
+        <button class="btn-primary" onclick="createPool()" id="btnCreatePool" style="padding: 14px 32px; font-size: 15px;" data-i="pool_create_btn">Создать пул</button>
+        <div id="createPoolResult" style="margin-top: 1.5rem; font-family: var(--font-mono); font-size: 13px; color: var(--brand); font-weight: 600; word-break: break-all;"></div>
+      </div>
+
+      <!-- Search Pool Card -->
+      <div class="pool-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3rem 2.5rem; background: var(--bg); box-shadow: var(--shadow-sm);">
+        <div style="font-size: 3.5rem; margin-bottom: 1.25rem;">🔍</div>
+        <h3 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--text);" data-i="pool_search_card_title">Найти пул по ID</h3>
+        <p style="color: var(--text-2); font-size: 15px; margin-bottom: 2rem; line-height: 1.6;" data-i="pool_search_card_desc">У вас есть код приглашения или ID пула? Введите его ниже, чтобы присоединиться к закупке.</p>
+        <div style="display: flex; gap: 12px; width: 100%; max-width: 340px;">
+          <input type="text" id="searchPoolId" placeholder="ID-xxxx" class="form-input" style="flex: 1;">
+          <button class="btn-secondary" id="btnSearchPool" onclick="searchPool()" style="padding: 14px 24px;" data-i="pool_search_btn">Найти</button>
+        </div>
+        <div id="searchPoolResult" style="margin-top: 2rem; width: 100%; text-align: left; display: none;">
+          <!-- Pool info will be injected here -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:2rem">
+    <div class="container">
+      <div class="section-tag" data-i="calc_eyebrow">Success Fee</div>
+      <h2 class="section-title" data-i="calc_title">Калькулятор комиссии</h2>
+      <p class="section-sub" data-i="calc_sub">Комиссия 3–5% начисляется только при успешном закрытии пула — настройте параметры и посмотрите расчёт.</p>
+
+      <div class="calc-panel" data-reveal>
+        <div class="calc-inputs">
+          <div class="slider-row">
+            <div class="slider-label">
+              <span data-i="calc_amount">Сумма закупки</span>
+              <strong id="calcAmountVal">500 000 ₸</strong>
+            </div>
+            <input type="range" id="calcAmount" min="50000" max="5000000" step="10000" value="500000" oninput="updateCalc()">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span data-i="calc_fee">Ставка комиссии</span>
+              <strong id="calcFeeVal">3.0%</strong>
+            </div>
+            <input type="range" id="calcFee" min="3" max="5" step="0.1" value="3" oninput="updateCalc()">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <span data-i="calc_participants">Участников в пуле</span>
+              <strong id="calcParticipantsVal">8</strong>
+            </div>
+            <input type="range" id="calcParticipants" min="3" max="30" step="1" value="8" oninput="updateCalc()">
+          </div>
+        </div>
+        <div class="calc-output">
+          <div class="calc-row">
+            <span class="calc-row-label" data-i="calc_total_purchase">Общая сумма закупки</span>
+            <span class="val" id="outTotal">500 000 ₸</span>
+          </div>
+          <div class="calc-row">
+            <span class="calc-row-label"><span data-i="calc_success_fee">Success Fee</span><span class="fee-pill" id="outFeePct">3.0%</span></span>
+            <span class="val" id="outFee">15 000 ₸</span>
+          </div>
+          <div class="calc-row">
+            <span class="calc-row-label" data-i="calc_per_participant">На участника (закупка)</span>
+            <span class="val" id="outPerParticipant">62 500 ₸</span>
+          </div>
+          <div class="calc-row total">
+            <span class="calc-row-label" data-i="calc_to_pay">К оплате с участника</span>
+            <span class="val" id="outPerParticipantTotal">64 375 ₸</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Quareo</div>
+      <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_product">Продукт</div>
+      <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+      <a href="pools.html" data-i="footer_l_pools">Co-Buying пулы</a>
+      <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+      <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_company">Компания</div>
+      <a href="#" data-i="footer_l_about">О проекте</a>
+      <a href="#" data-i="footer_l_contact">Контакты</a>
+      <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_legal">Документы</div>
+      <a href="#" data-i="footer_l_privacy">Политика конфиденциальности</a>
+      <a href="#" data-i="footer_l_terms">Условия использования</a>
+      <a href="#" data-i="footer_l_offer">Публичная оферта</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
+    <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
+  </div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script>
+const PAGE_I18N = {
+  ru: {
+    ph_eyebrow: "Co-Buying Engine", ph_title: "Совместные закупки синдиката",
+    ph_sub: "Объединяйтесь с другими продавцами и закупайте товары по цене крупного опта. Платформа автоматически генерирует счета и акты для оплаты.",
+    active_eyebrow: "Активные пулы", active_title: "Открытые закупки прямо сейчас",
+    calc_eyebrow: "Success Fee", calc_title: "Калькулятор комиссии",
+    calc_sub: "Комиссия 3–5% начисляется только при успешном закрытии пула — настройте параметры и посмотрите расчёт.",
+    calc_amount: "Сумма закупки", calc_fee: "Ставка комиссии", calc_participants: "Участников в пуле",
+    calc_total_purchase: "Общая сумма закупки", calc_success_fee: "Success Fee", calc_per_participant: "На участника (закупка)", calc_to_pay: "К оплате с участника",
+    pool_status_open: "Открыт", pool_status_closed: "Набор завершён",
+    pool_quota_label: "набрано", pool_participants_label: "участников", pool_expires_label: "до закрытия",
+    pool_view_btn: "Подробнее", pool_processing: "Закупка организуется",
+    pool_create_card_title: "Создать новый пул", pool_create_card_desc: "Инициируйте совместную закупку, установите целевую сумму и пригласите других селлеров.", pool_create_btn: "Создать пул",
+    pool_search_card_title: "Найти пул по ID", pool_search_card_desc: "У вас есть код приглашения или ID пула? Введите его ниже, чтобы присоединиться к закупке.", pool_search_btn: "Найти",
+  },
+  en: {
+    ph_eyebrow: "Co-Buying Engine", ph_title: "Syndicate co-buying pools",
+    ph_sub: "Join other sellers and buy products at large-wholesale prices. The platform automatically generates invoices and acts for payment.",
+    active_eyebrow: "Active pools", active_title: "Open purchases right now",
+    calc_eyebrow: "Success Fee", calc_title: "Fee calculator",
+    calc_sub: "A 3-5% fee is charged only when a pool closes successfully — adjust the parameters to see the breakdown.",
+    calc_amount: "Purchase amount", calc_fee: "Fee rate", calc_participants: "Pool participants",
+    calc_total_purchase: "Total purchase amount", calc_success_fee: "Success Fee", calc_per_participant: "Per participant (purchase)", calc_to_pay: "Total per participant",
+    pool_status_open: "Open", pool_status_closed: "Quota filled",
+    pool_quota_label: "raised", pool_participants_label: "participants", pool_expires_label: "until close",
+    pool_view_btn: "Details", pool_processing: "Order being placed",
+    pool_create_card_title: "Create a new pool", pool_create_card_desc: "Initiate a co-buying pool, set a target amount, and invite other sellers.", pool_create_btn: "Create pool",
+    pool_search_card_title: "Find pool by ID", pool_search_card_desc: "Do you have an invite code or pool ID? Enter it below to join the purchase.", pool_search_btn: "Find",
+  }
+};
+Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+
+function fmtMoney(n) {
+  return Math.round(n).toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₸';
+}
+
+function updateCalc() {
+  const amount = parseFloat(document.getElementById('calcAmount').value);
+  const feePct = parseFloat(document.getElementById('calcFee').value);
+  const participants = parseInt(document.getElementById('calcParticipants').value);
+
+  document.getElementById('calcAmountVal').textContent = fmtMoney(amount);
+  document.getElementById('calcFeeVal').textContent = feePct.toFixed(1) + '%';
+  document.getElementById('calcParticipantsVal').textContent = participants;
+
+  const fee = amount * (feePct / 100);
+  const perParticipant = amount / participants;
+  const feePerParticipant = fee / participants;
+  const totalPerParticipant = perParticipant + feePerParticipant;
+
+  document.getElementById('outTotal').textContent = fmtMoney(amount);
+  document.getElementById('outFeePct').textContent = feePct.toFixed(1) + '%';
+  document.getElementById('outFee').textContent = fmtMoney(fee);
+  document.getElementById('outPerParticipant').textContent = fmtMoney(perParticipant);
+  document.getElementById('outPerParticipantTotal').textContent = fmtMoney(totalPerParticipant);
+}
+
+// ── Backend Integration ──
+
+async function createPool() {
+  const btn = document.getElementById('btnCreatePool');
+  btn.disabled = true;
+  btn.textContent = 'Создание...';
+  
+  const qty = parseInt(document.getElementById('createQty').value) || 500;
+  const amt = parseFloat(document.getElementById('createAmt').value) || 2500000;
+  const prodName = document.getElementById('createProductName').value.trim() || 'Неизвестный товар';
+  const supName = document.getElementById('createSupplierName').value.trim() || 'Неизвестный продавец';
+  const productId = crypto.randomUUID();
+
+  try {
+    const res = await fetch(RP_API_BASE + '/pools/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() },
+      body: JSON.stringify({
+        product_id: productId,
+        product_name: prodName,
+        supplier_name: supName,
+        target_quantity: qty,
+        target_amount: amt,
+        expires_in_hours: 72
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Creation failed');
+    
+    document.getElementById('createPoolResult').innerHTML = `Пул успешно создан!<br>ID: <b style="color:var(--text)">${data.id}</b><br>Отправьте этот ID другим продавцам.`;
+    document.getElementById('searchPoolId').value = data.id; 
+  } catch (err) {
+    document.getElementById('createPoolResult').innerHTML = `<span style="color:var(--red)">Ошибка: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = RP_I18N[RP_LANG].pool_create_btn || 'Создать пул';
+  }
+}
+
+async function searchPool() {
+  const btn = document.getElementById('btnSearchPool');
+  const poolId = document.getElementById('searchPoolId').value.trim();
+  const resContainer = document.getElementById('searchPoolResult');
+  
+  if (!poolId) return;
+  
+  btn.disabled = true;
+  resContainer.style.display = 'block';
+  resContainer.innerHTML = '<span style="color:var(--text-3);font-size:14px;font-weight:500;">Поиск пула...</span>';
+
+  try {
+    const res = await fetch(RP_API_BASE + '/pools/' + poolId + '/status', {
+      headers: { ...rpAuthHeaders() }
+    });
+    const data = await res.json();
+    
+    if (!res.ok) throw new Error(data.detail || 'Pool not found');
+    
+    const pct = data.amount_progress_percent || 0;
+    const statusText = data.pool.status === 'open' ? 'Открыт' : (data.pool.status === 'closed' ? 'Собран' : 'Истёк');
+    const color = data.pool.status === 'open' ? 'var(--brand)' : 'var(--amber)';
+    const bgClass = data.pool.status === 'open' ? 'pool-status-pill open' : 'pool-status-pill closed';
+    
+    resContainer.innerHTML = `
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding: 1.5rem; margin-top:1rem; box-shadow:var(--shadow-sm);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <strong style="font-family:var(--font-mono); font-size:13px; color:var(--text-2);">ID: ${poolId.split('-')[0]}...</strong>
+          <span class="${bgClass}">${statusText}</span>
+        </div>
+        <div style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:var(--font-display);">${data.pool.product_name}</div>
+        <div style="font-size:13px; font-weight:500; color:var(--text-3); margin-bottom:16px;">Продавец: ${data.pool.supplier_name}</div>
+        <div class="progress-track" style="margin-bottom:8px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
+        <div style="font-size:13px; font-weight:600; color:var(--text-2); display:flex; justify-content:space-between; font-family:var(--font-mono);">
+          <span>Собрано: <span style="color:var(--text)">${fmtMoney(data.pool.current_amount)}</span></span>
+          <span>Цель: <span style="color:var(--text)">${fmtMoney(data.pool.target_amount)}</span></span>
+        </div>
+        <button class="btn-primary btn-block" style="margin-top:1.5rem; font-size:14px; padding:12px;" onclick="joinPool('${poolId}')" ${data.pool.status !== 'open' ? 'disabled' : ''}>Внести взнос и вступить</button>
+      </div>
+    `;
+  } catch (err) {
+    resContainer.innerHTML = `<span style="color:var(--red);font-size:14px;font-weight:500;">${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function joinPool(poolId) {
+  const amt = prompt('Введите сумму взноса в ₸:', '500000');
+  if (!amt) return;
+  const qty = prompt('Сколько единиц товара закупаете?', '100');
+  if (!qty) return;
+  
+  try {
+    const res = await fetch(RP_API_BASE + '/pools/' + poolId + '/join', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() },
+      body: JSON.stringify({
+        user_id: 'user_' + Math.floor(Math.random()*10000), 
+        quantity: parseInt(qty),
+        amount: parseFloat(amt)
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Join failed');
+    
+    alert('Вы успешно присоединились к пулу!');
+    searchPool(); 
+  } catch(err) {
+    alert('Ошибка вступления: ' + err.message);
+  }
+}
+
+function onLangChange() {
+  // Update texts based on lang
+}
+
+updateCalc();
+</script>
+</body>
+</html>
