@@ -340,9 +340,20 @@ async def scan_niche(
                 "business": 200,
                 "unlimited": 999999
             }
-            limit = plan_limits.get(current_user.plan.lower(), 0)
+            user_plan = current_user.plan.lower()
+            limit = plan_limits.get(user_plan, 0)
+
+            if user_plan == "free" or user_plan not in plan_limits:
+                raise HTTPException(
+                    status_code=403,
+                    detail="У вас нет активного тарифа. Пожалуйста, выберите тариф, чтобы пользоваться сканером."
+                )
+
             if getattr(current_user, 'scans_used', 0) >= limit:
-                raise HTTPException(status_code=403, detail="Лимит сканирований исчерпан. Пожалуйста, обновите тариф.")
+                raise HTTPException(
+                    status_code=403,
+                    detail="Лимит сканирований по вашему тарифу исчерпан. Пожалуйста, обновите тариф."
+                )
                 
             current_user.scans_used = getattr(current_user, 'scans_used', 0) + 1
             await db.commit()
