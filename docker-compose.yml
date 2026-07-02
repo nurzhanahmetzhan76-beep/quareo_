@@ -1,0 +1,83 @@
+# ─── RetailPool AI v2.0 — Docker Compose ───────────────────────────────
+# Microservice split: API server + Scraper worker + PostgreSQL + Redis
+# Team Lead: "Scraper and API must be in different containers!"
+
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: retailpool
+      POSTGRES_PASSWORD: retailpool
+      POSTGRES_DB: retailpool
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retailpool"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Redis ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── FastAPI Backend (API server) ──────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://retailpool:retailpool@postgres:5432/retailpool
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Playwright Scraper Worker ─────────────────────────────
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile.scraper
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://retailpool:retailpool@postgres:5432/retailpool
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Telegram Bot ───────────────────────────────────────────
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    ports:
+      - "5000:5000"
+    env_file: .env
+    environment:
+      BOT_API_BASE_URL: http://api:8000
+      DATABASE_URL: postgresql+asyncpg://retailpool:retailpool@postgres:5432/retailpool
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  pgdata:

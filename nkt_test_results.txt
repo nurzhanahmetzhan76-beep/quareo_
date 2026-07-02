@@ -1,0 +1,39 @@
+=== ATTRIBUTES === 200
+  code=ntin, required=None, type=standard
+  code=gtin, required=None, type=standard
+  code=xtin, required=None, type=standard
+  code=name_ru, required=None, type=standard
+  code=name_kk, required=None, type=standard
+  code=name_en, required=None, type=standard
+  code=short_name_ru, required=None, type=standard
+  code=short_name_kk, required=None, type=standard
+  code=paket, required=None, type=standard
+  code=country, required=None, type=standard
+  code=brand, required=None, type=standard
+  code=article, required=None, type=standard
+  code=mpn_code, required=None, type=standard
+  code=measure_unit, required=None, type=advanced
+  code=quantity, required=None, type=advanced
+  code=eaes, required=None, type=advanced
+  code=marking_required_status, required=None, type=advanced
+  code=tnved, required=None, type=standard
+  code=producer_identifier, required=None, type=advanced
+  code=producer_country, required=None, type=advanced
+
+=== OKTRU search kopilka === 401
+{"code":"UNAUTHORIZED","message":"Unauthorized"}
+
+=== POST oktru=9610-0012 === 422
+{"code":"NOT_FOUND","message":"OKTRU \"9610-0012\" not found."}
+
+=== POST oktru=9610 === 422
+{"code":"NOT_FOUND","message":"OKTRU \"9610\" not found."}
+
+=== POST oktru=3240-0001 === 422
+{"code":"NOT_FOUND","message":"OKTRU \"3240-0001\" not found."}
+
+=== POST oktru=3240 === 422
+{"code":"NOT_FOUND","message":"OKTRU \"3240\" not found."}
+
+=== POST oktru=9610-0012-0001 === 422
+{"code":"NOT_FOUND","message":"OKTRU \"9610-0012-0001\" not found."}
