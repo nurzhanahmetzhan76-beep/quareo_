@@ -391,7 +391,14 @@ async function runAnalysis() {
       body: JSON.stringify({ query: niche }),
     });
 
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+   if (!resp.ok) {
+      let errMsg = `HTTP ${resp.status}`;
+      try {
+        const errBody = await resp.json();
+        if (errBody && errBody.detail) errMsg = errBody.detail;
+      } catch (_) {}
+      throw new Error(errMsg);
+    }
 
     const r = await resp.json();
 
