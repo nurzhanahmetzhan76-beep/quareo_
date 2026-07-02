@@ -6,6 +6,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Playwright's Chromium browser + system dependencies (needed for /api/scan)
+RUN playwright install --with-deps chromium
+
 COPY retailpool/ retailpool/
 COPY frontend/ frontend/
 
