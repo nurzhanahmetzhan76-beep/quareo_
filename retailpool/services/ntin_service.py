@@ -327,11 +327,11 @@ class NtinService:
         """Get NKT API key: user-level first, then platform-level from .env."""
         user_settings = await self.get_settings(user_id)
         if user_settings and user_settings.nkt_api_key:
-        return decrypt_secret(user_settings.nkt_api_key)
+            return decrypt_secret(user_settings.nkt_api_key)
         # Fallback to platform-level key from .env
         from retailpool.config import settings as app_settings
         return getattr(app_settings, "NKT_API_KEY", None) or None
-
+      
     def _build_nkt_headers(self, api_key: str) -> dict[str, str]:
         """Build headers for НКТ API requests."""
         return {
