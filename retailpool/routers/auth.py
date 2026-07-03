@@ -15,6 +15,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from fastapi import Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
+
 from retailpool.database import get_db
 from retailpool.models.user import User
 from retailpool.schemas.auth import (
@@ -35,6 +41,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     status_code=status.HTTP_201_CREATED,
     summary="Register a new user account",
 )
+ @limiter.limit("3/minute")
 async def register(
     data: UserRegister,
     db: AsyncSession = Depends(get_db),
@@ -74,7 +81,9 @@ async def register(
     response_model=TokenResponse,
     summary="Login and receive JWT token",
 )
+@limiter.limit("5/minute")
 async def login(
+    request: Request,
     data: UserLogin,
     db: AsyncSession = Depends(get_db),
 ) -> TokenResponse:
