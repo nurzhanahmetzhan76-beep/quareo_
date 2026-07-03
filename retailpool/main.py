@@ -124,7 +124,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # CORS (allow all for MVP; restrict in production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://quareo.pro",],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
