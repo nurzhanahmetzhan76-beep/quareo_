@@ -176,18 +176,20 @@
             <div class="pay-method" onclick="selectMethod(this)" data-i="method_kaspi">Kaspi Pay</div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" data-i="form_card">Номер карты</label>
-            <input class="form-input" type="text" id="fCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
-          </div>
-          <div class="card-row">
+          <div id="cardFields">
             <div class="form-group">
-              <label class="form-label" data-i="form_expiry">Срок</label>
-              <input class="form-input" type="text" id="fExpiry" placeholder="ММ/ГГ" maxlength="5" oninput="formatExpiry(this)">
+              <label class="form-label" data-i="form_card">Номер карты</label>
+              <input class="form-input" type="text" id="fCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
             </div>
-            <div class="form-group">
-              <label class="form-label">CVV</label>
-              <input class="form-input" type="password" id="fCvv" placeholder="•••" maxlength="3">
+            <div class="card-row">
+              <div class="form-group">
+                <label class="form-label" data-i="form_expiry">Срок</label>
+                <input class="form-input" type="text" id="fExpiry" placeholder="ММ/ГГ" maxlength="5" oninput="formatExpiry(this)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV</label>
+                <input class="form-input" type="password" id="fCvv" placeholder="•••" maxlength="3">
+              </div>
             </div>
           </div>
 
@@ -220,9 +222,9 @@ const PAGE_I18N = {
     summary_price: "Стоимость плана", summary_total: "К оплате сегодня",
     summary_note: "Оплата защищена алгоритмами шифрования.",
     contact_title: "Контактные данные", payment_title: "Способ оплаты",
-    method_card: "Карта", method_kaspi: "Kaspi Pay",
+    method_card: "Карта", method_kaspi: "Kaspi Перевод",
     form_name:"Имя",form_email:"Email",form_phone:"Номер телефона",form_card:"Номер карты",form_expiry:"Срок",
-    form_note:"Данные надежно защищены.",form_pay:"Оплатить подписку",
+    form_note:"Данные надежно защищены.",form_pay:"Оплатить подписку",form_get_details:"Получить реквизиты",
     success_title:"Заявка принята",success_sub:"Мы свяжемся с вами в течение 24 часов и настроим доступ к платформе. Проверьте Telegram и Email.",
     success_home: "На главную",
     fill_error: "Пожалуйста, заполните все обязательные поля.",
@@ -239,9 +241,9 @@ const PAGE_I18N = {
     summary_price: "Plan price", summary_total: "Due today",
     summary_note: "Payment is secured with encryption.",
     contact_title: "Contact details", payment_title: "Payment method",
-    method_card: "Card", method_kaspi: "Kaspi Pay",
+    method_card: "Card", method_kaspi: "Kaspi Transfer",
     form_name:"Full name",form_email:"Email",form_phone:"Phone number",form_card:"Card number",form_expiry:"Expiry",
-    form_note:"Your data is securely protected.",form_pay:"Pay subscription",
+    form_note:"Your data is securely protected.",form_pay:"Pay subscription",form_get_details:"Get payment details",
     success_title:"Application received",success_sub:"We'll contact you within 24 hours and set up your platform access. Check Telegram and Email.",
     success_home: "Go home",
     fill_error: "Please fill in all required fields.",
@@ -277,6 +279,11 @@ function renderSummary() {
 function selectMethod(el) {
   document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
   el.classList.add('active');
+  const isKaspi = el.getAttribute('data-i') === 'method_kaspi';
+  const cardFields = document.getElementById('cardFields');
+  if (cardFields) cardFields.style.display = isKaspi ? 'none' : 'block';
+  const t = RP_I18N[RP_LANG];
+  document.getElementById('btnPay').textContent = isKaspi ? (t.form_get_details || 'Получить реквизиты') : (t.form_pay || 'Оплатить подписку');
 }
 
 function formatCard(el) {
@@ -336,14 +343,40 @@ async function submitPayment() {
     const successView = document.getElementById('successView');
     successView.classList.add('active');
 
-    const subIdEl = document.createElement('div');
-    subIdEl.style.cssText = 'font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--text-3);margin-bottom:1.5rem;';
-    subIdEl.textContent = 'Заявка №' + sub.id.substring(0, 8).toUpperCase();
-    const successTitle = successView.querySelector('h2');
-    if (successTitle && !document.getElementById('subIdDisplay')) {
-      subIdEl.id = 'subIdDisplay';
-      successTitle.after(subIdEl);
+    const subId = sub.id.substring(0, 8).toUpperCase();
+    let successHtml = `
+      <div class="success-ring">✓</div>
+      <h2 data-i="success_title">${t.success_title || 'Заявка принята'}</h2>
+      <div style="font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--text-3);margin-bottom:1.5rem;">Заявка №${subId}</div>
+    `;
+
+    if (paymentMethod === 'kaspi_transfer') {
+      successHtml += `
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:2rem;text-align:left;margin-bottom:2rem;">
+          <h3 style="margin-bottom:1rem;color:var(--brand)">Инструкция по оплате Kaspi Gold</h3>
+          <p style="margin-bottom:0.5rem">1. Откройте приложение Kaspi.kz</p>
+          <p style="margin-bottom:0.5rem">2. Переведите <strong style="font-family:var(--font-mono)">${fmtMoney(planPrice)}</strong> по номеру: <strong style="font-family:var(--font-mono);color:var(--text)">+7 778 805 88 45</strong></p>
+          <p style="margin-bottom:1rem">3. Получатель: <strong>Али К.</strong></p>
+          <div style="background:var(--brand-light);padding:1rem;border-radius:var(--radius-sm);color:var(--text);font-size:0.9rem;border-left:4px solid var(--brand)">
+            ❗️ <strong>Важно:</strong> В сообщении к переводу обязательно укажите ваш Email: <strong>${email}</strong>
+          </div>
+          <div style="margin-top:1.5rem;text-align:center;">
+            <a href="https://wa.me/77788058845?text=Здравствуйте,%20я%20оплатил(а)%20подписку%20${planName}.%20Мой%20email:%20${email}" target="_blank" class="btn-primary" style="background:#25D366;color:#fff;border:none;display:inline-flex;align-items:center;gap:8px;padding:12px 24px;text-decoration:none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+              Отправить чек в WhatsApp
+            </a>
+          </div>
+        </div>
+        <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;">На главную</a>
+      `;
+    } else {
+      successHtml += `
+        <p data-i="success_sub">${t.success_sub || 'Мы свяжемся с вами в течение 24 часов и настроим доступ к платформе. Проверьте Telegram и Email.'}</p>
+        <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;" data-i="success_home">${t.success_home || 'На главную'}</a>
+      `;
     }
+    
+    successView.innerHTML = successHtml;
 
   } catch (e) {
     btn.disabled = false;
