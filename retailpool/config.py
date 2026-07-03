@@ -149,7 +149,7 @@ class Settings(BaseSettings):
         description="Maximum delay (seconds) between scraper requests.",
     )
     SCRAPER_HEADLESS: bool = Field(
-        default=False,
+        default=True,
         description="Run Playwright browser in headless mode.",
     )
 
