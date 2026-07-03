@@ -41,7 +41,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     status_code=status.HTTP_201_CREATED,
     summary="Register a new user account",
 )
- @limiter.limit("3/minute")
+@limiter.limit("3/minute")
 async def register(
     data: UserRegister,
     db: AsyncSession = Depends(get_db),
