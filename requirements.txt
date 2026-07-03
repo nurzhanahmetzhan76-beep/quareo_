@@ -39,3 +39,7 @@ pytest>=8.2.0
 pytest-asyncio>=0.23.0
 aiosqlite>=0.20.0
 pypdf>=4.0.0
+
+# ── Security ──────────────────────────────────────────────
+cryptography>=42.0.0
+slowapi>=0.1.9
