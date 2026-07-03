@@ -43,6 +43,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 )
 @limiter.limit("3/minute")
 async def register(
+    request: Request,  
     data: UserRegister,
     db: AsyncSession = Depends(get_db),
 ) -> TokenResponse:
