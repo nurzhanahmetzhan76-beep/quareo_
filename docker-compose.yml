@@ -11,8 +11,7 @@ services:
       POSTGRES_USER: retailpool
       POSTGRES_PASSWORD: retailpool
       POSTGRES_DB: retailpool
-    ports:
-      - "5432:5432"
+    
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -24,8 +23,6 @@ services:
   # ── Redis ─────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
