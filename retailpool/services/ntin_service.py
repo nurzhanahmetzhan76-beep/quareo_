@@ -21,6 +21,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from retailpool.models.ntin import NtinProduct, NtinSubmission, NtinStatus, UserSellerSettings
+from retailpool.services.crypto import encrypt_secret, decrypt_secret
 
 logger = logging.getLogger(__name__)
 
@@ -694,7 +695,7 @@ class NtinService:
             self.session.add(settings)
 
         if "kaspi_api_key" in data:
-            settings.kaspi_api_key = data["kaspi_api_key"]
+            settings.kaspi_api_key = encrypt_secret(data["kaspi_api_key"])
         if "kaspi_merchant_id" in data:
             settings.kaspi_merchant_id = data["kaspi_merchant_id"]
         if "kaspi_shop_name" in data:
