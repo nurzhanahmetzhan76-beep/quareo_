@@ -701,7 +701,7 @@ class NtinService:
         if "kaspi_shop_name" in data:
             settings.kaspi_shop_name = data["kaspi_shop_name"]
         if "nkt_api_key" in data:
-            settings.nkt_api_key = data["nkt_api_key"]
+            settings.nkt_api_key = encrypt_secret(data["nkt_api_key"])
 
         await self.session.flush()
         logger.info("Saved seller settings for user %s", user_id)
