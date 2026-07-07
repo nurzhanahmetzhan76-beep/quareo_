@@ -21,6 +21,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from retailpool.models.ntin import NtinProduct, NtinSubmission, NtinStatus, UserSellerSettings
+from retailpool.services.crypto import encrypt_secret, decrypt_secret
 
 logger = logging.getLogger(__name__)
 
@@ -384,11 +385,11 @@ class NtinService:
         """Get NKT API key: user-level first, then platform-level from .env."""
         user_settings = await self.get_settings(user_id)
         if user_settings and user_settings.nkt_api_key:
-            return user_settings.nkt_api_key
+            return decrypt_secret(user_settings.nkt_api_key)
         # Fallback to platform-level key from .env
         from retailpool.config import settings as app_settings
         return getattr(app_settings, "NKT_API_KEY", None) or None
-
+      
     def _build_nkt_headers(self, api_key: str) -> dict[str, str]:
         """Build headers for НКТ API requests."""
         return {
@@ -752,13 +753,13 @@ class NtinService:
             self.session.add(settings)
 
         if "kaspi_api_key" in data:
-            settings.kaspi_api_key = data["kaspi_api_key"]
+            settings.kaspi_api_key = encrypt_secret(data["kaspi_api_key"])
         if "kaspi_merchant_id" in data:
             settings.kaspi_merchant_id = data["kaspi_merchant_id"]
         if "kaspi_shop_name" in data:
             settings.kaspi_shop_name = data["kaspi_shop_name"]
         if "nkt_api_key" in data:
-            settings.nkt_api_key = data["nkt_api_key"]
+            settings.nkt_api_key = encrypt_secret(data["nkt_api_key"])
 
         await self.session.flush()
         logger.info("Saved seller settings for user %s", user_id)

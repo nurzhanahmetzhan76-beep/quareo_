@@ -15,7 +15,7 @@ class UserRegister(BaseModel):
 
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(
-        ..., min_length=6, max_length=128,
+        ..., min_length=8, max_length=128,
         description="Plain-text password (will be hashed)"
     )
     full_name: str = Field(

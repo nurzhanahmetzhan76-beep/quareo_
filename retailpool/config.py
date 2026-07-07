@@ -68,6 +68,10 @@ class Settings(BaseSettings):
         default="change-me-in-production",
         description="Static API key for service-to-service auth (MVP).",
     )
+    ENCRYPTION_KEY: str = Field(
+        default="",
+        description="Fernet key для шифрования пользовательских API-ключей в БД.",
+    )
 
     # ── JWT Authentication ────────────────────────────────────────────────
     JWT_SECRET: str = Field(
