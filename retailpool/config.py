@@ -114,6 +114,10 @@ class Settings(BaseSettings):
         default="",
         description="Public HTTPS URL for Telegram webhook (production only).",
     )
+    ADMIN_CHAT_ID: str = Field(
+        default="",
+        description="Telegram Chat ID of the admin for hot niche notifications.",
+    )
     BOT_API_BASE_URL: str = Field(
         default="http://localhost:8000",
         description="Base URL of the FastAPI backend for bot API calls.",

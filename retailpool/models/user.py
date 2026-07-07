@@ -44,6 +44,10 @@ class User(Base):
         String(32), default="free",
         comment="Subscription plan: free / start / business / unlimited"
     )
+    telegram_id: Mapped[int | None] = mapped_column(
+        Integer, unique=True, index=True, nullable=True,
+        comment="Linked Telegram Chat ID for VIP notifications"
+    )
     scans_used: Mapped[int] = mapped_column(
         Integer, default=0
     )

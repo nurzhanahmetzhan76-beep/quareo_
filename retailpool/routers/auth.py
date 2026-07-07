@@ -26,6 +26,11 @@ from retailpool.models.user import User
 from retailpool.schemas.auth import (
     UserRegister, UserLogin, TokenResponse, UserOut,
 )
+from pydantic import BaseModel
+
+class TelegramLinkRequest(BaseModel):
+    telegram_id: int
+
 from retailpool.services.auth_service import (
     hash_password, verify_password, create_access_token, get_current_user,
 )
@@ -124,3 +129,18 @@ async def get_me(
 ) -> UserOut:
     """Return the profile of the currently authenticated user."""
     return UserOut.model_validate(current_user)
+
+
+@router.post(
+    "/telegram-link",
+    summary="Link Telegram Chat ID to the current user",
+)
+async def link_telegram(
+    data: TelegramLinkRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Link user's Telegram ID for VIP notifications."""
+    current_user.telegram_id = data.telegram_id
+    await db.commit()
+    return {"status": "ok", "telegram_id": data.telegram_id}

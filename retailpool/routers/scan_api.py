@@ -78,6 +78,50 @@ def _format_price(price: float) -> str:
     """Format price in tenge."""
     return f"{int(price):,} ₸".replace(",", " ")
 
+async def _send_vip_notifications(query: str, score: int, avg_price: float, seller_count: int, products: list[dict], vip_chat_ids: list[int], user_email: str) -> None:
+    """Send a Telegram notification to all VIP users when a hot niche is scanned."""
+    import httpx
+    
+    if not settings.TELEGRAM_BOT_TOKEN:
+        return
+        
+    chat_ids = set(vip_chat_ids)
+    if settings.ADMIN_CHAT_ID and settings.ADMIN_CHAT_ID.isdigit():
+        chat_ids.add(int(settings.ADMIN_CHAT_ID))
+        
+    if not chat_ids:
+        return
+        
+    text = (
+        f"💎 <b>VIP-Радар: Найдена горячая ниша!</b>\n\n"
+        f"👤 Нашел: <b>{user_email}</b>\n"
+        f"🔍 Запрос: <b>{query}</b>\n"
+        f"📊 Перспектива: <b>{score}/100</b>\n"
+        f"💰 Ср. цена: <b>{_format_price(avg_price)}</b>\n"
+        f"🏪 Продавцов: <b>{seller_count}</b>\n\n"
+        f"📦 Топ товары:\n"
+    )
+    for i, p in enumerate(products[:3], 1):
+        url = p.get('url', '')
+        title = p.get('title', 'Товар')[:40]
+        text += f"{i}. <a href='{url}'>{title}...</a>\n"
+        
+    url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage"
+    
+    async with httpx.AsyncClient() as client:
+        for chat_id in chat_ids:
+            payload = {
+                "chat_id": chat_id,
+                "text": text,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True
+            }
+            try:
+                await client.post(url, json=payload, timeout=5.0)
+            except Exception as e:
+                logger.error(f"Failed to send VIP notification to {chat_id}: {e}")
+
+
 
 def _compute_score(
     vulnerability_ratio: float,
@@ -208,9 +252,9 @@ def _generate_recommendations(
             margin_high = int(avg_price * 0.85)
             recs.append(f"Средняя цена в нише {_format_price(avg_price)}. Целевая закупочная цена: {_format_price(margin_low)}–{_format_price(margin_high)} для маржи 15-40%.")
 
-        if score >= 60:
-            recs.append("Ниша перспективная — рекомендуем войти через совместную закупку в пуле RetailPool для снижения рисков.")
-        else:
+        if score > 70:
+            recs.append("Ниша перспективная — рекомендуем войти через совместную закупку в пуле Quareo для снижения рисков.")
+        elif score < 40:
             recs.append("Перед входом в нишу проведите более глубокий анализ спроса через Kaspi аналитику и проверьте сезонность.")
     else:
         if vulnerability_ratio > 0.5:
@@ -227,9 +271,9 @@ def _generate_recommendations(
             margin_high = int(avg_price * 0.85)
             recs.append(f"Average niche price {_format_price(avg_price)}. Target purchase price: {_format_price(margin_low)}–{_format_price(margin_high)} for 15-40% margin.")
 
-        if score >= 60:
-            recs.append("Promising niche — consider entering via a RetailPool co-buying pool to reduce risk.")
-        else:
+        if score > 70:
+            recs.append("Promising niche — consider entering via a Quareo co-buying pool to reduce risk.")
+        elif score < 40:
             recs.append("Before entering, conduct deeper demand analysis via Kaspi analytics and check seasonality.")
 
     return recs[:4]
@@ -497,6 +541,28 @@ async def scan_niche(
 
         # Compute final score
         score = _compute_score(vulnerability_ratio, 0, avg_reviews, seller_count)
+
+        # Notify VIPs if score >= 75
+        if score >= 75:
+            import asyncio
+            from sqlalchemy import select
+            from retailpool.models.user import User
+            
+            user_email = current_user.email if current_user else "Неизвестный пользователь"
+            
+            stmt = select(User.telegram_id).where(User.plan == "unlimited", User.telegram_id.is_not(None))
+            result = await db.execute(stmt)
+            vip_chat_ids = list(result.scalars().all())
+            
+            asyncio.create_task(_send_vip_notifications(
+                query=query,
+                score=score,
+                avg_price=avg_price,
+                seller_count=seller_count,
+                products=products_data,
+                vip_chat_ids=vip_chat_ids,
+                user_email=user_email
+            ))
 
         response = ScanResponse(
             success=True,

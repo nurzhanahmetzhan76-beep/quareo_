@@ -47,6 +47,10 @@ from retailpool.bot.handlers.alerts import (
     alert_callback,
     alert_text_input,
 )
+from retailpool.bot.handlers.auth import (
+    login_command,
+    auth_middleware,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +62,7 @@ BOT_COMMANDS = [
     BotCommand("track", "Подписаться на алерт по нише"),
     BotCommand("alerts", "Мои активные подписки"),
     BotCommand("untrack", "Отписаться от алерта"),
+    BotCommand("login", "Авторизация в боте"),
     BotCommand("help", "Справка по командам"),
 ]
 
@@ -75,12 +80,20 @@ def create_application() -> Application:
             "Please add it to your .env file."
         )
 
-    builder = Application.builder().token(bot_settings.BOT_TOKEN)
+    from telegram.ext import PicklePersistence, TypeHandler
+    persistence = PicklePersistence(filepath="retailpool_bot_data.pickle")
+
+    builder = Application.builder().token(bot_settings.BOT_TOKEN).persistence(persistence)
     app = builder.build()
+
+    # ── Register Auth Middleware ─────────────────────────────────────────
+    # Runs before all other handlers (group=-1) and stops execution if not authorized
+    app.add_handler(TypeHandler(Update, auth_middleware), group=-1)
 
     # ── Register command handlers ────────────────────────────────────────
     app.add_handler(CommandHandler("start", start_handler))
     app.add_handler(CommandHandler("help", help_handler))
+    app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("pools", pools_command))
     app.add_handler(CommandHandler("scan", scan_command))
     app.add_handler(CommandHandler("track", track_command))

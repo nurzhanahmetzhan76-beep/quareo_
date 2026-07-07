@@ -1,5 +1,5 @@
 """
-RetailPool AI — Telegram Bot Entry Point.
+Quareo — Telegram Bot Entry Point.
 
 Usage:
     # Polling mode (development — no public URL needed)
@@ -26,7 +26,7 @@ logger = logging.getLogger("retailpool.bot")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RetailPool AI Telegram Bot")
+    parser = argparse.ArgumentParser(description="Quareo Telegram Bot")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "--polling",
