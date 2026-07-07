@@ -16,10 +16,11 @@ import logging
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from retailpool.database import async_session_factory
+from retailpool.database import async_session_factory, get_db
 from retailpool.services.ntin_service import NtinService
 from retailpool.models.ntin import NtinStatus
 from retailpool.models.user import User
@@ -45,6 +46,7 @@ class NtinProductCreate(BaseModel):
     weight_kg: float | None = None
     price: float | None = None
     image_url: str | None = None
+    oktru_code: str | None = None
 
 
 class NtinProductResponse(BaseModel):
@@ -207,7 +209,8 @@ async def create_product(data: NtinProductCreate, current_user: User = Depends(g
                     "business": 100,
                     "unlimited": 200
                 }
-                limit = plan_limits.get(current_user.plan.lower(), 0)
+                user_plan = current_user.plan or "free"
+                limit = plan_limits.get(user_plan.lower(), 0)
                 if stats["total"] >= limit:
                     raise HTTPException(status_code=403, detail="Лимит NTIN регистраций исчерпан. Пожалуйста, обновите тариф.")
                     
@@ -285,14 +288,89 @@ async def check_product_status(product_id: str, current_user: User = Depends(get
             return _product_to_response(product)
 
 
-@router.post("/sync")
-async def sync_nkt_requests(current_user: User = Depends(get_current_user)):
-    """Sync statuses of all submitted products from НКТ."""
-    async with async_session_factory() as session:
-        async with session.begin():
-            svc = NtinService(session)
-            result = await svc.sync_nkt_requests(current_user.id)
-            return result
+@router.post("/requests/sync")
+async def sync_requests(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Sync statuses of all active requests from НКТ."""
+    svc = NtinService(db)
+    result = await svc.sync_nkt_requests(current_user.id)
+    return {"status": "ok", "synced": result}
+
+
+@router.get("/oktru/search")
+async def search_oktru(
+    q: str = Query(..., min_length=2, description="Поисковый запрос (например: копилка)"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Поиск кодов ОКТРУ напрямую через API НКТ."""
+    svc = NtinService(db)
+    api_key = await svc._get_nkt_api_key(current_user.id)
+    if not api_key or api_key == "test_api_key_12345":
+        raise HTTPException(
+            status_code=400,
+            detail="Для поиска ОКТРУ необходимо указать реальный API-ключ НКТ в настройках."
+        )
+
+    import httpx
+    import urllib.parse
+    base_url = "https://nationalcatalog.kz/gwp"
+    headers = {"X-API-KEY": api_key, "Accept": "application/json"}
+    url = f"{base_url}/portal/api/v1/dictionaries/OKTRU/items?page=1&size=100&search={urllib.parse.quote(q)}"
+    root_word = q.lower()[:5] if len(q) > 5 else q.lower()
+    
+    def score_item(item):
+        name_ru = str(item.get("nameRu", "")).lower()
+        if q.lower() in name_ru:
+            return 2
+        if root_word in name_ru:
+            return 1
+        return 0
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(url, headers=headers)
+            if resp.status_code == 200:
+                data = resp.json()
+                items = data.get("content", [])
+                level4_items = [i for i in items if i.get("code") and str(i.get("code")).count("-") == 3]
+                level4_items.sort(key=lambda x: score_item(x), reverse=True)
+                display_items = level4_items if level4_items else items
+                results = [{"code": item.get("code"), "name": item.get("nameRu", "")} for item in display_items[:20]]
+            elif resp.status_code == 429:
+                results = [] # Rate limit, rely entirely on local DB
+            elif resp.status_code == 401:
+                raise HTTPException(status_code=401, detail="API-ключ НКТ недействителен.")
+            else:
+                results = []
+    except Exception:
+        results = []
+
+    # Fetch from local OKTRU dictionary
+    from sqlalchemy import select
+    from retailpool.models.ntin import OktruDictionary
+    local_results = await db.execute(select(OktruDictionary).where(OktruDictionary.search_vector.like(f"%{root_word}%")).limit(20))
+    local_codes = local_results.scalars().all()
+    
+    added_codes = {r["code"] for r in results}
+    
+    for c in reversed(local_codes):
+        if c.code not in added_codes:
+            results.insert(0, {"code": c.code, "name": f"🗃️ БАЗА: {c.name_ru}"})
+            added_codes.add(c.code)
+            
+    # INJECT KNOWN CODES
+    from retailpool.services.ntin_service import _fuzzy_match_tn_ved
+    db_matches = _fuzzy_match_tn_ved(q)
+    for match in reversed(db_matches):
+        if match.get("oktru_code") and match["oktru_code"] != "1106-0001-0001-100011943":
+            if match["oktru_code"] not in added_codes:
+                results.insert(0, {"code": match["oktru_code"], "name": f"✨ НАЙДЕНО ИИ: {match['name']}"})
+                added_codes.add(match["oktru_code"])
+            
+    if not results:
+        return {"results": [{"code": "", "name": "❌ НКТ временно недоступен (Лимит запросов), а в базе товар еще не найден."}]}
+        
+    return {"results": results}
 
 
 @router.post("/bulk-import", response_model=list[NtinProductResponse])

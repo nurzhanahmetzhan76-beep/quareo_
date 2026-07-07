@@ -480,12 +480,18 @@
                 <input class="form-input" id="weight" type="number" step="0.1" placeholder="1.2">
               </div>
             </div>
-            <div class="form-group" style="margin-top:1rem">
-              <label class="form-label">Код ОКТРУ <span style="color:var(--red)">*</span></label>
-              <input class="form-input" id="oktruCode" placeholder="Например: 1106-0001-0001-100011943"
-                style="font-family:var(--font-mono,monospace)">
-              <div style="font-size:12px;color:var(--text-3);margin-top:4px">Обязателен для создания заявки в НКТ. Вы
-                можете найти его в личном кабинете nationalcatalog.kz.</div>
+            <div class="form-group" style="margin-top:1rem; position: relative;">
+              <label class="form-label">Код ОКТРУ <span style="color:var(--text-3); font-weight:normal; font-size:12px">(Опционально. ИИ может найти его сам)</span></label>
+              <div style="display: flex; gap: 8px;">
+                <input class="form-input" id="oktruSearch" placeholder="Поиск по названию (напр. копилка)..." style="flex: 1;">
+                <button class="btn-secondary" onclick="searchOktru()" id="btnSearchOktru">Поиск</button>
+              </div>
+              <input class="form-input" id="oktruCode" placeholder="Например: 1074-0004-0003-100085768"
+                style="font-family:var(--font-mono,monospace); margin-top: 8px;">
+              <div id="oktruDropdown" style="display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <!-- Search results will appear here -->
+              </div>
+              <div style="font-size:12px;color:var(--text-3);margin-top:4px">Оставьте пустым, и наш ИИ сам найдет правильный код при заполнении карточки!</div>
             </div>
             <div style="display:flex;gap:12px;margin-top:1.5rem">
               <button class="btn-primary" onclick="createAndAiFill()"
@@ -626,12 +632,60 @@
       };
     }
 
-    function showMsg(id, msg, isErr) {
-      const el = document.getElementById(id);
-      el.textContent = msg; el.classList.add('visible');
-      if (!isErr) el.className = 'form-success visible';
-      else el.className = 'form-error visible';
-      setTimeout(() => el.classList.remove('visible'), 5000);
+    function showMsg(id, txt, isErr = false) {
+      const e = document.getElementById(id);
+      e.style.display = 'block'; e.style.color = isErr ? 'var(--red)' : 'var(--green)';
+      e.innerText = txt;
+      setTimeout(() => e.style.display = 'none', 4000);
+    }
+
+    async function searchOktru() {
+      const q = document.getElementById('oktruSearch').value.trim();
+      if (!q || q.length < 2) {
+        alert('Введите хотя бы 2 символа для поиска');
+        return;
+      }
+      const btn = document.getElementById('btnSearchOktru');
+      btn.disabled = true;
+      btn.innerText = '...';
+      const dropdown = document.getElementById('oktruDropdown');
+      dropdown.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-3)">Загрузка...</div>';
+      dropdown.style.display = 'block';
+      
+      try {
+        const r = await fetch(API + '/api/ntin/oktru/search?q=' + encodeURIComponent(q), { headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'HTTP ' + r.status);
+        }
+        const data = await r.json();
+        const results = data.results || [];
+        
+        if (results.length === 0) {
+          dropdown.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-3)">Ничего не найдено</div>';
+          setTimeout(() => dropdown.style.display = 'none', 3000);
+        } else {
+          let html = '';
+          results.forEach(item => {
+            html += `<div style="padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;" onmouseover="this.style.background='var(--bg-2)'" onmouseout="this.style.background=''" onclick="selectOktru('${item.code}')">
+              <strong style="color:var(--text)">${item.code}</strong><br>
+              <span style="font-size:12px;color:var(--text-3)">${item.name}</span>
+            </div>`;
+          });
+          dropdown.innerHTML = html;
+        }
+      } catch (e) {
+        dropdown.innerHTML = `<div style="padding:12px;color:var(--red)">${e.message}</div>`;
+        setTimeout(() => dropdown.style.display = 'none', 5000);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Поиск';
+      }
+    }
+
+    function selectOktru(code) {
+      document.getElementById('oktruCode').value = code;
+      document.getElementById('oktruDropdown').style.display = 'none';
     }
 
     async function createDraft() {

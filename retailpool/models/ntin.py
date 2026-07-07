@@ -233,3 +233,25 @@ class UserSellerSettings(Base):
 
     def __repr__(self) -> str:
         return f"<UserSellerSettings user={self.user_id}>"
+
+class OktruDictionary(Base):
+    """Local cache/copy of the НКТ OKTRU dictionary for instantaneous offline search.
+    
+    Populated by a sync script downloading from NKT API.
+    """
+
+    __tablename__ = "oktru_dictionary"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    code: Mapped[str] = mapped_column(
+        String(64), unique=True, index=True,
+        comment="OKTRU code, e.g. 1074-0004-0003-100085768"
+    )
+    name_ru: Mapped[str] = mapped_column(Text, index=True)
+    name_kz: Mapped[str | None] = mapped_column(Text, nullable=True)
+    level: Mapped[int] = mapped_column(Integer, index=True)
+    
+    # Pre-calculated root or tokens for fast search
+    search_vector: Mapped[str | None] = mapped_column(Text, nullable=True, index=True)
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)

@@ -340,7 +340,7 @@ async def scan_niche(
                 "business": 200,
                 "unlimited": 999999
             }
-            user_plan = current_user.plan.lower()
+            user_plan = (current_user.plan or "free").lower()
             limit = plan_limits.get(user_plan, 0)
 
             if user_plan == "free" or user_plan not in plan_limits:
