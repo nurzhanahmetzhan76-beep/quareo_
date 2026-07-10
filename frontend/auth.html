@@ -246,8 +246,15 @@ async function handleRegister() {
     });
     
     const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Registration failed');
-    
+    if (!res.ok) {
+      let msg = data.detail;
+      if (Array.isArray(msg)) {
+        msg = msg.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
+      } else if (typeof msg === 'object') {
+        msg = JSON.stringify(msg);
+      }
+      throw new Error(msg || 'Registration failed');
+    }
     sucBox.textContent = t.reg_ok;
     sucBox.classList.add('visible');
     

@@ -149,38 +149,163 @@
     </div>
   </section>
 
-  <section style="padding-top:1rem; padding-bottom: 2rem;">
-    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
-      <!-- Create Pool Card -->
-      <div class="pool-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3rem 2.5rem; border: 2px dashed var(--brand-mid); background: var(--brand-light);">
-        <div style="font-size: 3.5rem; margin-bottom: 1.25rem;">🚀</div>
-        <h3 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--text);" data-i="pool_create_card_title">Создать новый пул</h3>
-        <p style="color: var(--text-2); font-size: 15px; margin-bottom: 2.5rem; line-height: 1.6;" data-i="pool_create_card_desc">Инициируйте совместную закупку, установите целевую сумму и пригласите других селлеров.</p>
-        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-bottom: 2rem;">
-          <input type="text" id="createProductName" placeholder="Название товара" class="form-input">
-          <input type="text" id="createSupplierName" placeholder="Продавец / Поставщик" class="form-input">
-          <input type="number" id="createQty" placeholder="Целевое кол-во (шт)" value="500" class="form-input">
-          <input type="number" id="createAmt" placeholder="Целевая сумма (₸)" value="2500000" class="form-input">
+  <!-- HOW IT WORKS STEPPER -->
+  <section style="padding-top:0; padding-bottom:2rem;">
+    <div class="container">
+      <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:1.5rem;color:var(--text);">Как это работает?</h2>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
+        <div style="text-align:center;padding:1.5rem 1rem;background:var(--brand-light);border:1px solid var(--brand-mid);border-radius:var(--radius-lg);">
+          <div style="width:40px;height:40px;margin:0 auto 12px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-mono);">1</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Создание</div>
+          <div style="font-size:12px;color:var(--text-2);">Вставьте ссылку на товар с 1688/Alibaba</div>
         </div>
-        <button class="btn-primary" onclick="createPool()" id="btnCreatePool" style="padding: 14px 32px; font-size: 15px;" data-i="pool_create_btn">Создать пул</button>
-        <div id="createPoolResult" style="margin-top: 1.5rem; font-family: var(--font-mono); font-size: 13px; color: var(--brand); font-weight: 600; word-break: break-all;"></div>
-      </div>
-
-      <!-- Search Pool Card -->
-      <div class="pool-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3rem 2.5rem; background: var(--bg); box-shadow: var(--shadow-sm);">
-        <div style="font-size: 3.5rem; margin-bottom: 1.25rem;">🔍</div>
-        <h3 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--text);" data-i="pool_search_card_title">Найти пул по ID</h3>
-        <p style="color: var(--text-2); font-size: 15px; margin-bottom: 2rem; line-height: 1.6;" data-i="pool_search_card_desc">У вас есть код приглашения или ID пула? Введите его ниже, чтобы присоединиться к закупке.</p>
-        <div style="display: flex; gap: 12px; width: 100%; max-width: 340px;">
-          <input type="text" id="searchPoolId" placeholder="ID-xxxx" class="form-input" style="flex: 1;">
-          <button class="btn-secondary" id="btnSearchPool" onclick="searchPool()" style="padding: 14px 24px;" data-i="pool_search_btn">Найти</button>
+        <div style="text-align:center;padding:1.5rem 1rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);">
+          <div style="width:40px;height:40px;margin:0 auto 12px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-mono);">2</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Сбор участников</div>
+          <div style="font-size:12px;color:var(--text-2);">Селлеры вносят взносы до 100%</div>
         </div>
-        <div id="searchPoolResult" style="margin-top: 2rem; width: 100%; text-align: left; display: none;">
-          <!-- Pool info will be injected here -->
+        <div style="text-align:center;padding:1.5rem 1rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);">
+          <div style="width:40px;height:40px;margin:0 auto 12px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-mono);">3</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Закупка</div>
+          <div style="font-size:12px;color:var(--text-2);">Оплата поставщику + карго из Китая</div>
+        </div>
+        <div style="text-align:center;padding:1.5rem 1rem;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);">
+          <div style="width:40px;height:40px;margin:0 auto 12px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-mono);">4</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Сплит-логистика</div>
+          <div style="font-size:12px;color:var(--text-2);">Товар дробится по участникам в их города</div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- SHOWCASE -->
+  <section style="padding-top:1rem; padding-bottom: 2rem;">
+    <div class="container">
+      <div style="display: flex; gap: 10px; margin-bottom: 2rem;">
+        <button class="btn-primary" style="padding: 12px 24px;" onclick="document.getElementById('createModal').style.display='flex'">+ Создать закупку</button>
+        <button class="btn-secondary" style="padding: 12px 24px;" onclick="document.getElementById('searchModal').style.display='flex'">🔍 Найти по ID</button>
+      </div>
+      
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text);">Витрина: Открытые пулы</h2>
+      
+      <div class="pools-grid" id="poolsShowcase" style="margin-top: 0;">
+        <!-- Card 1 -->
+        <div class="pool-card">
+          <div style="height:180px;background:linear-gradient(135deg,#667eea33,#764ba233),url('https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=400&q=80') center/cover;border-radius:var(--radius) var(--radius) 0 0;margin:-2rem -2rem 1.5rem -2rem;position:relative;">
+            <span style="position:absolute;top:12px;right:12px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;font-family:var(--font-mono);">⏱ 2д 14ч</span>
+          </div>
+          <div class="pool-card-head">
+            <h3 class="pool-card-title">Умные часы Smart Watch 8 (Опт)</h3>
+            <span class="pool-status-pill open">Сбор</span>
+          </div>
+          <a href="https://detail.1688.com" target="_blank" style="display:inline-block;font-size:12px;color:var(--brand);font-weight:600;margin-bottom:12px;font-family:var(--font-mono);">🔗 1688.com · Shenzhen Electronics</a>
+          <div class="progress-track"><div class="progress-fill" style="width: 65%;"></div></div>
+          <div class="progress-label"><span>Собрано: <strong>1 300 000 ₸</strong></span><span>Из 2 000 000 ₸</span></div>
+          <div class="pool-participants">
+            <div class="avatar-stack"><span>АК</span><span>ДМ</span><span>ИЛ</span><span>+3</span></div>
+            <span>6 участников</span>
+          </div>
+          <button class="btn-primary btn-block" style="padding:12px;" onclick="openJoinModal('mock-1', 'Умные часы Smart Watch 8')">Внести взнос</button>
+        </div>
+        <!-- Card 2 -->
+        <div class="pool-card">
+          <div style="height:180px;background:linear-gradient(135deg,#f093fb33,#f5576c33),url('https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=400&q=80') center/cover;border-radius:var(--radius) var(--radius) 0 0;margin:-2rem -2rem 1.5rem -2rem;position:relative;">
+            <span style="position:absolute;top:12px;right:12px;background:var(--amber);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;font-family:var(--font-mono);">⏱ 5д 8ч</span>
+          </div>
+          <div class="pool-card-head">
+            <h3 class="pool-card-title">Беспроводные наушники TWS Pro Max</h3>
+            <span class="pool-status-pill open">Сбор</span>
+          </div>
+          <a href="https://alibaba.com" target="_blank" style="display:inline-block;font-size:12px;color:var(--brand);font-weight:600;margin-bottom:12px;font-family:var(--font-mono);">🔗 Alibaba · Guangzhou Audio Co.</a>
+          <div class="progress-track"><div class="progress-fill" style="width: 20%;"></div></div>
+          <div class="progress-label"><span>Собрано: <strong>300 000 ₸</strong></span><span>Из 1 500 000 ₸</span></div>
+          <div class="pool-participants">
+            <div class="avatar-stack"><span>НА</span><span>КБ</span></div>
+            <span>2 участника</span>
+          </div>
+          <button class="btn-primary btn-block" style="padding:12px;" onclick="openJoinModal('mock-2', 'Беспроводные наушники TWS Pro Max')">Внести взнос</button>
+        </div>
+        <!-- Card 3 -->
+        <div class="pool-card" style="border-color:var(--green);background:var(--green-bg);">
+          <div style="height:180px;background:linear-gradient(135deg,#11998e33,#38ef7d33),url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80') center/cover;border-radius:var(--radius) var(--radius) 0 0;margin:-2rem -2rem 1.5rem -2rem;position:relative;">
+            <span style="position:absolute;top:12px;right:12px;background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;font-family:var(--font-mono);">✓ Собран</span>
+          </div>
+          <div class="pool-card-head">
+            <h3 class="pool-card-title">Портативная колонка BT-500</h3>
+            <span class="pool-status-pill closed">Закупка</span>
+          </div>
+          <a href="https://1688.com" target="_blank" style="display:inline-block;font-size:12px;color:var(--green-text);font-weight:600;margin-bottom:12px;font-family:var(--font-mono);">🔗 1688.com · Dongguan Sound</a>
+          <div class="progress-track" style="border-color:var(--green);"><div class="progress-fill" style="width:100%;background:var(--green);"></div></div>
+          <div class="progress-label"><span>Собрано: <strong style="color:var(--green-text);">800 000 ₸</strong></span><span>Из 800 000 ₸</span></div>
+          <div class="pool-participants">
+            <div class="avatar-stack"><span style="background:var(--green-bg);color:var(--green-text);">МТ</span><span style="background:var(--green-bg);color:var(--green-text);">ЕК</span><span style="background:var(--green-bg);color:var(--green-text);">АС</span><span style="background:var(--green-bg);color:var(--green-text);">ДЖ</span><span style="background:var(--green-bg);color:var(--green-text);">+4</span></div>
+            <span>8 участников</span>
+          </div>
+          <button class="btn-primary btn-block" style="padding:12px;background:var(--green);border-color:var(--green);" disabled>Закупка организуется</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modals -->
+  <div id="createModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:9999;">
+    <div style="background:var(--bg); padding:2.5rem; border-radius:var(--radius-xl); width:100%; max-width:500px; box-shadow:var(--shadow-lg);">
+      <h3 style="font-family:var(--font-display); font-size:1.6rem; margin-bottom:0.5rem;">Новый пул (Модель 1)</h3>
+      <p style="color:var(--text-2); font-size:14px; margin-bottom:1.5rem;">Закупка по прямой ссылке с маркетплейсов</p>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <label style="font-size:13px; font-weight:600; color:var(--text-2);">Прямая ссылка на товар (1688, Taobao, Kaspi)</label>
+        <input type="url" id="createUrl" placeholder="https://detail.1688.com/offer/..." class="form-input">
+        
+        <label style="font-size:13px; font-weight:600; color:var(--text-2); margin-top:4px;">Название товара</label>
+        <input type="text" id="createProductName" placeholder="Например: Умные часы" class="form-input">
+        
+        <label style="font-size:13px; font-weight:600; color:var(--text-2); margin-top:4px;">Целевая сумма (₸)</label>
+        <input type="number" id="createAmt" placeholder="2500000" class="form-input">
+      </div>
+      <div style="display:flex; gap:12px; margin-top:2.5rem;">
+        <button class="btn-primary" style="flex:1; padding:12px;" onclick="createPool()" id="btnCreatePool">Создать пул</button>
+        <button class="btn-secondary" style="padding:12px 20px;" onclick="document.getElementById('createModal').style.display='none'">Отмена</button>
+      </div>
+      <div id="createPoolResult" style="margin-top: 1rem; font-size: 13px; color: var(--brand);"></div>
+    </div>
+  </div>
+
+  <div id="searchModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:9999;">
+    <div style="background:var(--bg); padding:2.5rem; border-radius:var(--radius-xl); width:100%; max-width:400px;">
+      <h3 style="font-family:var(--font-display); font-size:1.6rem; margin-bottom:1.5rem;">Найти пул по ID</h3>
+      <input type="text" id="searchPoolId" placeholder="ID пула..." class="form-input" style="width:100%; margin-bottom:1.5rem;">
+      <button class="btn-primary btn-block" style="padding:12px;" id="btnSearchPool" onclick="searchPool()">Найти</button>
+      <button class="btn-secondary btn-block" style="margin-top:12px; padding:12px;" onclick="document.getElementById('searchModal').style.display='none'">Закрыть</button>
+      <div id="searchPoolResult" style="margin-top:1.5rem; display:none;"></div>
+    </div>
+  </div>
+
+  <div id="joinModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:9999;">
+    <div style="background:var(--bg); padding:2.5rem; border-radius:var(--radius-xl); width:100%; max-width:440px;">
+      <h3 style="font-family:var(--font-display); font-size:1.6rem; margin-bottom:0.5rem;">Внести взнос</h3>
+      <p id="joinModalTitle" style="color:var(--text-2); margin-bottom:1.5rem; font-size:14px;"></p>
+      
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <label style="font-size:13px; font-weight:600; color:var(--text-2);">Количество товара (шт)</label>
+        <input type="number" id="joinQty" placeholder="100" class="form-input">
+        
+        <label style="font-size:13px; font-weight:600; color:var(--text-2); margin-top:4px;">Сумма взноса (₸)</label>
+        <input type="number" id="joinAmt" placeholder="500000" class="form-input">
+
+        <label style="font-size:13px; font-weight:600; color:var(--text-2); margin-top:4px;">Регион доставки (Сплит-логистика)</label>
+        <select id="joinCity" class="form-input" style="background:var(--bg-2);">
+          <option>Алматы (Самовывоз с центр. склада)</option>
+          <option>Астана (СДЭК до двери)</option>
+          <option>Шымкент (Казпочта)</option>
+          <option>Другой регион (уточнит менеджер)</option>
+        </select>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:2.5rem;">
+        <button class="btn-primary" style="flex:1; padding:12px;" onclick="submitJoinPool()">Оплатить взнос</button>
+        <button class="btn-secondary" style="padding:12px 20px;" onclick="document.getElementById('joinModal').style.display='none'">Отмена</button>
+      </div>
+    </div>
+  </div>
 
   <section style="padding-top:2rem">
     <div class="container">
@@ -334,10 +459,10 @@ async function createPool() {
   btn.disabled = true;
   btn.textContent = 'Создание...';
   
-  const qty = parseInt(document.getElementById('createQty').value) || 500;
   const amt = parseFloat(document.getElementById('createAmt').value) || 2500000;
-  const prodName = document.getElementById('createProductName').value.trim() || 'Неизвестный товар';
-  const supName = document.getElementById('createSupplierName').value.trim() || 'Неизвестный продавец';
+  const qty = 500;
+  const prodName = document.getElementById('createProductName').value.trim() || 'Новый товар (по ссылке)';
+  const supName = document.getElementById('createUrl').value.trim() || 'По прямой ссылке';
   const productId = crypto.randomUUID();
 
   try {
@@ -413,11 +538,22 @@ async function searchPool() {
   }
 }
 
-async function joinPool(poolId) {
-  const amt = prompt('Введите сумму взноса в ₸:', '500000');
-  if (!amt) return;
-  const qty = prompt('Сколько единиц товара закупаете?', '100');
-  if (!qty) return;
+let currentJoinPoolId = null;
+
+function openJoinModal(poolId, title) {
+  currentJoinPoolId = poolId;
+  document.getElementById('joinModalTitle').textContent = title || 'Пул ' + poolId;
+  document.getElementById('joinQty').value = '100';
+  document.getElementById('joinAmt').value = '500000';
+  document.getElementById('joinModal').style.display = 'flex';
+}
+
+async function submitJoinPool() {
+  const poolId = currentJoinPoolId;
+  if (!poolId) return;
+  const amt = document.getElementById('joinAmt').value;
+  const qty = document.getElementById('joinQty').value;
+  const city = document.getElementById('joinCity').value;
   
   try {
     const res = await fetch(RP_API_BASE + '/pools/' + poolId + '/join', {
@@ -432,11 +568,15 @@ async function joinPool(poolId) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Join failed');
     
-    alert('Вы успешно присоединились к пулу!');
-    searchPool(); 
+    alert('Успех! Вы внесли взнос. Доставка оформлена в: ' + city);
+    document.getElementById('joinModal').style.display = 'none';
   } catch(err) {
     alert('Ошибка вступления: ' + err.message);
   }
+}
+
+function joinPool(poolId) {
+  openJoinModal(poolId, 'Вступление в пул ' + poolId);
 }
 
 function onLangChange() {

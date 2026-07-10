@@ -15,7 +15,7 @@ class UserRegister(BaseModel):
 
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(
-        ..., min_length=8, max_length=128,
+        ..., min_length=6, max_length=128,
         description="Plain-text password (will be hashed)"
     )
     full_name: str = Field(
@@ -50,14 +50,14 @@ class TokenResponse(BaseModel):
 class UserOut(BaseModel):
     """Public user profile (no password)."""
 
-    id: uuid.UUID
-    email: str
-    full_name: str
+    id: uuid.UUID | str | None = None
+    email: str | None = None
+    full_name: str | None = None
     company_name: str | None = None
     phone: str | None = None
-    plan: str
-    is_active: bool
-    created_at: datetime
+    plan: str | None = "free"
+    is_active: bool | None = True
+    created_at: datetime | str | None = None
 
     model_config = {"from_attributes": True}
 

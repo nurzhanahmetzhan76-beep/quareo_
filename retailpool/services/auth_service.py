@@ -33,11 +33,16 @@ def hash_password(plain_password: str) -> str:
     ).decode("utf-8")
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
+def verify_password(plain_password: str, hashed_password: str | None) -> bool:
     """Verify a plain-text password against its hash."""
-    return _bcrypt.checkpw(
-        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-    )
+    if not plain_password or not hashed_password:
+        return False
+    try:
+        return _bcrypt.checkpw(
+            str(plain_password).encode("utf-8"), str(hashed_password).encode("utf-8")
+        )
+    except (ValueError, TypeError):
+        return False
 
 
 def create_access_token(user_id: str, email: str) -> str:
