@@ -530,8 +530,19 @@ function renderProducts(products, t) {
 
   const badge = document.createElement('div');
   badge.style.cssText = 'text-align:center;margin-top:16px;font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--green);';
-  badge.textContent = t.badge_real + ' · ' + products.length + ' товаров с kaspi.kz';
+  badge.textContent = (t.badge_real || '📊 РЕАЛЬНЫЕ ДАННЫЕ') + ' · ' + products.length + ' товаров с kaspi.kz';
   container.appendChild(badge);
+
+  const legend = document.createElement('div');
+  legend.style.cssText = 'margin-top:20px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text-2);';
+  legend.innerHTML = RP_LANG === 'ru' ? 
+    `<strong>Как читать результаты?</strong><br>
+    <span style="color:var(--red);font-weight:600;">Красные карточки (УЯЗВИМ)</span> — это слабые конкуренты. У них мало отзывов, низкий рейтинг, нет Kaspi Доставки или слишком высокая цена. <strong>Это ваши главные цели</strong>, их легко обойти.<br>
+    <span style="color:var(--green);font-weight:600;margin-top:6px;display:inline-block;">Зеленые карточки (ОК)</span> — это сильные конкуренты с хорошими отзывами и ценами. С ними конкурировать сложнее.` :
+    `<strong>How to read the results?</strong><br>
+    <span style="color:var(--red);font-weight:600;">Red cards (VULNERABLE)</span> — these are weak competitors. They have few reviews, low ratings, no Kaspi Delivery, or overpriced. <strong>These are your main targets</strong>, easy to beat.<br>
+    <span style="color:var(--green);font-weight:600;margin-top:6px;display:inline-block;">Green cards (OK)</span> — strong competitors with good reviews and prices. Harder to compete with.`;
+  container.appendChild(legend);
 }
 </script>
 </body>

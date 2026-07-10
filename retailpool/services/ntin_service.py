@@ -309,37 +309,36 @@ class NtinService:
                 api_key = await self._get_nkt_api_key(user_id)
                 if api_key and api_key != "test_api_key_12345":
                     url = f"https://nationalcatalog.kz/gwp/portal/api/v1/dictionaries/OKTRU/items?page=1&size=100&search={urllib.parse.quote(product.title_ru)}"
-                headers = {"X-API-KEY": api_key, "Accept": "application/json"}
-                try:
-                    async with httpx.AsyncClient(timeout=10.0) as client:
-                        resp = await client.get(url, headers=headers)
-                        if resp.status_code == 200:
-                            data = resp.json()
-                            items = data.get("content", [])
-                            # Find the best 4th level code by checking if the name matches
-                            best_code = None
-                            first_valid = None
-                            
-                            for item in items:
-                                code = str(item.get("code", ""))
-                                name_ru = str(item.get("nameRu", "")).lower()
+                    headers = {"X-API-KEY": api_key, "Accept": "application/json"}
+                    try:
+                        async with httpx.AsyncClient(timeout=10.0) as client:
+                            resp = await client.get(url, headers=headers)
+                            if resp.status_code == 200:
+                                data = resp.json()
+                                items = data.get("content", [])
+                                # Find the best 4th level code by checking if the name matches
+                                best_code = None
+                                first_valid = None
                                 
-                                if code.count("-") == 3:
-                                    if not first_valid:
-                                        first_valid = code
+                                for item in items:
+                                    code = str(item.get("code", ""))
+                                    name_ru = str(item.get("nameRu", "")).lower()
                                     
-                                    # Very simple root matching (e.g. "копилк" instead of "копилка")
-                                    root_word = product.title_ru.lower()[:5] if len(product.title_ru) > 5 else product.title_ru.lower()
-                                    if root_word in name_ru:
-                                        best_code = code
-                                        break
-                            
-                            # Use best match, or fallback to first valid, or dummy
-                            product.oktru_code = best_code or first_valid
-                            if product.oktru_code:
-                                logger.info(f"AI auto-found OKTRU code {product.oktru_code} for {product.title_ru}")
-                except Exception as e:
-                    logger.warning(f"Failed to auto-fetch OKTRU code: {e}")
+                                    if code.count("-") == 3:
+                                        if not first_valid:
+                                            first_valid = code
+                                        
+                                        # Very simple root matching
+                                        if root_word in name_ru:
+                                            best_code = code
+                                            break
+                                
+                                # Use best match, or fallback to first valid, or dummy
+                                product.oktru_code = best_code or first_valid
+                                if product.oktru_code:
+                                    logger.info(f"AI auto-found OKTRU code {product.oktru_code} for {product.title_ru}")
+                    except Exception as e:
+                        logger.warning(f"Failed to auto-fetch OKTRU code: {e}")
             
             # Fallback if dynamic search fails or no key
             if not product.oktru_code or product.oktru_code == "1106-0001-0001-100011943":

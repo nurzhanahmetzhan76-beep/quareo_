@@ -141,7 +141,20 @@ class NtinStatsResponse(BaseModel):
 # Use a deterministic UUID for demo/MVP until auth is properly wired
 
 
+def _safe_iso(dt) -> str | None:
+    if not dt:
+        return None
+    if isinstance(dt, str):
+        return dt
+    try:
+        return dt.isoformat()
+    except AttributeError:
+        return str(dt)
+
 def _product_to_response(p) -> NtinProductResponse:
+    # Ensure status is a string (in case it's an Enum object)
+    status_val = p.status.value if hasattr(p.status, "value") else str(p.status)
+    
     return NtinProductResponse(
         id=str(p.id),
         title_ru=p.title_ru,
@@ -161,12 +174,12 @@ def _product_to_response(p) -> NtinProductResponse:
         weight_kg=p.weight_kg,
         price=p.price,
         image_url=p.image_url,
-        status=p.status,
+        status=status_val,
         revision_comment=p.revision_comment,
-        created_at=p.created_at.isoformat() if p.created_at else "",
-        updated_at=p.updated_at.isoformat() if p.updated_at else "",
-        submitted_at=p.submitted_at.isoformat() if p.submitted_at else None,
-        approved_at=p.approved_at.isoformat() if p.approved_at else None,
+        created_at=_safe_iso(p.created_at) or "",
+        updated_at=_safe_iso(p.updated_at) or "",
+        submitted_at=_safe_iso(p.submitted_at),
+        approved_at=_safe_iso(p.approved_at),
     )
 
 

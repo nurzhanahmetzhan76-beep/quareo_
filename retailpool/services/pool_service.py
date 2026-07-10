@@ -50,6 +50,12 @@ class PoolService:
             current_quantity=0,
             current_amount=0.0,
             status=PoolStatus.OPEN,
+            pool_type=data.pool_type,
+            source_url=data.source_url,
+            image_url=data.image_url,
+            category=data.category,
+            unit_price=data.unit_price,
+            weight_per_unit_kg=data.weight_per_unit_kg,
             expires_at=datetime.now(timezone.utc) + timedelta(hours=data.expires_in_hours),
         )
         self._db.add(pool)
@@ -76,11 +82,21 @@ class PoolService:
             if p.user_id == data.user_id:
                 raise ValueError(f"User {data.user_id} already joined pool {pool_id}")
 
+        # Prevent over-contribution
+        remaining_amount = pool.target_amount - pool.current_amount
+        if data.amount > remaining_amount > 0:
+            raise ValueError(
+                f"Contribution exceeds remaining target. "
+                f"Max allowed: {remaining_amount:.0f} ₸"
+            )
+
         participant = PoolParticipant(
             pool_id=pool_id,
             user_id=data.user_id,
             quantity=data.quantity,
             amount=data.amount,
+            delivery_city=data.delivery_city,
+            delivery_method=data.delivery_method,
         )
         self._db.add(participant)
 

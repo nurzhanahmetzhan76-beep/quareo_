@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -26,6 +27,31 @@ class PoolCreate(BaseModel):
         default=72, gt=0, le=720,
         description="Pool lifetime in hours before expiration",
     )
+    # ── New sourcing fields ───────────────────────────────────────
+    pool_type: str = Field(
+        default="link",
+        description="Pool sourcing model: 'link' (direct URL) or 'tender' (RFQ)"
+    )
+    source_url: Optional[str] = Field(
+        default=None,
+        description="Direct URL to the product on 1688 / Alibaba / Kaspi etc."
+    )
+    image_url: Optional[str] = Field(
+        default=None,
+        description="Product image URL"
+    )
+    category: Optional[str] = Field(
+        default=None,
+        description="Product category"
+    )
+    unit_price: Optional[float] = Field(
+        default=None, gt=0,
+        description="Unit price in KZT"
+    )
+    weight_per_unit_kg: Optional[float] = Field(
+        default=None, gt=0,
+        description="Approximate weight per unit in kg"
+    )
 
 
 class PoolJoin(BaseModel):
@@ -39,6 +65,15 @@ class PoolJoin(BaseModel):
     amount: float = Field(
         ..., gt=0, description="Individual contribution amount (KZT)"
     )
+    # ── New delivery fields ───────────────────────────────────────
+    delivery_city: str = Field(
+        default="Алматы",
+        description="City for last-mile delivery"
+    )
+    delivery_method: str = Field(
+        default="pickup",
+        description="Delivery method: 'pickup', 'sdek', 'kazpost'"
+    )
 
 
 class ParticipantOut(BaseModel):
@@ -48,6 +83,8 @@ class ParticipantOut(BaseModel):
     user_id: str
     quantity: int
     amount: float
+    delivery_city: Optional[str] = None
+    delivery_method: Optional[str] = None
     joined_at: datetime
 
     model_config = {"from_attributes": True}
@@ -65,6 +102,13 @@ class PoolOut(BaseModel):
     current_quantity: int
     current_amount: float
     status: str
+    pool_type: Optional[str] = "link"
+    source_url: Optional[str] = None
+    image_url: Optional[str] = None
+    category: Optional[str] = None
+    unit_price: Optional[float] = None
+    weight_per_unit_kg: Optional[float] = None
+    created_by: Optional[str] = None
     created_at: datetime
     expires_at: datetime
 

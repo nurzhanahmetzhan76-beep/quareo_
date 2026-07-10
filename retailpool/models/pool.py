@@ -14,6 +14,7 @@ from sqlalchemy import (
     Integer,
     DateTime,
     ForeignKey,
+    Text,
     Enum as SAEnum,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -35,6 +36,13 @@ class PoolStatus(str, enum.Enum):
     CANCELLED = "cancelled"
 
 
+class PoolType(str, enum.Enum):
+    """How the pool sources its product."""
+
+    LINK = "link"      # Initiator provides a direct marketplace URL
+    TENDER = "tender"  # Syndicate posts an RFQ for suppliers to bid on
+
+
 class Pool(Base):
     """A co-buying pool opened for a specific product."""
 
@@ -48,6 +56,36 @@ class Pool(Base):
     )
     product_name: Mapped[str] = mapped_column(String(255), default="")
     supplier_name: Mapped[str] = mapped_column(String(255), default="")
+
+    # ── New: sourcing fields ──────────────────────────────────────
+    pool_type: Mapped[str] = mapped_column(
+        String(20), default=PoolType.LINK.value,
+        comment="link or tender"
+    )
+    source_url: Mapped[str | None] = mapped_column(
+        Text, nullable=True,
+        comment="Direct URL to the product on 1688 / Alibaba / Kaspi etc."
+    )
+    image_url: Mapped[str | None] = mapped_column(
+        Text, nullable=True,
+        comment="Product image URL (auto-fetched or manual)"
+    )
+    category: Mapped[str | None] = mapped_column(
+        String(128), nullable=True,
+        comment="Product category for filtering"
+    )
+    unit_price: Mapped[float | None] = mapped_column(
+        Float, nullable=True,
+        comment="Unit price in KZT"
+    )
+    weight_per_unit_kg: Mapped[float | None] = mapped_column(
+        Float, nullable=True,
+        comment="Approximate weight per unit in kg (for logistics calc)"
+    )
+    created_by: Mapped[str | None] = mapped_column(
+        String(128), nullable=True,
+        comment="Email or user ID of the pool creator"
+    )
 
     # Targets for quorum
     target_quantity: Mapped[int] = mapped_column(
@@ -97,6 +135,16 @@ class PoolParticipant(Base):
     )
     quantity: Mapped[int] = mapped_column(Integer)
     amount: Mapped[float] = mapped_column(Float, comment="Individual contribution (KZT)")
+
+    # ── New: delivery info ────────────────────────────────────────
+    delivery_city: Mapped[str | None] = mapped_column(
+        String(128), nullable=True, default="Алматы",
+        comment="City for last-mile delivery"
+    )
+    delivery_method: Mapped[str | None] = mapped_column(
+        String(64), nullable=True, default="pickup",
+        comment="pickup / sdek / kazpost"
+    )
 
     joined_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
