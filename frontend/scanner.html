@@ -177,7 +177,7 @@
       <a href="index.html" data-i="nav_home">Главная</a>
       <a href="scanner.html" class="active" data-i="nav_scanner">Сканер</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
-      <a href="pools.html" data-i="nav_pools">Пулы</a>
+      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
       <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
     </div>
@@ -261,12 +261,11 @@
             
             <div class="pool-banner" style="flex-direction: column; align-items: stretch; gap: 1.5rem;">
               <div class="pool-banner-text" style="text-align: center;">
-                <strong data-i="pool_action_title">Организуйте совместную закупку</strong>
-                <span data-i="pool_action_desc" style="color: var(--text-2); font-size: 15px; display: inline-block; margin-top: 4px;">Создайте новый пул для этой ниши или найдите уже существующий.</span>
+                <strong data-i="pool_action_title">Оцените рентабельность</strong>
+                <span data-i="pool_action_desc" style="color: var(--text-2); font-size: 15px; display: inline-block; margin-top: 4px;">Используйте глубокий анализ магазина, чтобы рассчитать P&L и юнит-экономику перед закупкой.</span>
               </div>
               <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="pools.html?action=create" class="btn-primary" data-i="pool_create" style="padding:12px 26px;">➕ Создать пул</a>
-                <a href="pools.html?action=search" class="btn-secondary" data-i="pool_search" style="padding:12px 26px;">🔍 Найти пул</a>
+                <a href="analytics.html" class="btn-primary" data-i="store_scanner_btn" style="padding:12px 26px;">📊 Открыть Store Scanner</a>
               </div>
             </div>
           </div>
@@ -286,7 +285,7 @@
     <div class="footer-col">
       <div class="footer-col-title" data-i="footer_product">Продукт</div>
       <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
-      <a href="pools.html" data-i="footer_l_pools">Co-Buying пулы</a>
+      <a href="analytics.html" data-i="footer_l_analytics">Store Scanner</a>
       <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
       <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
     </div>
@@ -325,7 +324,7 @@ const PAGE_I18N = {
     score_label: "Niche Score",
     res_weak: "Слабые места конкурентов", res_reco: "Рекомендации Quareo", res_analysis: "Полный анализ",
     res_products: "Найденные товары на Kaspi.kz",
-    pool_action_title: "Организуйте совместную закупку", pool_action_desc: "Создайте новый пул для этой ниши или найдите уже существующий.", pool_create: "➕ Создать пул", pool_search: "🔍 Найти пул",
+    pool_action_title: "Оцените рентабельность", pool_action_desc: "Используйте глубокий анализ магазина, чтобы рассчитать P&L.", store_scanner_btn: "📊 Открыть Store Scanner",
     metric_demand: "Спрос", metric_sellers: "Продавцов", metric_price: "Средняя цена", metric_opp: "Потенциал",
     scan_error: "Ошибка анализа. Попробуйте снова.",
     scan_blocked: "Kaspi.kz заблокировал запрос. Подождите 30 сек и попробуйте снова.",
@@ -345,7 +344,7 @@ const PAGE_I18N = {
     score_label: "Niche Score",
     res_weak: "Competitor weaknesses", res_reco: "Quareo recommendations", res_analysis: "Full analysis",
     res_products: "Products found on Kaspi.kz",
-    pool_action_title: "Organize a co-buying pool", pool_action_desc: "Create a new pool for this niche or find an existing one.", pool_create: "➕ Create pool", pool_search: "🔍 Find pool",
+    pool_action_title: "Evaluate Profitability", pool_action_desc: "Use the deep store scanner to calculate P&L.", store_scanner_btn: "📊 Open Store Scanner",
     metric_demand: "Demand", metric_sellers: "Sellers", metric_price: "Avg price", metric_opp: "Opportunity",
     scan_error: "Analysis failed. Please try again.",
     scan_blocked: "Kaspi.kz blocked the request. Wait 30s and try again.",

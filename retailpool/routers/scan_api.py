@@ -253,7 +253,7 @@ def _generate_recommendations(
             recs.append(f"Средняя цена в нише {_format_price(avg_price)}. Целевая закупочная цена: {_format_price(margin_low)}–{_format_price(margin_high)} для маржи 15-40%.")
 
         if score > 70:
-            recs.append("Ниша перспективная — рекомендуем войти через совместную закупку в пуле Quareo для снижения рисков.")
+            recs.append("Ниша перспективная — рекомендуем использовать глубокий анализ экономики (Store Scanner) перед финальной закупкой.")
         elif score < 40:
             recs.append("Перед входом в нишу проведите более глубокий анализ спроса через Kaspi аналитику и проверьте сезонность.")
     else:
@@ -272,7 +272,7 @@ def _generate_recommendations(
             recs.append(f"Average niche price {_format_price(avg_price)}. Target purchase price: {_format_price(margin_low)}–{_format_price(margin_high)} for 15-40% margin.")
 
         if score > 70:
-            recs.append("Promising niche — consider entering via a Quareo co-buying pool to reduce risk.")
+            recs.append("Promising niche — consider using the deep Store Scanner to calculate unit economics before purchasing.")
         elif score < 40:
             recs.append("Before entering, conduct deeper demand analysis via Kaspi analytics and check seasonality.")
 

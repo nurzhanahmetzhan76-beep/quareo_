@@ -1,0 +1,97 @@
+{
+  "data": [
+    {
+      "id": "OTc0MzYxMDM4IyMw",
+      "type": "orderentries",
+      "attributes": {
+        "entryNumber": 0,
+        "deliveryCost": 0.0,
+        "quantity": 1,
+        "basePrice": 600.0,
+        "totalPrice": 600.0,
+        "unitType": "PIECES",
+        "category": {
+          "code": "Master - Kitchen knives",
+          "title": "Ножи, ножницы и наборы"
+        },
+        "offer": {
+          "code": "107443634_567039606",
+          "name": "Нож универсальный SM-5081, лезвие: сталь 1 шт"
+        },
+        "isImeiRequired": false
+      },
+      "relationships": {
+        "product": {
+          "data": {
+            "id": "MTA3NDQzNjM0",
+            "type": "masterproducts"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMw/relationships/product",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMw/product"
+          }
+        },
+        "deliveryPointOfService": {
+          "data": {
+            "id": "MTc3NjgwMzdfUFA1",
+            "type": "pointofservices"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMw/relationships/deliveryPointOfService",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMw/deliveryPointOfService"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMw"
+      }
+    },
+    {
+      "id": "OTc0MzYxMDM4IyMx",
+      "type": "orderentries",
+      "attributes": {
+        "entryNumber": 1,
+        "deliveryCost": 0.0,
+        "quantity": 1,
+        "basePrice": 1900.0,
+        "totalPrice": 1900.0,
+        "unitType": "PIECES",
+        "category": {
+          "code": "Master - Educational toys",
+          "title": "Развивающие игрушки"
+        },
+        "offer": {
+          "code": "120024664_179436481",
+          "name": "Каталка Вертолет-самолет пластик"
+        },
+        "isImeiRequired": false
+      },
+      "relationships": {
+        "product": {
+          "data": {
+            "id": "MTIwMDI0NjY0",
+            "type": "masterproducts"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMx/relationships/product",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMx/product"
+          }
+        },
+        "deliveryPointOfService": {
+          "data": {
+            "id": "MTc3NjgwMzdfUFA1",
+            "type": "pointofservices"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMx/relationships/deliveryPointOfService",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMx/deliveryPointOfService"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc0MzYxMDM4IyMx"
+      }
+    }
+  ],
+  "included": []
+}

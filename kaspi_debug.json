@@ -1,0 +1,1661 @@
+{
+  "data": [
+    {
+      "id": "OTkyODIzODEx",
+      "type": "orders",
+      "attributes": {
+        "code": "992823811",
+        "creationDate": 1783654102018,
+        "totalPrice": 15990.0,
+        "deliveryCostForSeller": 0.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783654108710,
+        "signatureRequired": false,
+        "status": "CANCELLED",
+        "pickupPointId": "17768037_PP1",
+        "state": "ARCHIVE",
+        "cancellationReason": "BUYER_CANCELLATION_HIMSELF",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Ольга",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Ольга",
+          "lastName": "Ц"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Костанай",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFAx",
+          "displayName": "PP1",
+          "address": {
+            "streetName": "Virtual",
+            "streetNumber": "Street",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, Virtual, Street",
+            "latitude": 1.0,
+            "longitude": 1.0
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": null,
+          "courierTransmissionDate": null,
+          "courierTransmissionPlanningDate": 1783654221825,
+          "waybillNumber": null,
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": false,
+        "creditTerm": 3,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PAY_WITH_CREDIT"
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkyODIzODExIyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkyODIzODEx/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkyODIzODEx/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkyODIzODEx/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkyODIzODEx/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkyODIzODEx"
+      }
+    },
+    {
+      "id": "OTg4MzIwODc4",
+      "type": "orders",
+      "attributes": {
+        "code": "988320878",
+        "creationDate": 1783328662651,
+        "totalPrice": 188.0,
+        "deliveryCostForSeller": 57.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783328662650,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Толғанай",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Толғанай",
+          "lastName": "Х"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Шымкент",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/UVFlMUZ3SkZPWDEyWnQtQnB6ZWFWdy4uRkxURExDMjJSWW9QOG93QU1pT1JYUS4u",
+          "courierTransmissionDate": 1783342534000,
+          "courierTransmissionPlanningDate": 1783342534000,
+          "waybillNumber": "385619535",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783663035213
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTg4MzIwODc4IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTg4MzIwODc4/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTg4MzIwODc4/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTg4MzIwODc4/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTg4MzIwODc4/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTg4MzIwODc4"
+      }
+    },
+    {
+      "id": "OTkzMDgxODEx",
+      "type": "orders",
+      "attributes": {
+        "code": "993081811",
+        "creationDate": 1783670149501,
+        "totalPrice": 2997.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783670149500,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Евгений",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Евгений",
+          "lastName": "С"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/WlJzRmwtWDI1STBoYlhaaFVoZVBTdy4uUEk0MXVvR3pYY1FwOUFWZjhNeUwyZy4u",
+          "courierTransmissionDate": 1783671933000,
+          "courierTransmissionPlanningDate": 1783671933000,
+          "waybillNumber": "388267248",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783673292756
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzMDgxODExIyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMDgxODEx/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMDgxODEx/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMDgxODEx/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMDgxODEx/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMDgxODEx"
+      }
+    },
+    {
+      "id": "OTkzMTE2NDI1",
+      "type": "orders",
+      "attributes": {
+        "code": "993116425",
+        "creationDate": 1783671828373,
+        "totalPrice": 57000.0,
+        "deliveryCostForSeller": 2145.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783671828777,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Екатерина",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Екатерина",
+          "lastName": "Х"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/eXFiTUthOUpYMlRBVmpCaWxwWmoxdy4uQ3U2dS1VdS1YSjhVMlVBY1RKWHR3Zy4u",
+          "courierTransmissionDate": 1783673295000,
+          "courierTransmissionPlanningDate": 1783673295000,
+          "waybillNumber": "388286657",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783674223010
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzMTE2NDI1IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE2NDI1/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE2NDI1/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE2NDI1/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE2NDI1/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE2NDI1"
+      }
+    },
+    {
+      "id": "OTkzMTE1NzE4",
+      "type": "orders",
+      "attributes": {
+        "code": "993115718",
+        "creationDate": 1783671800201,
+        "totalPrice": 900.0,
+        "deliveryCostForSeller": 57.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783671800201,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Rejepbay",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Rejepbay",
+          "lastName": "B"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/QzdTSlpFSWpoQzdiZ09fcWFGN3VfZy4uU3NvajQ2UHR0enhMUU9qN3pKUHVGdy4u",
+          "courierTransmissionDate": 1783673931000,
+          "courierTransmissionPlanningDate": 1783673931000,
+          "waybillNumber": "388286314",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783674874143
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzMTE1NzE4IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE1NzE4/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE1NzE4/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE1NzE4/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE1NzE4/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTE1NzE4"
+      }
+    },
+    {
+      "id": "OTkxMDAwMzkw",
+      "type": "orders",
+      "attributes": {
+        "code": "991000390",
+        "creationDate": 1783515416961,
+        "totalPrice": 1500.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783515416960,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 500.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Анель",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Анель",
+          "lastName": "Ж"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/eUowSWxRdVhFaTRFWWhaZEZhM0VkZy4uTUhIVm5hcVRjdVdxYV96SXBmNnNwUS4u",
+          "courierTransmissionDate": 1783518892000,
+          "courierTransmissionPlanningDate": 1783518892000,
+          "waybillNumber": "387112262",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783675410909
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkxMDAwMzkwIyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMDAwMzkw/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxMDAwMzkw/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMDAwMzkw/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxMDAwMzkw/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMDAwMzkw"
+      }
+    },
+    {
+      "id": "OTkzMTMxMDE2",
+      "type": "orders",
+      "attributes": {
+        "code": "993131016",
+        "creationDate": 1783672519214,
+        "totalPrice": 9000.0,
+        "deliveryCostForSeller": 927.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783672519213,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Светлана",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Светлана",
+          "lastName": "А"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/ZGo1a2YyTGM3cEgzQzYzb2RTV19KZy4uSmY0UW9PSUd5OG5iRDNnWEwtbWkxdy4u",
+          "courierTransmissionDate": 1783675065000,
+          "courierTransmissionPlanningDate": 1783675065000,
+          "waybillNumber": "388294717",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783677742678
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzMTMxMDE2IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTMxMDE2/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTMxMDE2/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTMxMDE2/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzMTMxMDE2/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzMTMxMDE2"
+      }
+    },
+    {
+      "id": "OTkyMDA3OTE2",
+      "type": "orders",
+      "attributes": {
+        "code": "992007916",
+        "creationDate": 1783591392722,
+        "totalPrice": 2400.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783591392720,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 500.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Мадина",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Мадина",
+          "lastName": "А"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/Q2VISVBGbDhQSjc0aHl0NXZ1NHJuZy4uZXhVUlhFMFA1cjNkcS13S0NyQ2syQS4u",
+          "courierTransmissionDate": 1783601438000,
+          "courierTransmissionPlanningDate": 1783601438000,
+          "waybillNumber": "387672056",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783686098587
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkyMDA3OTE2IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkyMDA3OTE2/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkyMDA3OTE2/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkyMDA3OTE2/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkyMDA3OTE2/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkyMDA3OTE2"
+      }
+    },
+    {
+      "id": "OTkxMTA5MDYy",
+      "type": "orders",
+      "attributes": {
+        "code": "991109062",
+        "creationDate": 1783521547402,
+        "totalPrice": 140.0,
+        "deliveryCostForSeller": 57.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783521547401,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP1",
+        "state": "ARCHIVE",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Гульдана",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Гульдана",
+          "lastName": "К"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFAx",
+          "displayName": "PP1",
+          "address": {
+            "streetName": "Virtual",
+            "streetNumber": "Street",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, Virtual, Street",
+            "latitude": 1.0,
+            "longitude": 1.0
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/MWRKWVBkYVRXbU9JWmJoT1NOUE56dy4uUERPYjFiRDNzSElBQm1UbTF4NVVTZy4u",
+          "courierTransmissionDate": 1783601484000,
+          "courierTransmissionPlanningDate": 1783601484000,
+          "waybillNumber": "387171880",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783690972727
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkxMTA5MDYyIyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMTA5MDYy/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxMTA5MDYy/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMTA5MDYy/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxMTA5MDYy/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkxMTA5MDYy"
+      }
+    },
+    {
+      "id": "OTg5MzEwNjk2",
+      "type": "orders",
+      "attributes": {
+        "code": "989310696",
+        "creationDate": 1783405424606,
+        "totalPrice": 850.0,
+        "deliveryCostForSeller": 57.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783405424605,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Мадина",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Мадина",
+          "lastName": "С"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Шелек",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/dE1nQjhUWXkwQlhLNDVKRVljVXBLQS4uWkIxeFJVb0ZKWXZYaDdtMFdMa1NmZy4u",
+          "courierTransmissionDate": 1783431937000,
+          "courierTransmissionPlanningDate": 1783431937000,
+          "waybillNumber": "386173017",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783692636482
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTg5MzEwNjk2IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTg5MzEwNjk2/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTg5MzEwNjk2/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTg5MzEwNjk2/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTg5MzEwNjk2/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTg5MzEwNjk2"
+      }
+    },
+    {
+      "id": "OTkxOTM0OTk4",
+      "type": "orders",
+      "attributes": {
+        "code": "991934998",
+        "creationDate": 1783587984131,
+        "totalPrice": 995.0,
+        "deliveryCostForSeller": 57.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783587989718,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Дана",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Дана",
+          "lastName": "Ж"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/NFFfdTlRam1fODlmUExuSENta1pKUS4uTHJBWWc4NmNOamhxZE9FcW1sUjdIUS4u",
+          "courierTransmissionDate": 1783601446000,
+          "courierTransmissionPlanningDate": 1783601446000,
+          "waybillNumber": "387631960",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": "9"
+        },
+        "assembled": true,
+        "creditTerm": 3,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PAY_WITH_CREDIT",
+        "completionDate": 1783692652426
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkxOTM0OTk4IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxOTM0OTk4/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxOTM0OTk4/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxOTM0OTk4/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxOTM0OTk4/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkxOTM0OTk4"
+      }
+    },
+    {
+      "id": "OTkzNDgzODA5",
+      "type": "orders",
+      "attributes": {
+        "code": "993483809",
+        "creationDate": 1783688870228,
+        "totalPrice": 2000.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783688870228,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Гүлбаршын",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Гүлбаршын",
+          "lastName": "С"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/R1d6MTFLem5xdk5kelN3OHJBa1ozdy4uYnB0MEFKRnNBRHFGN0JEZkdLTUZpQS4u",
+          "courierTransmissionDate": 1783692121000,
+          "courierTransmissionPlanningDate": 1783692121000,
+          "waybillNumber": "388490407",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783694257836
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzNDgzODA5IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNDgzODA5/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNDgzODA5/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNDgzODA5/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNDgzODA5/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNDgzODA5"
+      }
+    },
+    {
+      "id": "OTkxNzYxNzU3",
+      "type": "orders",
+      "attributes": {
+        "code": "991761757",
+        "creationDate": 1783579289284,
+        "totalPrice": 2000.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783579289283,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 500.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Даниил",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Даниил",
+          "lastName": "К"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/VlJlWlRyTFB6OTNPSnhCUHowd1lOUS4uWUJQXzdjY3YxWmtHeXpZSjB2d0JIUS4u",
+          "courierTransmissionDate": 1783601454000,
+          "courierTransmissionPlanningDate": 1783601454000,
+          "waybillNumber": "387534116",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_PICKUP",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783695115336
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkxNzYxNzU3IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxNzYxNzU3/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxNzYxNzU3/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkxNzYxNzU3/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkxNzYxNzU3/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkxNzYxNzU3"
+      }
+    },
+    {
+      "id": "OTkwNTg0MjQ0",
+      "type": "orders",
+      "attributes": {
+        "code": "990584244",
+        "creationDate": 1783494716870,
+        "totalPrice": 2900.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783494724736,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 0.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Айгерим",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Айгерим",
+          "lastName": "Т"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Кулан",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/WU1nWEszSVJBSnVtOXlFWWtmeGxGUS4uSFhUZ0RVREIxQ25JXy00X3lka016Zy4u",
+          "courierTransmissionDate": 1783518888000,
+          "courierTransmissionPlanningDate": 1783518888000,
+          "waybillNumber": "386883655",
+          "express": false,
+          "returnedToWarehouse": false,
+          "firstMileCourier": "9"
+        },
+        "assembled": true,
+        "creditTerm": 12,
+        "deliveryMode": "DELIVERY_REGIONAL_TODOOR",
+        "paymentMode": "PAY_WITH_CREDIT",
+        "completionDate": 1783695137608
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkwNTg0MjQ0IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkwNTg0MjQ0/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkwNTg0MjQ0/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkwNTg0MjQ0/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkwNTg0MjQ0/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkwNTg0MjQ0"
+      }
+    },
+    {
+      "id": "OTkzNTIwNDk5",
+      "type": "orders",
+      "attributes": {
+        "code": "993520499",
+        "creationDate": 1783690747563,
+        "totalPrice": 1300.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783690747562,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Әділхан",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Әділхан",
+          "lastName": "С"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/dmtTR09DaWZzZ3haanI3SnJFTmZOdy4ualJ5c2pMSmw1Rk9qaDBENWVNWmdIQS4u",
+          "courierTransmissionDate": 1783693103000,
+          "courierTransmissionPlanningDate": 1783693103000,
+          "waybillNumber": "388510456",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783695180144
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzNTIwNDk5IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTIwNDk5/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTIwNDk5/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTIwNDk5/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTIwNDk5/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTIwNDk5"
+      }
+    },
+    {
+      "id": "OTkzNTM3MTk0",
+      "type": "orders",
+      "attributes": {
+        "code": "993537194",
+        "creationDate": 1783691743222,
+        "totalPrice": 3500.0,
+        "deliveryCostForSeller": 231.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783691743221,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Маржан",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Маржан",
+          "lastName": "Б"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/Qm11YUZRM0Ftb0dBakRDLWRFWnF4dy4uRlFlVEhNbFhLT1dUVUJvZHdPdjRqUS4u",
+          "courierTransmissionDate": 1783692845000,
+          "courierTransmissionPlanningDate": 1783692845000,
+          "waybillNumber": "388521111",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783695345976
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzNTM3MTk0IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTM3MTk0/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTM3MTk0/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTM3MTk0/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTM3MTk0/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTM3MTk0"
+      }
+    },
+    {
+      "id": "OTkzNTI5NjI4",
+      "type": "orders",
+      "attributes": {
+        "code": "993529628",
+        "creationDate": 1783691238578,
+        "totalPrice": 2400.0,
+        "deliveryCostForSeller": 173.0,
+        "isKaspiDelivery": true,
+        "preOrder": false,
+        "approvedByBankDate": 1783691238577,
+        "signatureRequired": false,
+        "status": "COMPLETED",
+        "pickupPointId": "17768037_PP6",
+        "state": "ARCHIVE",
+        "deliveryCost": 995.0,
+        "customer": {
+          "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+          "name": "Цунцур",
+          "cellPhone": "+0(000)-000-00-00",
+          "firstName": "Цунцур",
+          "lastName": "М"
+        },
+        "deliveryAddress": {
+          "streetName": null,
+          "streetNumber": null,
+          "town": "Алматы",
+          "district": null,
+          "building": null,
+          "apartment": null,
+          "formattedAddress": null,
+          "latitude": null,
+          "longitude": null
+        },
+        "originAddress": {
+          "id": "MTc3NjgwMzdfUFA2",
+          "displayName": "PP6",
+          "address": {
+            "streetName": "микрорайон Тастак-1",
+            "streetNumber": " 6А",
+            "town": "г. Алматы",
+            "district": null,
+            "building": null,
+            "apartment": null,
+            "formattedAddress": "г. Алматы, микрорайон Тастак-1,  6А",
+            "latitude": 43.24814224243164,
+            "longitude": 76.8607406616211
+          },
+          "city": {
+            "id": "NzUwMDAwMDAw",
+            "code": "750000000",
+            "name": "Алматы",
+            "active": true
+          }
+        },
+        "kaspiDelivery": {
+          "waybill": "https://kaspi.kz/shop/api/waybill/MlE5TTZxaVVhVHVDd3RvUERVUlc0dy4uQ1NqMEpVSElsRFJiN3hoWnVSVVNidy4u",
+          "courierTransmissionDate": 1783694136000,
+          "courierTransmissionPlanningDate": 1783694136000,
+          "waybillNumber": "388515882",
+          "express": true,
+          "returnedToWarehouse": false,
+          "firstMileCourier": null
+        },
+        "assembled": true,
+        "deliveryMode": "DELIVERY_LOCAL",
+        "paymentMode": "PREPAID",
+        "completionDate": 1783695482241
+      },
+      "relationships": {
+        "entries": {
+          "data": [
+            {
+              "id": "OTkzNTI5NjI4IyMw",
+              "type": "orderentries"
+            }
+          ],
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTI5NjI4/relationships/entries",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTI5NjI4/entries"
+          }
+        },
+        "user": {
+          "data": {
+            "id": "KzAoMDAwKS0wMDAtMDAtMDA",
+            "type": "customers"
+          },
+          "links": {
+            "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTI5NjI4/relationships/user",
+            "related": "https://kaspi.kz/shop/api/v2/orders/OTkzNTI5NjI4/user"
+          }
+        }
+      },
+      "links": {
+        "self": "https://kaspi.kz/shop/api/v2/orders/OTkzNTI5NjI4"
+      }
+    }
+  ],
+  "included": [],
+  "meta": {
+    "pageCount": 8,
+    "totalCount": 367
+  }
+}

@@ -40,6 +40,7 @@ from retailpool.routers.repricing import router as repricing_router
 from retailpool.routers.analytics import router as analytics_router
 from retailpool.routers.reviews import router as reviews_router
 from retailpool.routers.waybills import router as waybills_router
+from retailpool.routers.store_scanner import router as store_scanner_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -142,7 +143,7 @@ app.include_router(repricing_router)
 app.include_router(analytics_router)
 app.include_router(reviews_router)
 app.include_router(waybills_router)
-
+app.include_router(store_scanner_router)
 
 # ── Static assets (CSS, JS) ─────────────────────────────────────────────
 if FRONTEND_DIR.exists():
