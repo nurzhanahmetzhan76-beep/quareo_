@@ -18,7 +18,7 @@ async def repricing_loop() -> None:
     while True:
         try:
             logger.info("Starting repricing cycle...")
-            async with SessionLocal() as db:
+            async with async_session_factory() as db:
                 results = await run_repricing_cycle(db)
                 if results:
                     actions = [r["action"] for r in results]
