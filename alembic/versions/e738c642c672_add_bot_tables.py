@@ -20,13 +20,13 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     conn = op.get_bind()
-    inspector = Inspector.from_engine(conn)
+    inspector = sa.inspect(conn)
     tables = inspector.get_table_names()
     
     # Add telegram_id to users
     columns = [c["name"] for c in inspector.get_columns("users")]
     if "telegram_id" not in columns:
-        op.add_column('users', sa.Column('telegram_id', sa.Integer(), nullable=True))
+        op.add_column('users', sa.Column('telegram_id', sa.BigInteger(), nullable=True))
         op.create_index(op.f('ix_users_telegram_id'), 'users', ['telegram_id'], unique=True)
     
     if "user_seller_settings" not in tables:
