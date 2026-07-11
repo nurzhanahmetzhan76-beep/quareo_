@@ -48,7 +48,7 @@ function rpAuthHeaders() {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_pricing: "Тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanner: "Сканер", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Kaspi-бот", nav_pricing: "Тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",
@@ -59,7 +59,7 @@ const RP_I18N = {
     footer_built: "Алматы · Казахстан",
   },
   en: {
-    nav_home: "Home", nav_scanner: "Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_pricing: "Pricing", nav_cta: "Get started",
+    nav_home: "Home", nav_scanner: "Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_kaspi_bot: "Kaspi-bot", nav_pricing: "Pricing", nav_cta: "Get started",
     nav_login: "Sign in", nav_register: "Sign up", nav_logout: "Sign out", nav_profile: "Profile",
     footer_desc: "An AI radar for Kaspi.kz: we find low-competition niches and form co-buying syndicates for Kazakhstani SMBs.",
     footer_product: "Product", footer_company: "Company", footer_legal: "Legal",

@@ -71,6 +71,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     from retailpool.models import subscription  # noqa: F401 — register model
     from retailpool.bot import models as _bot_models  # noqa: F401 — register bot models
     from retailpool.models import ntin as _ntin_models  # noqa: F401 — register NTIN models
+    from retailpool.models import repricing as _repricing_models  # noqa: F401 — register repricing models
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables ensured.")
