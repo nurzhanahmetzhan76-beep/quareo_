@@ -17,17 +17,15 @@ WELCOME_TEXT = (
     "🏪 <b>Quareo</b> — ваш персональный помощник\n"
     "для аналитики и совместных закупок на Kaspi.kz.\n\n"
     "Что я умею:\n"
-    "📦 <b>Пулы закупок</b> — витрина совместных закупок, вход в один клик\n"
     "🔍 <b>Сканер Kaspi</b> — анализ ниши по ссылке или запросу\n"
     "🔔 <b>Push-алерты</b> — трекинг демпинга и стоков конкурентов\n"
-    "📄 <b>Документы</b> — автоматическая генерация счетов\n\n"
+    "📄 <b>Документы</b> — автоматическая генерация документов\n\n"
     "Выберите действие ниже 👇"
 )
 
 HELP_TEXT = (
     "📖 <b>Справка по командам</b>\n\n"
     "/start — Главное меню\n"
-    "/pools — Витрина открытых пулов\n"
     "/scan &lt;запрос&gt; — Анализ ниши на Kaspi\n"
     "/track &lt;запрос&gt; — Подписка на алерт по нише\n"
     "/alerts — Мои активные подписки\n"
@@ -77,10 +75,7 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             parse_mode="HTML",
             reply_markup=back_to_menu_keyboard(),
         )
-    elif action == "pools":
-        # Import here to avoid circular imports
-        from retailpool.bot.handlers.pools import show_pools_list
-        await show_pools_list(query, context)
+
     elif action == "scanner":
         await query.edit_message_text(
             "🔍 <b>Сканер Kaspi</b>\n\n"
@@ -98,9 +93,7 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     elif action == "documents":
         await query.edit_message_text(
             "📄 <b>Документы</b>\n\n"
-            "Счета генерируются автоматически при закрытии пула.\n"
-            "Перейдите в раздел Пулов и нажмите «📄 Получить счёт»\n"
-            "на закрытом пуле.",
+            "Раздел документов находится в разработке.",
             parse_mode="HTML",
             reply_markup=back_to_menu_keyboard(),
         )

@@ -48,22 +48,22 @@ function rpAuthHeaders() {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер", nav_pools: "Пулы", nav_pricing: "Тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanner: "Сканер", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_pricing: "Тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",
-    footer_l_scanner: "Niche Scanner", footer_l_pools: "Co-Buying пулы", footer_l_pricing: "Тарифы", footer_l_demo: "Демо",
+    footer_l_scanner: "Niche Scanner", footer_l_analytics: "Аналитика", footer_l_pricing: "Тарифы", footer_l_demo: "Демо",
     footer_l_about: "О проекте", footer_l_contact: "Контакты", footer_l_telegram: "Telegram-бот",
     footer_l_privacy: "Политика конфиденциальности", footer_l_terms: "Условия использования", footer_l_offer: "Публичная оферта",
     footer_rights: "© 2025 Quareo. Все права защищены.",
     footer_built: "Алматы · Казахстан",
   },
   en: {
-    nav_home: "Home", nav_scanner: "Scanner", nav_pools: "Pools", nav_pricing: "Pricing", nav_cta: "Get started",
+    nav_home: "Home", nav_scanner: "Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_pricing: "Pricing", nav_cta: "Get started",
     nav_login: "Sign in", nav_register: "Sign up", nav_logout: "Sign out", nav_profile: "Profile",
     footer_desc: "An AI radar for Kaspi.kz: we find low-competition niches and form co-buying syndicates for Kazakhstani SMBs.",
     footer_product: "Product", footer_company: "Company", footer_legal: "Legal",
-    footer_l_scanner: "Niche Scanner", footer_l_pools: "Co-Buying pools", footer_l_pricing: "Pricing", footer_l_demo: "Demo",
+    footer_l_scanner: "Niche Scanner", footer_l_analytics: "Analytics", footer_l_pricing: "Pricing", footer_l_demo: "Demo",
     footer_l_about: "About", footer_l_contact: "Contact", footer_l_telegram: "Telegram bot",
     footer_l_privacy: "Privacy policy", footer_l_terms: "Terms of service", footer_l_offer: "Public offer",
     footer_rights: "© 2025 Quareo. All rights reserved.",

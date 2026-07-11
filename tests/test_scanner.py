@@ -6,9 +6,7 @@ import pytest
 from decimal import Decimal
 
 from retailpool.schemas.product import ProductCard
-from retailpool.schemas.pool import PoolOut, PoolStatusOut, ParticipantOut
 from retailpool.scraper.niche_analyzer import NicheAnalyzer
-from retailpool.services.document_service import KaspiDocumentService
 
 import uuid
 from datetime import datetime, timezone
@@ -92,64 +90,4 @@ class TestNicheAnalyzer:
         assert analyzer.calculate_monopolization(100, 0) == 1000.0
 
 
-# ═══════════════════════════════════════════════════════════════════════════
-# Document Service Tests
-# ═══════════════════════════════════════════════════════════════════════════
 
-class TestDocumentService:
-
-    def test_success_fee_calculation(self):
-        """3% of 1,000,000 KZT = 30,000 KZT."""
-        svc = KaspiDocumentService(fee_percent=3.0)
-        fee = svc.calculate_success_fee(1_000_000)
-        assert fee == 30_000.0
-
-    def test_success_fee_5_percent(self):
-        """5% of 500,000 KZT = 25,000 KZT."""
-        svc = KaspiDocumentService(fee_percent=5.0)
-        fee = svc.calculate_success_fee(500_000)
-        assert fee == 25_000.0
-
-    def test_invoice_payload_generation(self):
-        """Invoice payload should include correct totals and fee."""
-        svc = KaspiDocumentService(fee_percent=4.0)
-
-        pool_id = uuid.uuid4()
-        product_id = uuid.uuid4()
-        now = datetime.now(timezone.utc)
-
-        pool_out = PoolOut(
-            id=pool_id, product_id=product_id,
-            target_quantity=10, target_amount=300000,
-            current_quantity=10, current_amount=300000,
-            status="closed", created_at=now, expires_at=now,
-        )
-        participants = [
-            ParticipantOut(
-                id=uuid.uuid4(), user_id="user_1",
-                quantity=5, amount=150000, joined_at=now,
-            ),
-            ParticipantOut(
-                id=uuid.uuid4(), user_id="user_2",
-                quantity=5, amount=150000, joined_at=now,
-            ),
-        ]
-        status = PoolStatusOut(
-            pool=pool_out, participants=participants,
-            quantity_progress_percent=100.0,
-            amount_progress_percent=100.0,
-            is_quorum_reached=True,
-        )
-
-        payload = svc.prepare_invoice_payload(
-            pool_status=status,
-            product_name="Увлажнитель Xiaomi",
-            unit_price=30000,
-        )
-
-        assert len(payload.items) == 2
-        assert payload.subtotal == 300000.0
-        assert payload.success_fee_amount == 12000.0  # 4% of 300k
-        assert payload.grand_total == 312000.0
-        assert payload.success_fee.applied_percent == 4.0
-        assert payload.invoice_number.startswith("INV-")

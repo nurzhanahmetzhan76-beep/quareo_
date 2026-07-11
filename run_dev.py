@@ -22,7 +22,7 @@ from retailpool.models.base import Base
 
 # Import all models so Base.metadata knows about them
 import retailpool.models.product  # noqa: F401
-import retailpool.models.pool     # noqa: F401
+
 import retailpool.models.user     # noqa: F401
 import retailpool.models.ntin     # noqa: F401
 

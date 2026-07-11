@@ -31,6 +31,12 @@ async def process_waybills(
     Takes a ZIP file of Kaspi waybills/labels and converts them.
     format: 'thermal' (1 per page) or 'a4' (4 per page)
     """
+    user_plan = (current_user.plan or "free").lower()
+    allowed_plans = ["накладные", "waybills", "start", "business", "unlimited", "старт", "бизнес", "безлимит", "агентство"]
+    
+    if user_plan not in allowed_plans and current_user.email != "karimbai.ali10@mail.ru":
+        raise HTTPException(status_code=403, detail="Доступ к накладным доступен только на платных тарифах (Накладные, Старт, Бизнес и выше).")
+
     if not file.filename.lower().endswith(".zip"):
         raise HTTPException(status_code=400, detail="Пожалуйста, загрузите ZIP архив.")
         

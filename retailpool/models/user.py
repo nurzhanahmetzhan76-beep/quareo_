@@ -42,7 +42,7 @@ class User(Base):
     )
     plan: Mapped[str] = mapped_column(
         String(32), default="free",
-        comment="Subscription plan: free / start / business / unlimited"
+        comment="Subscription plan: free / waybills / start / business / unlimited"
     )
     telegram_id: Mapped[int | None] = mapped_column(
         Integer, unique=True, index=True, nullable=True,

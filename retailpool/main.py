@@ -29,9 +29,8 @@ from slowapi.errors import RateLimitExceeded
 
 from retailpool.config import settings
 from retailpool.database import engine
-from retailpool.routers.pools import router as pools_router
 from retailpool.routers.scanner import router as scanner_router
-from retailpool.routers.documents import router as documents_router
+
 from retailpool.routers.auth import router as auth_router
 from retailpool.routers.scan_api import router as scan_api_router
 from retailpool.routers.subscriptions import router as subscriptions_router
@@ -133,9 +132,8 @@ app.add_middleware(
 
 # ── API routers ──────────────────────────────────────────────────────────
 app.include_router(auth_router)
-app.include_router(pools_router)
 app.include_router(scanner_router)
-app.include_router(documents_router)
+
 app.include_router(scan_api_router)
 app.include_router(subscriptions_router)
 app.include_router(ntin_router)
@@ -183,7 +181,6 @@ def _serve_page(filename: str):
 _PAGE_ROUTES = [
     ("/",            "index.html"),
     ("/scanner",     "scanner.html"),
-    ("/pools-page",  "pools.html"),
     ("/pricing",     "pricing.html"),
     ("/checkout",    "checkout.html"),
     ("/auth",        "auth.html"),
@@ -210,9 +207,3 @@ for _path, _filename in _PAGE_ROUTES:
 @app.get("/index.html", tags=["Frontend"], include_in_schema=False)
 async def serve_index_html():
     return _serve_page("index.html")
-
-
-# Also handle pools.html directly (since some pages link to it)
-@app.get("/pools.html", tags=["Frontend"], include_in_schema=False)
-async def serve_pools_html():
-    return _serve_page("pools.html")

@@ -78,7 +78,7 @@
       <a href="index.html" data-i="nav_home">Главная</a>
       <a href="scanner.html" data-i="nav_scanner">Сканер</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
-      <a href="pools.html" data-i="nav_pools">Пулы</a>
+      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
       <a href="pricing.html" class="active" data-i="nav_pricing">Тарифы</a>
     </div>
@@ -106,6 +106,19 @@
     <div class="container">
       <div class="pricing-grid">
         <div class="price-card" data-reveal>
+          <div class="price-tier" data-i="tier_wb">Накладные</div>
+          <div class="price-amount">500 ₸</div>
+          <div class="price-period" data-i="per_month">/ месяц</div>
+          <div class="price-desc" data-i="tier_wb_desc">Доступ только к инструменту массовой печати накладных для термопринтера.</div>
+          <ul class="price-features">
+            <li><span class="feat-check">✓</span><span data-i="twbf1">Безлимитные накладные</span></li>
+            <li><span class="feat-check" style="color:var(--text-3); opacity:0.5;">✗</span><span data-i="twbf2" style="color:var(--text-3); text-decoration:line-through;">Сканер профиля</span></li>
+            <li><span class="feat-check" style="color:var(--text-3); opacity:0.5;">✗</span><span data-i="twbf3" style="color:var(--text-3); text-decoration:line-through;">NTIN регистрация</span></li>
+          </ul>
+          <a class="btn-secondary btn-block" href="checkout.html?plan=Накладные&price=500" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
+        </div>
+        
+        <div class="price-card" data-reveal>
           <div class="price-tier" data-i="tier1">Старт</div>
           <div class="price-amount">8 000 ₸</div>
           <div class="price-period" data-i="per_month">/ месяц</div>
@@ -114,7 +127,7 @@
             <li><span class="feat-check">✓</span><span data-i="t1f1">50 сканирований ниши</span></li>
             <li><span class="feat-check">✓</span><span data-i="t1f2">20 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t1f3">Создание накладных для термопринтера</span></li>
-            <li><span class="feat-check">✓</span><span data-i="t1f4">Участие в пулах совместных закупок</span></li>
+
           </ul>
           <a class="btn-secondary btn-block" href="checkout.html?plan=Старт&price=8000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
         </div>
@@ -129,8 +142,6 @@
             <li><span class="feat-check">✓</span><span data-i="t2f1">200 сканирований ниши</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f2">100 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f3">Создание накладных для термопринтера</span></li>
-            <li><span class="feat-check">✓</span><span data-i="t2f4">Участие в неограниченных пулах</span></li>
-            <li><span class="feat-check">✓</span><span data-i="t2f5">Аналитика офлайн остатков</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f6">Приоритетная поддержка</span></li>
           </ul>
           <a class="btn-primary btn-block" href="checkout.html?plan=Бизнес&price=15000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
@@ -146,7 +157,6 @@
             <li><span class="feat-check">✓</span><span data-i="t3f2">200 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t3f3">Доступ к Telegram-боту</span></li>
             <li><span class="feat-check">✓</span><span data-i="t3f4">Создание накладных для термопринтера</span></li>
-            <li><span class="feat-check">✓</span><span data-i="t3f5">Whitelabel отчёты</span></li>
           </ul>
           <a class="btn-secondary btn-block" href="checkout.html?plan=Безлимит&price=20000" style="padding: 14px; font-size: 15px;" data-i="choose_plan">Выбрать план</a>
         </div>
@@ -171,14 +181,14 @@
     <div class="footer-col">
       <div class="footer-col-title" data-i="footer_product">Продукт</div>
       <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
-      <a href="pools.html" data-i="footer_l_pools">Co-Buying пулы</a>
+
       <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
       <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title" data-i="footer_company">Компания</div>
       <a href="#" data-i="footer_l_about">О проекте</a>
-      <a href="#" data-i="footer_l_contact">Контакты</a>
+      <a href="https://t.me/@Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
       <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
     </div>
     <div class="footer-col">
@@ -201,40 +211,40 @@ const PAGE_I18N = {
     ph_eyebrow: "Тарифы", ph_title: "Выберите план для вашего масштаба",
     ph_sub: "Начните с разведки одной ниши или подключите весь синдикат — цена растёт вместе с вашим бизнесом.",
     tier1: "Старт", tier2: "Бизнес", tier3: "Безлимит", per_month: "/ месяц", popular: "Популярный",
+    tier_wb: "Накладные", tier_wb_desc: "Доступ только к инструменту массовой печати накладных для термопринтера.",
     tier1_desc: "Для начинающих продавцов, которые хотят найти первую прибыльную нишу.",
     tier2_desc: "Для активных продавцов, которые работают сразу на нескольких площадках.",
     tier3_desc: "Для агентств и крупных продавцов, управляющих несколькими магазинами.",
-    t1f1:"50 сканирований ниши",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",t1f4:"Участие в пулах совместных закупок",
-    t2f1:"200 сканирований ниши",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f4:"Участие в неограниченных пулах",t2f5:"Аналитика офлайн остатков",t2f6:"Приоритетная поддержка",
-    t3f1:"Безлимитные сканирования ниши",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",t3f5:"Whitelabel отчёты",
+    twbf1: "Безлимитные накладные", twbf2: "Сканер профиля", twbf3: "NTIN регистрация",
+    t1f1:"50 сканирований ниши",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",
+    t2f1:"200 сканирований ниши",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f6:"Приоритетная поддержка",
+    t3f1:"Безлимитные сканирования ниши",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",
     choose_plan: "Выбрать план",
     faq_eyebrow: "FAQ", faq_title: "Частые вопросы",
     faqs: [
       {q:"Как быстро я увижу первые инсайты?",a:"После регистрации Scouting Engine начинает сканирование немедленно. Первые алерты в Telegram приходят уже в течение нескольких часов."},
-      {q:"Сколько человек нужно для открытия закупочного пула?",a:"Минимум 3 участника. Как только набирается нужное количество, бот автоматически генерирует счета и организует единый заказ."},
       {q:"Работает ли платформа только с Kaspi?",a:"Niche Scanner сфокусирован на Kaspi.kz как главном маркетплейсе Казахстана. Карточки товаров генерируются сразу для Kaspi, Wildberries и Ozon."},
       {q:"Можно ли отменить подписку?",a:"Да, в любой момент без штрафов. Доступ сохраняется до конца оплаченного периода."},
-      {q:"Как работает Success Fee?",a:"3–5% взимается только при успешном завершении совместной закупки. Если пул не собрался — комиссия не берётся."},
     ]
   },
   en: {
     ph_eyebrow: "Pricing", ph_title: "Choose a plan for your scale",
     ph_sub: "Start by scouting a single niche, or connect your whole syndicate — price grows with your business.",
     tier1: "Starter", tier2: "Business", tier3: "Unlimited", per_month: "/ month", popular: "Most popular",
+    tier_wb: "Waybills", tier_wb_desc: "Access only to the mass printing tool for thermal printer waybills.",
     tier1_desc: "For new sellers looking for their first profitable niche.",
     tier2_desc: "For active sellers working across multiple marketplaces.",
     tier3_desc: "For agencies and large sellers managing multiple stores.",
-    t1f1:"50 Niche Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",t1f4:"Co-buying pool access",
-    t2f1:"200 Niche Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f4:"Unlimited pool access",t2f5:"Offline analytics",t2f6:"Priority support",
-    t3f1:"Unlimited Niche Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",t3f5:"Whitelabel reports",
+    twbf1: "Unlimited waybills", twbf2: "Profile scanner", twbf3: "NTIN registration",
+    t1f1:"50 Niche Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",
+    t2f1:"200 Niche Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f6:"Priority support",
+    t3f1:"Unlimited Niche Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",
     choose_plan: "Choose plan",
     faq_eyebrow: "FAQ", faq_title: "Frequently asked questions",
     faqs: [
       {q:"How quickly will I see first insights?",a:"After registration, the Scouting Engine starts scanning immediately. First Telegram alerts arrive within hours."},
-      {q:"How many people are needed to open a buying pool?",a:"Minimum 3 participants. Once reached, the bot automatically generates invoices and organizes a single order."},
       {q:"Does the platform only work with Kaspi?",a:"The Niche Scanner is focused on Kaspi.kz. Product cards are generated for Kaspi, Wildberries and Ozon simultaneously."},
       {q:"Can I cancel my subscription?",a:"Yes, anytime with no penalties. Access continues until the end of the paid period."},
-      {q:"How does the Success Fee work?",a:"3–5% is charged only upon successful completion of a co-purchase. If the pool doesn't form — no fee is charged."},
     ]
   }
 };

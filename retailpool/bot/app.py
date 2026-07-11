@@ -29,17 +29,12 @@ from retailpool.bot.handlers.start import (
     help_handler,
     menu_callback,
 )
-from retailpool.bot.handlers.pools import (
-    pools_command,
-    pool_callback,
-    pool_quantity_input,
-    pools_page_callback,
-)
+
 from retailpool.bot.handlers.scanner import (
     scan_command,
     kaspi_link_handler,
 )
-from retailpool.bot.handlers.documents import document_callback
+
 from retailpool.bot.handlers.alerts import (
     alerts_command,
     track_command,
@@ -57,7 +52,7 @@ logger = logging.getLogger(__name__)
 # Bot commands for the Telegram menu
 BOT_COMMANDS = [
     BotCommand("start", "Главное меню"),
-    BotCommand("pools", "Витрина совместных закупок"),
+
     BotCommand("scan", "Сканировать нишу на Kaspi"),
     BotCommand("track", "Подписаться на алерт по нише"),
     BotCommand("alerts", "Мои активные подписки"),
@@ -94,7 +89,7 @@ def create_application() -> Application:
     app.add_handler(CommandHandler("start", start_handler))
     app.add_handler(CommandHandler("help", help_handler))
     app.add_handler(CommandHandler("login", login_command))
-    app.add_handler(CommandHandler("pools", pools_command))
+
     app.add_handler(CommandHandler("scan", scan_command))
     app.add_handler(CommandHandler("track", track_command))
     app.add_handler(CommandHandler("untrack", untrack_command))
@@ -102,9 +97,8 @@ def create_application() -> Application:
 
     # ── Register callback query handlers ─────────────────────────────────
     # Order matters: more specific patterns first
-    app.add_handler(CallbackQueryHandler(pool_callback, pattern=r"^pool:"))
-    app.add_handler(CallbackQueryHandler(pools_page_callback, pattern=r"^pools:page:"))
-    app.add_handler(CallbackQueryHandler(document_callback, pattern=r"^doc:"))
+
+
     app.add_handler(CallbackQueryHandler(alert_callback, pattern=r"^alert:"))
     app.add_handler(CallbackQueryHandler(
         _scan_callback, pattern=r"^scan:"
@@ -118,11 +112,7 @@ def create_application() -> Application:
         kaspi_link_handler,
     ))
 
-    # Numeric input for pool join flow
-    app.add_handler(MessageHandler(
-        filters.TEXT & filters.Regex(r"^\d+$"),
-        pool_quantity_input,
-    ))
+
 
     # Alert text input (when creating_alert flag is set)
     app.add_handler(MessageHandler(
@@ -151,9 +141,7 @@ async def _post_init(application: Application) -> None:
 async def _text_router(update: Update, context) -> None:
     """Route plain text messages to the appropriate handler."""
     # Check if user is in a specific flow
-    if context.user_data.get("joining_pool_id"):
-        await pool_quantity_input(update, context)
-    elif context.user_data.get("creating_alert"):
+    if context.user_data.get("creating_alert"):
         await alert_text_input(update, context)
     # Otherwise ignore plain text (don't auto-scan)
 
@@ -172,16 +160,7 @@ async def _scan_callback(update: Update, context) -> None:
     action = parts[1]
     value = ":".join(parts[2:])
 
-    if action == "create_pool":
-        await query.edit_message_text(
-            f"📦 <b>Создание пула по запросу «{value}»</b>\n\n"
-            "⚠️ Для создания пула нужны данные о товаре.\n"
-            "Пожалуйста, сначала выберите конкретный товар\n"
-            "на сайте RetailPool AI и создайте пул оттуда.\n\n"
-            "🌐 Сайт: <code>http://localhost:8000/pools-page</code>",
-            parse_mode="HTML",
-        )
-    elif action == "track":
+    if action == "track":
         # Auto-create alert
         from retailpool.bot.keyboards import alert_type_keyboard
         await query.edit_message_text(

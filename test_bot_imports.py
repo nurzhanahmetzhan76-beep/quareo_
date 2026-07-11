@@ -29,13 +29,13 @@ test_import("bot.keyboards", lambda: __import__("retailpool.bot.keyboards"))
 test_import("bot.api_client", lambda: __import__("retailpool.bot.api_client"))
 
 # 4. PDF Generator
-test_import("bot.pdf_generator", lambda: __import__("retailpool.bot.pdf_generator"))
+
 
 # 5. Handlers
 test_import("bot.handlers.start", lambda: __import__("retailpool.bot.handlers.start"))
-test_import("bot.handlers.pools", lambda: __import__("retailpool.bot.handlers.pools"))
+
 test_import("bot.handlers.scanner", lambda: __import__("retailpool.bot.handlers.scanner"))
-test_import("bot.handlers.documents", lambda: __import__("retailpool.bot.handlers.documents"))
+
 test_import("bot.handlers.alerts", lambda: __import__("retailpool.bot.handlers.alerts"))
 
 # 6. Alert Worker

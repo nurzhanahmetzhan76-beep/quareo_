@@ -1,176 +1,439 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quareo — ИИ-радар по нишам Kaspi.kz</title>
-<link rel="stylesheet" href="assets/style.css">
-<style>
-  /* ── Hero ─────────────────────────────────────────────────── */
-  .hero {
-    position: relative;
-    padding-top: 11rem; padding-bottom: 7rem;
-    overflow: hidden;
-  }
-  .hero-content {
-    position: relative; z-index: 2;
-    max-width: 800px; margin: 0 auto;
-    text-align: center;
-  }
-  .hero-eyebrow {
-    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.16em; color: var(--brand);
-    margin-bottom: 1.5rem; display: inline-flex; align-items: center; gap: 10px;
-    background: var(--brand-light); padding: 6px 16px; border-radius: 100px;
-    border: 1px solid var(--brand-mid);
-  }
-  .hero-eyebrow-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--brand);
-    box-shadow: 0 0 12px var(--brand);
-    animation: blip-pulse 2s ease-in-out infinite;
-  }
-  @keyframes blip-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-  .hero h1 {
-    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
-    margin-bottom: 1.5rem;
-    line-height: 1.1;
-    color: var(--text);
-  }
-  .hero h1 .accent { 
-    background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .hero-sub {
-    font-size: 1.25rem; color: var(--text-2); margin: 0 auto 2.5rem;
-    max-width: 600px; line-height: 1.6;
-  }
-  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
-  
-  /* ── Readout Stats ────────────────────────────────────────── */
-  .hero-readout {
-    display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
-    font-family: var(--font-mono);
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border);
-    padding: 1.5rem 3rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-  }
-  .readout-item { text-align: center; }
-  .readout-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 600; }
-  .readout-val { font-size: 1.75rem; font-weight: 700; color: var(--text); }
-  .readout-val.signal { color: var(--brand); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quareo — ИИ-радар по нишам Kaspi.kz</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      padding-top: 11rem;
+      padding-bottom: 7rem;
+      overflow: hidden;
+    }
 
-  /* ── Marquee ──────────────────────────────────────────────── */
-  .marquee-section {
-    background: var(--bg-2);
-    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    padding: 1.5rem 0; overflow: hidden;
-  }
-  .marquee-track {
-    display: flex; gap: 4rem; white-space: nowrap;
-    font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-3);
-    animation: marquee-scroll 35s linear infinite;
-  }
-  .marquee-track span { display: flex; align-items: center; gap: 12px; }
-  .marquee-track .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
-  @keyframes marquee-scroll { to { transform: translateX(-50%); } }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
 
-  /* ── Process Visuals ───────────────────────────────────────── */
-  .process-list { margin-top: 4rem; display: flex; flex-direction: column; gap: 1rem; }
-  .process-row {
-    display: grid; grid-template-columns: auto 1fr 1fr; gap: 3rem;
-    padding: 2.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg);
-    background: var(--bg);
-    align-items: center;
-    transition: box-shadow 0.3s, border-color 0.3s;
-  }
-  .process-row:hover {
-    box-shadow: var(--shadow-lg); border-color: var(--brand-mid);
-  }
-  .process-index {
-    font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--brand);
-    background: var(--brand-light); width: 48px; height: 48px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .process-name h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-  .process-name p { font-size: 15px; color: var(--text-2); max-width: 360px; line-height: 1.6; }
-  .process-visual {
-    height: 100px; border-radius: var(--radius);
-    background: var(--bg-2); border: 1px solid var(--border);
-    position: relative; overflow: hidden;
-    display: flex; align-items: center; padding: 0 1.5rem; gap: 1.5rem;
-  }
-  .pv-bars { display: flex; align-items: flex-end; gap: 6px; height: 48px; }
-  .pv-bars span { width: 8px; background: var(--border-2); border-radius: 4px; opacity: 0.5; transition: height 0.3s; }
-  .pv-bars span.hi { background: var(--brand); opacity: 1; box-shadow: 0 0 12px rgba(37,99,235,0.4); }
-  .pv-readout { font-family: var(--font-mono); font-size: 13px; color: var(--text-2); }
-  .pv-readout strong { color: var(--text); display: block; font-size: 20px; font-weight: 700; margin-bottom: 2px; }
-  .pv-cards { display: flex; gap: 8px; }
-  .pv-card { width: 42px; height: 56px; border-radius: 6px; background: var(--bg); border: 2px solid var(--border); position: relative; }
-  .pv-card.weak::after {
-    content: '✗'; position: absolute; top: 4px; right: 4px;
-    font-size: 12px; color: var(--red); font-weight: bold;
-  }
-  .pv-card.weak { border-color: var(--red); background: var(--red-bg); }
-  .pv-progress-line { flex: 1; height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
-  .pv-progress-fill { height: 100%; width: 68%; background: linear-gradient(90deg, var(--brand), var(--purple)); border-radius: 100px; }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--brand);
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--brand-light);
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--brand-mid);
+    }
 
-  /* ── Feature Grid ──────────────────────────────────────────── */
-  .feature-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem; margin-top: 4rem;
-  }
-  .feature-cell {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 2.5rem 2rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .feature-cell:hover {
-    transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--brand-mid);
-  }
-  .feature-icon-mark {
-    width: 48px; height: 48px; border-radius: 12px;
-    background: var(--brand-light); border: 1px solid var(--brand-mid);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1.5rem; font-family: var(--font-mono); font-size: 20px; color: var(--brand);
-  }
-  .feature-cell h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
-  .feature-cell p { font-size: 14.5px; color: var(--text-2); line-height: 1.6; }
+    .hero-eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 12px var(--brand);
+      animation: blip-pulse 2s ease-in-out infinite;
+    }
 
-  /* ── CTA banner ───────────────────────────────────────────── */
-  .cta-banner {
-    border-radius: var(--radius-xl); border: 1px solid var(--brand-mid);
-    background: linear-gradient(135deg, var(--brand-light) 0%, var(--purple-light) 100%);
-    padding: 4.5rem 3rem; text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .cta-banner::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-    opacity: 0.05; pointer-events: none; mix-blend-mode: multiply;
-  }
-  .cta-banner h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.25rem; color: var(--text); position: relative; z-index: 2; }
-  .cta-banner p { color: var(--text-2); margin: 0 auto 2.5rem; max-width: 540px; font-size: 1.15rem; position: relative; z-index: 2; }
-  .cta-banner .btn-primary { position: relative; z-index: 2; font-size: 16px; padding: 14px 32px; border-radius: 12px; }
+    @keyframes blip-pulse {
 
-  @media (max-width: 860px) {
-    .process-row { grid-template-columns: 1fr; gap: 1.5rem; }
-    .process-index { width: 40px; height: 40px; font-size: 16px; }
-  }
-</style>
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--text-2);
+      margin: 0 auto 2.5rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── Readout Stats ────────────────────────────────────────── */
+    .hero-readout {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      padding: 1.5rem 3rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .readout-item {
+      text-align: center;
+    }
+
+    .readout-label {
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .readout-val {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .readout-val.signal {
+      color: var(--brand);
+    }
+
+    /* ── Marquee ──────────────────────────────────────────────── */
+    .marquee-section {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+      overflow: hidden;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 4rem;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-3);
+      animation: marquee-scroll 35s linear infinite;
+    }
+
+    .marquee-track span {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .marquee-track .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    @keyframes marquee-scroll {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ── Process Visuals ───────────────────────────────────────── */
+    .process-list {
+      margin-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .process-row {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 3rem;
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--bg);
+      align-items: center;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .process-row:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--brand-mid);
+    }
+
+    .process-index {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand);
+      background: var(--brand-light);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .process-name h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .process-name p {
+      font-size: 15px;
+      color: var(--text-2);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .process-visual {
+      height: 100px;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .pv-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 48px;
+    }
+
+    .pv-bars span {
+      width: 8px;
+      background: var(--border-2);
+      border-radius: 4px;
+      opacity: 0.5;
+      transition: height 0.3s;
+    }
+
+    .pv-bars span.hi {
+      background: var(--brand);
+      opacity: 1;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+    }
+
+    .pv-readout {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    .pv-readout strong {
+      color: var(--text);
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .pv-cards {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pv-card {
+      width: 42px;
+      height: 56px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      position: relative;
+    }
+
+    .pv-card.weak::after {
+      content: '✗';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 12px;
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    .pv-card.weak {
+      border-color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .pv-progress-line {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .pv-progress-fill {
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--brand), var(--purple));
+      border-radius: 100px;
+    }
+
+    /* ── Feature Grid ──────────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .feature-cell {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-cell:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--brand-mid);
+    }
+
+    .feature-icon-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--brand-light);
+      border: 1px solid var(--brand-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--brand);
+    }
+
+    .feature-cell h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-cell p {
+      font-size: 14.5px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── CTA banner ───────────────────────────────────────────── */
+    .cta-banner {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--brand-mid);
+      background: linear-gradient(135deg, var(--brand-light) 0%, var(--purple-light) 100%);
+      padding: 4.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+      opacity: 0.05;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1.25rem;
+      color: var(--text);
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-banner p {
+      color: var(--text-2);
+      margin: 0 auto 2.5rem;
+      max-width: 540px;
+      font-size: 1.15rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-banner .btn-primary {
+      position: relative;
+      z-index: 2;
+      font-size: 16px;
+      padding: 14px 32px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .process-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .process-index {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      Quareo
-    </a>
-    <div class="nav-links" id="navLinks">
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        Quareo
+      </a>
+      <div class="nav-links" id="navLinks">
       <a href="index.html" class="active" data-i="nav_home">Главная</a>
       <a href="scanner.html" data-i="nav_scanner">Сканер</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
@@ -178,294 +441,313 @@
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
       <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
     </div>
-    <div class="nav-right">
-      <div class="lang-switch">
-        <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
-        <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
-      </div>
-      <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
-      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
-    </div>
-  </div>
-</nav>
-
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <canvas id="particlesCanvas" class="hero-particles"></canvas>
-    <div class="container hero-content" data-reveal>
-      <div class="hero-eyebrow">
-        <span class="hero-eyebrow-dot"></span>
-        <span data-i="hero_eyebrow">Live · Kaspi.kz · 24/7 сканирование</span>
-      </div>
-      <h1 data-i="hero_h1">Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас</h1>
-      <p class="hero-sub" data-i="hero_sub">Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации категорий и помечает товары с высокой маржой и слабой конкуренцией.</p>
-      
-      <div class="hero-ctas">
-        <a href="scanner.html" class="btn-primary" data-i="hero_cta1" style="padding: 14px 28px; font-size: 16px;">Запустить сканер</a>
-        <a href="#how" class="btn-secondary" data-i="hero_cta2" style="padding: 14px 28px; font-size: 16px;">Как это работает</a>
-      </div>
-      
-      <div class="hero-readout">
-        <div class="readout-item">
-          <div class="readout-label" data-i="ro1_label">Категорий в радаре</div>
-          <div class="readout-val signal" data-count="214">0</div>
+      <div class="nav-right">
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+          <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
         </div>
-        <div class="readout-item">
-          <div class="readout-label" data-i="ro2_label">Уязвимых ниш</div>
-          <div class="readout-val signal" data-count="37">0</div>
-        </div>
-        <div class="readout-item">
-          <div class="readout-label" data-i="ro3_label">Success Fee</div>
-          <div class="readout-val">3–5%</div>
-        </div>
+        <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
+        <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
       </div>
     </div>
-  </section>
+  </nav>
 
-  <!-- MARQUEE -->
-  <div class="marquee-section">
-    <div class="marquee-track" id="marqueeTrack"></div>
-  </div>
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <canvas id="particlesCanvas" class="hero-particles"></canvas>
+      <div class="container hero-content" data-reveal>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          <span data-i="hero_eyebrow">Live · Kaspi.kz · 24/7 сканирование</span>
+        </div>
+        <h1 data-i="hero_h1">Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас</h1>
+        <p class="hero-sub" data-i="hero_sub">Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации
+          категорий и помечает товары с высокой маржой и слабой конкуренцией.</p>
 
-  <!-- HOW IT WORKS -->
-  <section id="how">
-    <div class="container">
-      <div class="section-tag" data-i="how_eyebrow">Процесс</div>
-      <h2 class="section-title" data-i="how_title">От сигнала до полки магазина</h2>
-      <p class="section-sub" data-i="how_sub">Четыре шага — от обнаружения ниши до товара, готового к продаже на маркетплейсах.</p>
+        <div class="hero-ctas">
+          <a href="scanner.html" class="btn-primary" data-i="hero_cta1"
+            style="padding: 14px 28px; font-size: 16px;">Запустить сканер</a>
+          <a href="#how" class="btn-secondary" data-i="hero_cta2" style="padding: 14px 28px; font-size: 16px;">Как это
+            работает</a>
+        </div>
 
-      <div class="process-list">
-        <div class="process-row" data-reveal>
-          <div class="process-index">01</div>
-          <div class="process-name">
-            <h3 data-i="step1_h">Scouting Engine</h3>
-            <p data-i="step1_p">ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к числу активных продавцов.</p>
+        <div class="hero-readout">
+          <div class="readout-item">
+            <div class="readout-label" data-i="ro1_label">Категорий в радаре</div>
+            <div class="readout-val signal" data-count="214">0</div>
           </div>
-          <div class="process-visual">
-            <div class="pv-bars">
-              <span style="height:30%"></span><span style="height:55%"></span><span style="height:40%"></span>
-              <span style="height:80%" class="hi"></span><span style="height:35%"></span><span style="height:60%"></span>
-              <span style="height:25%"></span><span style="height:90%" class="hi"></span>
+          <div class="readout-item">
+            <div class="readout-label" data-i="ro2_label">Уязвимых ниш</div>
+            <div class="readout-val signal" data-count="37">0</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label" data-i="ro3_label">Success Fee</div>
+            <div class="readout-val">3–5%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+      <div class="container">
+        <div class="section-tag" data-i="how_eyebrow">Процесс</div>
+        <h2 class="section-title" data-i="how_title">От сигнала до полки магазина</h2>
+        <p class="section-sub" data-i="how_sub">Четыре шага — от обнаружения ниши до товара, готового к продаже на
+          маркетплейсах.</p>
+
+        <div class="process-list">
+          <div class="process-row" data-reveal>
+            <div class="process-index">01</div>
+            <div class="process-name">
+              <h3 data-i="step1_h">Scouting Engine</h3>
+              <p data-i="step1_p">ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к
+                числу активных продавцов.</p>
             </div>
-            <div class="pv-readout"><strong class="text-signal">0.82</strong><span data-i="pv1_label">monop. index</span></div>
-          </div>
-        </div>
-
-        <div class="process-row" data-reveal>
-          <div class="process-index">02</div>
-          <div class="process-name">
-            <h3 data-i="step2_h">Визуальный аудит</h3>
-            <p data-i="step2_p">Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки помечаются как точка входа.</p>
-          </div>
-          <div class="process-visual">
-            <div class="pv-cards">
-              <div class="pv-card weak"></div>
-              <div class="pv-card weak"></div>
-              <div class="pv-card" style="border-color:var(--brand)"></div>
-              <div class="pv-card weak"></div>
+            <div class="process-visual">
+              <div class="pv-bars">
+                <span style="height:30%"></span><span style="height:55%"></span><span style="height:40%"></span>
+                <span style="height:80%" class="hi"></span><span style="height:35%"></span><span
+                  style="height:60%"></span>
+                <span style="height:25%"></span><span style="height:90%" class="hi"></span>
+              </div>
+              <div class="pv-readout"><strong class="text-signal">0.82</strong><span data-i="pv1_label">monop.
+                  index</span></div>
             </div>
-            <div class="pv-readout"><strong class="text-alert">3 / 4</strong><span data-i="pv2_label">слабых карточек</span></div>
           </div>
-        </div>
 
-        <div class="process-row" data-reveal>
-          <div class="process-index">03</div>
-          <div class="process-name">
-            <h3 data-i="step3_h">Юнит-экономика</h3>
-            <p data-i="step3_p">Аналитика магазина рассчитывает маржу до копейки, строит сезонные графики и помечает товары, которые продаются в минус.</p>
-          </div>
-          <div class="process-visual">
-            <div class="pv-progress-line"><div class="pv-progress-fill"></div></div>
-            <div class="pv-readout"><strong>100%</strong><span data-i="pv3_label">точный P&L</span></div>
-          </div>
-        </div>
-
-        <div class="process-row" data-reveal>
-          <div class="process-index">04</div>
-          <div class="process-name">
-            <h3 data-i="step4_h">Мультиканальный выход</h3>
-            <p data-i="step4_p">Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с первого дня.</p>
-          </div>
-          <div class="process-visual">
-            <div class="pv-cards">
-              <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
-              <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
-              <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
+          <div class="process-row" data-reveal>
+            <div class="process-index">02</div>
+            <div class="process-name">
+              <h3 data-i="step2_h">Визуальный аудит</h3>
+              <p data-i="step2_p">Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки
+                помечаются как точка входа.</p>
             </div>
-            <div class="pv-readout"><strong class="text-signal" data-i="pv4_val">Kaspi+WB+Ozon</strong><span data-i="pv4_label">готово к запуску</span></div>
+            <div class="process-visual">
+              <div class="pv-cards">
+                <div class="pv-card weak"></div>
+                <div class="pv-card weak"></div>
+                <div class="pv-card" style="border-color:var(--brand)"></div>
+                <div class="pv-card weak"></div>
+              </div>
+              <div class="pv-readout"><strong class="text-alert">3 / 4</strong><span data-i="pv2_label">слабых
+                  карточек</span></div>
+            </div>
+          </div>
+
+          <div class="process-row" data-reveal>
+            <div class="process-index">03</div>
+            <div class="process-name">
+              <h3 data-i="step3_h">Юнит-экономика</h3>
+              <p data-i="step3_p">Аналитика магазина рассчитывает маржу до копейки, строит сезонные графики и помечает
+                товары, которые продаются в минус.</p>
+            </div>
+            <div class="process-visual">
+              <div class="pv-progress-line">
+                <div class="pv-progress-fill"></div>
+              </div>
+              <div class="pv-readout"><strong>100%</strong><span data-i="pv3_label">точный P&L</span></div>
+            </div>
+          </div>
+
+          <div class="process-row" data-reveal>
+            <div class="process-index">04</div>
+            <div class="process-name">
+              <h3 data-i="step4_h">Мультиканальный выход</h3>
+              <p data-i="step4_p">Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с
+                первого дня.</p>
+            </div>
+            <div class="process-visual">
+              <div class="pv-cards">
+                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
+                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
+                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
+              </div>
+              <div class="pv-readout"><strong class="text-signal" data-i="pv4_val">Kaspi+WB+Ozon</strong><span
+                  data-i="pv4_label">готово к запуску</span></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FEATURES -->
-  <section id="features" style="background: var(--bg-2);">
-    <div class="container">
-      <div class="section-tag" data-i="feat_eyebrow">Возможности</div>
-      <h2 class="section-title" data-i="feat_title">Полный набор инструментов разведки</h2>
-      <p class="section-sub" data-i="feat_sub">Каждый модуль решает конкретную задачу — от поиска ниши до выхода на полку.</p>
+    <!-- FEATURES -->
+    <section id="features" style="background: var(--bg-2);">
+      <div class="container">
+        <div class="section-tag" data-i="feat_eyebrow">Возможности</div>
+        <h2 class="section-title" data-i="feat_title">Полный набор инструментов разведки</h2>
+        <p class="section-sub" data-i="feat_sub">Каждый модуль решает конкретную задачу — от поиска ниши до выхода на
+          полку.</p>
 
-      <div class="feature-grid">
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">◎</div>
-          <h3 data-i="f1_h">Kaspi Niche Scanner <span class="badge-new">New</span></h3>
-          <p data-i="f1_p">Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые ниши.</p>
-        </div>
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">▣</div>
-          <h3 data-i="f2_h">Визуальный аудит карточек</h3>
-          <p data-i="f2_p">Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.</p>
-        </div>
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">⇄</div>
-          <h3 data-i="f3_h">Сканер профиля Kaspi</h3>
-          <p data-i="f3_p">Анализируйте продажи конкурентов и находите слабые места в своей юнит-экономике.</p>
-        </div>
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">▤</div>
-          <h3 data-i="f4_h">Офлайн + Онлайн аналитика</h3>
-          <p data-i="f4_p">Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.</p>
-        </div>
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">⌬</div>
-          <h3 data-i="f5_h">Telegram-бот</h3>
-          <p data-i="f5_p">Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.</p>
-        </div>
-        <div class="feature-cell" data-reveal>
-          <div class="feature-icon-mark">◧</div>
-          <h3 data-i="f6_h">Дизайн «под ключ»</h3>
-          <p data-i="f6_p">Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.</p>
+        <div class="feature-grid">
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">◎</div>
+            <h3 data-i="f1_h">Kaspi Niche Scanner <span class="badge-new">New</span></h3>
+            <p data-i="f1_p">Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые
+              ниши.</p>
+          </div>
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">▣</div>
+            <h3 data-i="f2_h">Визуальный аудит карточек</h3>
+            <p data-i="f2_p">Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.</p>
+          </div>
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">⇄</div>
+            <h3 data-i="f3_h">Сканер профиля Kaspi</h3>
+            <p data-i="f3_p">Анализируйте продажи конкурентов и находите слабые места в своей юнит-экономике.</p>
+          </div>
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">▤</div>
+            <h3 data-i="f4_h">Офлайн + Онлайн аналитика</h3>
+            <p data-i="f4_p">Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.</p>
+          </div>
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">⌬</div>
+            <h3 data-i="f5_h">Telegram-бот</h3>
+            <p data-i="f5_p">Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.</p>
+          </div>
+          <div class="feature-cell" data-reveal>
+            <div class="feature-icon-mark">◧</div>
+            <h3 data-i="f6_h">Дизайн «под ключ»</h3>
+            <p data-i="f6_p">Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA -->
-  <section>
-    <div class="container">
-      <div class="cta-banner" data-reveal>
-        <div class="section-tag" data-i="cta_eyebrow" style="justify-content:center">Готовы начать?</div>
-        <h2 data-i="cta_title">Найдите свою первую золотую нишу за 5 минут</h2>
-        <p data-i="cta_sub">Подключитесь к радару, получите первые инсайты в Telegram и масштабируйте свой магазин на Kaspi.</p>
-        <a href="pricing.html" class="btn-primary" data-i="cta_btn">Выбрать тариф</a>
+    <!-- CTA -->
+    <section>
+      <div class="container">
+        <div class="cta-banner" data-reveal>
+          <div class="section-tag" data-i="cta_eyebrow" style="justify-content:center">Готовы начать?</div>
+          <h2 data-i="cta_title">Найдите свою первую золотую нишу за 5 минут</h2>
+          <p data-i="cta_sub">Подключитесь к радару, получите первые инсайты в Telegram и масштабируйте свой магазин на
+            Kaspi.</p>
+          <a href="pricing.html" class="btn-primary" data-i="cta_btn">Выбрать тариф</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Quareo</div>
+        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и
+          оптимизируем ваши продажи через глубокую аналитику.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_product">Продукт</div>
+        <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+        <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
+        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+        <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_company">Компания</div>
+        <a href="#" data-i="footer_l_about">О проекте</a>
+        <a href="https://t.me/@Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
+        <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_legal">Документы</div>
+        <a href="#" data-i="footer_l_privacy">Политика конфиденциальности</a>
+        <a href="#" data-i="footer_l_terms">Условия использования</a>
+        <a href="#" data-i="footer_l_offer">Публичная оферта</a>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand">Quareo</div>
-      <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и оптимизируем ваши продажи через глубокую аналитику.</p>
+    <div class="footer-bottom">
+      <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
+      <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
     </div>
-    <div class="footer-col">
-      <div class="footer-col-title" data-i="footer_product">Продукт</div>
-      <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
-      <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
-      <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
-      <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title" data-i="footer_company">Компания</div>
-      <a href="#" data-i="footer_l_about">О проекте</a>
-      <a href="#" data-i="footer_l_contact">Контакты</a>
-      <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title" data-i="footer_legal">Документы</div>
-      <a href="#" data-i="footer_l_privacy">Политика конфиденциальности</a>
-      <a href="#" data-i="footer_l_terms">Условия использования</a>
-      <a href="#" data-i="footer_l_offer">Публичная оферта</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
-    <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
-  </div>
-</footer>
+  </footer>
 
-<script src="assets/common.js"></script>
-<script>
-const PAGE_I18N = {
-  ru: {
-    hero_eyebrow: "Live · Kaspi.kz · 24/7 сканирование",
-    hero_h1: 'Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас',
-    hero_sub: "Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации категорий и помечает товары с высокой маржой и слабой конкуренцией.",
-    hero_cta1: "Запустить сканер", hero_cta2: "Как это работает",
-    ro1_label: "Категорий в радаре", ro2_label: "Уязвимых ниш", ro3_label: "Success Fee",
-    how_eyebrow: "Процесс", how_title: "От сигнала до полки магазина",
-    how_sub: "Четыре шага — от обнаружения ниши до товара, готового к продаже на маркетплейсах.",
-    step1_h: "Scouting Engine", step1_p: "ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к числу активных продавцов.",
-    step2_h: "Визуальный аудит", step2_p: "Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки помечаются как точка входа.",
-    step3_h: "Co-Buying пул", step3_p: "Платформа открывает пул, продавцы присоединяются, бот генерирует счета для оплаты через Kaspi Pay.",
-    step4_h: "Мультиканальный выход", step4_p: "Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с первого дня.",
-    pv1_label: "monop. index", pv2_label: "слабых карточек", pv3_label: "участников", pv4_label: "готово к запуску", pv4_val: "Kaspi+WB+Ozon",
-    feat_eyebrow: "Возможности", feat_title: "Полный набор инструментов разведки",
-    feat_sub: "Каждый модуль решает конкретную задачу — от поиска ниши до выхода на полку.",
-    f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые ниши.",
-    f2_h: "Визуальный аудит карточек", f2_p: "Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.",
-    f3_h: "Синдикат закупок", f3_p: "Объединяйтесь с другими продавцами и закупайте по цене крупного опта.",
-    f4_h: "Офлайн + Онлайн аналитика", f4_p: "Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.",
-    f5_h: "Telegram-бот", f5_p: "Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.",
-    f6_h: "Дизайн «под ключ»", f6_p: "Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.",
-    cta_eyebrow: "Готовы начать?", cta_title: "Найдите свою первую золотую нишу за 5 минут",
-    cta_sub: "Подключитесь к радару, получите первые инсайты в Telegram и присоединяйтесь к открытым пулам синдиката.",
-    cta_btn: "Выбрать тариф",
-    marquee: ["УВЛАЖНИТЕЛИ ВОЗДУХА", "НАУШНИКИ TWS", "ТОВАРЫ ДЛЯ ДАЧИ", "ДЕТСКИЕ ИГРУШКИ", "ВИТАМИНЫ И БАДЫ", "ЧЕХЛЫ ДЛЯ ТЕЛЕФОНОВ", "ОСВЕЖИТЕЛИ ВОЗДУХА", "ПОВЕРБАНКИ"],
-  },
-  en: {
-    hero_eyebrow: "Live · Kaspi.kz · 24/7 scanning",
-    hero_h1: 'The radar finds<br><span class="accent">weak niches</span><br>before you do',
-    hero_sub: "Quareo continuously scans Kaspi.kz, computes a monopolization index for every category, and flags products where competitors are weak — and demand is high.",
-    hero_cta1: "Run the scanner", hero_cta2: "How it works",
-    ro1_label: "Categories on radar", ro2_label: "Vulnerable niches found", ro3_label: "Success fee",
-    how_eyebrow: "Process", how_title: "From signal to shelf",
-    how_sub: "Four steps — from spotting a niche to a product ready to sell across three marketplaces.",
-    step1_h: "Scouting Engine", step1_p: "AI scans Kaspi.kz categories and computes a monopolization index — the ratio of demand to active sellers.",
-    step2_h: "Visual audit", step2_p: "The algorithm checks photos, descriptions and reviews of top competitors — weak listings are flagged as entry points.",
-    step3_h: "Unit Economics", step3_p: "Store analytics calculates margin down to the penny, builds seasonal charts and flags loss-making products.",
-    step4_h: "Multichannel launch", step4_p: "Ready-made cards and infographics for Kaspi, Wildberries and Ozon — top the category from day one.",
-    pv1_label: "monop. index", pv2_label: "weak listings", pv3_label: "participants", pv4_label: "ready to launch", pv4_val: "Kaspi+WB+Ozon",
-    feat_eyebrow: "Capabilities", feat_title: "A full scouting toolkit",
-    feat_sub: "Each module solves one specific job — from finding a niche to landing it on the shelf.",
-    f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Supply/demand ratio analysis per category — we find monopolizable niches.",
-    f2_h: "Visual card audit", f2_p: "Evaluation of competitor photos, reviews and descriptions. Weak cards = entry point.",
-    f3_h: "Kaspi Profile Scanner", f3_p: "Analyze competitors' sales and find weak spots in your own unit economics.",
-    f4_h: "Offline + online analytics", f4_p: "Offline store inventory and online signals in one interface.",
-    f5_h: "Telegram bot", f5_p: "Insights, alerts and documents — straight to the messenger.",
-    f6_h: "Turn-key design", f6_p: "Auto-generated product cards for Kaspi, WB and Ozon — ready to sell immediately.",
-    cta_eyebrow: "Ready to start?", cta_title: "Find your first golden niche in 5 minutes",
-    cta_sub: "Connect to the radar, get your first Telegram insights, and scale your Kaspi store.",
-    cta_btn: "Choose a plan",
-    marquee: ["AIR HUMIDIFIERS", "TWS EARBUDS", "GARDEN GOODS", "KIDS TOYS", "VITAMINS & SUPPLEMENTS", "PHONE CASES", "AIR FRESHENERS", "POWER BANKS"],
-  }
-};
-// Merge page-specific translations into shared dictionary
-Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+  <script src="assets/common.js"></script>
+  <script>
+    const PAGE_I18N = {
+      ru: {
+        hero_eyebrow: "Live · Kaspi.kz · 24/7 сканирование",
+        hero_h1: 'Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас',
+        hero_sub: "Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации категорий и помечает товары с высокой маржой и слабой конкуренцией.",
+        hero_cta1: "Запустить сканер", hero_cta2: "Как это работает",
+        ro1_label: "Категорий в радаре", ro2_label: "Уязвимых ниш", ro3_label: "Success Fee",
+        how_eyebrow: "Процесс", how_title: "От сигнала до полки магазина",
+        how_sub: "Четыре шага — от обнаружения ниши до товара, готового к продаже на маркетплейсах.",
+        step1_h: "Scouting Engine", step1_p: "ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к числу активных продавцов.",
+        step2_h: "Визуальный аудит", step2_p: "Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки помечаются как точка входа.",
+        step3_h: "Юнит-экономика", step3_p: "Аналитика магазина рассчитывает маржу до копейки, строит сезонные графики и помечает товары, которые продаются в минус.",
+        step4_h: "Мультиканальный выход", step4_p: "Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с первого дня.",
+        pv1_label: "monop. index", pv2_label: "слабых карточек", pv3_label: "участников", pv4_label: "готово к запуску", pv4_val: "Kaspi+WB+Ozon",
+        feat_eyebrow: "Возможности", feat_title: "Полный набор инструментов разведки",
+        feat_sub: "Каждый модуль решает конкретную задачу — от поиска ниши до выхода на полку.",
+        f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые ниши.",
+        f2_h: "Визуальный аудит карточек", f2_p: "Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.",
+        f3_h: "Сканер профиля Kaspi", f3_p: "Анализируйте продажи конкурентов и находите слабые места в своей юнит-экономике.",
+        f4_h: "Офлайн + Онлайн аналитика", f4_p: "Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.",
+        f5_h: "Telegram-бот", f5_p: "Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.",
+        f6_h: "Дизайн «под ключ»", f6_p: "Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.",
+        cta_eyebrow: "Готовы начать?", cta_title: "Найдите свою первую золотую нишу за 5 минут",
+        cta_sub: "Подключитесь к радару, получите первые инсайты в Telegram и масштабируйте свой магазин на Kaspi.",
+        cta_btn: "Выбрать тариф",
+        marquee: ["УВЛАЖНИТЕЛИ ВОЗДУХА", "НАУШНИКИ TWS", "ТОВАРЫ ДЛЯ ДАЧИ", "ДЕТСКИЕ ИГРУШКИ", "ВИТАМИНЫ И БАДЫ", "ЧЕХЛЫ ДЛЯ ТЕЛЕФОНОВ", "ОСВЕЖИТЕЛИ ВОЗДУХА", "ПОВЕРБАНКИ"],
+      },
+      en: {
+        hero_eyebrow: "Live · Kaspi.kz · 24/7 scanning",
+        hero_h1: 'The radar finds<br><span class="accent">weak niches</span><br>before you do',
+        hero_sub: "Quareo continuously scans Kaspi.kz, computes a monopolization index for every category, and flags products where competitors are weak — and demand is high.",
+        hero_cta1: "Run the scanner", hero_cta2: "How it works",
+        ro1_label: "Categories on radar", ro2_label: "Vulnerable niches found", ro3_label: "Success fee",
+        how_eyebrow: "Process", how_title: "From signal to shelf",
+        how_sub: "Four steps — from spotting a niche to a product ready to sell across three marketplaces.",
+        step1_h: "Scouting Engine", step1_p: "AI scans Kaspi.kz categories and computes a monopolization index — the ratio of demand to active sellers.",
+        step2_h: "Visual audit", step2_p: "The algorithm checks photos, descriptions and reviews of top competitors — weak listings are flagged as entry points.",
+        step3_h: "Unit Economics", step3_p: "Store analytics calculates margin down to the penny, builds seasonal charts and flags loss-making products.",
+        step4_h: "Multichannel launch", step4_p: "Ready-made cards and infographics for Kaspi, Wildberries and Ozon — top the category from day one.",
+        pv1_label: "monop. index", pv2_label: "weak listings", pv3_label: "participants", pv4_label: "ready to launch", pv4_val: "Kaspi+WB+Ozon",
+        feat_eyebrow: "Capabilities", feat_title: "A full scouting toolkit",
+        feat_sub: "Each module solves one specific job — from finding a niche to landing it on the shelf.",
+        f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Supply/demand ratio analysis per category — we find monopolizable niches.",
+        f2_h: "Visual card audit", f2_p: "Evaluation of competitor photos, reviews and descriptions. Weak cards = entry point.",
+        f3_h: "Kaspi Profile Scanner", f3_p: "Analyze competitors' sales and find weak spots in your own unit economics.",
+        f4_h: "Offline + online analytics", f4_p: "Offline store inventory and online signals in one interface.",
+        f5_h: "Telegram bot", f5_p: "Insights, alerts and documents — straight to the messenger.",
+        f6_h: "Turn-key design", f6_p: "Auto-generated product cards for Kaspi, WB and Ozon — ready to sell immediately.",
+        cta_eyebrow: "Ready to start?", cta_title: "Find your first golden niche in 5 minutes",
+        cta_sub: "Connect to the radar, get your first Telegram insights, and scale your Kaspi store.",
+        cta_btn: "Choose a plan",
+        marquee: ["AIR HUMIDIFIERS", "TWS EARBUDS", "GARDEN GOODS", "KIDS TOYS", "VITAMINS & SUPPLEMENTS", "PHONE CASES", "AIR FRESHENERS", "POWER BANKS"],
+      }
+    };
+    // Merge page-specific translations into shared dictionary
+    Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
 
-function renderMarquee() {
-  const items = RP_I18N[RP_LANG].marquee;
-  const html = items.map(m => `<span><span class="dot"></span>${m}</span>`).join('');
-  document.getElementById('marqueeTrack').innerHTML = html + html;
-}
+    function renderMarquee() {
+      const items = RP_I18N[RP_LANG].marquee;
+      const html = items.map(m => `<span><span class="dot"></span>${m}</span>`).join('');
+      document.getElementById('marqueeTrack').innerHTML = html + html;
+    }
 
-function onLangChange() {
-  renderMarquee();
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') === 'index.html') a.classList.add('active');
-  });
-}
+    function onLangChange() {
+      renderMarquee();
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        if (a.getAttribute('href') === 'index.html') a.classList.add('active');
+      });
+    }
 
-renderMarquee();
+    renderMarquee();
 
-// Initialize particles for hero
-if (typeof rpInitParticles === 'function') {
-  rpInitParticles('particlesCanvas');
-}
-</script>
+    // Initialize particles for hero
+    if (typeof rpInitParticles === 'function') {
+      rpInitParticles('particlesCanvas');
+    }
+  </script>
 </body>
+
 </html>
