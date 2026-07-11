@@ -93,19 +93,31 @@ async def _send_vip_notifications(query: str, score: int, avg_price: float, sell
         return
         
     text = (
-        f"💎 <b>VIP-Радар: Найдена горячая ниша!</b>\n\n"
+        f"💎 <b>VIP-Радар: Кто-то нашел горячую нишу!</b>\n\n"
         f"👤 Нашел: <b>{user_email}</b>\n"
         f"🔍 Запрос: <b>{query}</b>\n"
         f"📊 Перспектива: <b>{score}/100</b>\n"
         f"💰 Ср. цена: <b>{_format_price(avg_price)}</b>\n"
         f"🏪 Продавцов: <b>{seller_count}</b>\n\n"
-        f"📦 Топ товары:\n"
     )
-    for i, p in enumerate(products[:3], 1):
+    
+    weaknesses = [p.get("weakness_reasons") for p in products if p.get("weakness_reasons")]
+    flat_weaknesses = list(set(item for sublist in weaknesses for item in sublist))
+    if flat_weaknesses:
+        text += "⚠️ <b>Слабости:</b>\n"
+        for w in flat_weaknesses[:3]:
+            text += f"  • {w}\n"
+        text += "\n"
+        
+    text += "📦 <b>Топ товары:</b>\n"
+    for i, p in enumerate(products[:5], 1):
         url = p.get('url', '')
         title = p.get('title', 'Товар')[:40]
-        text += f"{i}. <a href='{url}'>{title}...</a>\n"
+        price = _format_price(p.get('price', 0))
+        text += f"{i}. <a href='{url}'>{title}...</a> - {price}\n"
         
+    text += f"\n💡 <i>Запустите сканер /scan {query} чтобы получить полный анализ</i>"
+    
     url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage"
     
     async with httpx.AsyncClient() as client:
