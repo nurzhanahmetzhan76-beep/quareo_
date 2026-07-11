@@ -6,7 +6,7 @@ import asyncio
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from retailpool.database import SessionLocal
+from retailpool.database import async_session_factory
 from retailpool.services.repricing_service import run_repricing_cycle
 
 logger = logging.getLogger(__name__)
