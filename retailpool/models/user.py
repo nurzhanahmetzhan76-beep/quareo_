@@ -29,7 +29,11 @@ class User(Base):
         String(256), unique=True, index=True, nullable=False
     )
     hashed_password: Mapped[str] = mapped_column(
-        String(512), nullable=False
+        String(512), nullable=True
+    )
+     google_id: Mapped[str | None] = mapped_column(
+        String(64), unique=True, index=True, nullable=True,
+        comment="Google account ID (sub) for OAuth login"
     )
     full_name: Mapped[str] = mapped_column(
         String(256), nullable=False
