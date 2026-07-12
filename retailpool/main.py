@@ -32,6 +32,7 @@ from retailpool.database import engine
 from retailpool.routers.scanner import router as scanner_router
 
 from retailpool.routers.auth import router as auth_router
+from retailpool.routers.google_auth import router as google_auth_router
 from retailpool.routers.scan_api import router as scan_api_router
 from retailpool.routers.subscriptions import router as subscriptions_router
 from retailpool.routers.ntin import router as ntin_router
@@ -133,6 +134,7 @@ app.add_middleware(
 
 # ── API routers ──────────────────────────────────────────────────────────
 app.include_router(auth_router)
+app.include_router(google_auth_router)
 app.include_router(scanner_router)
 
 app.include_router(scan_api_router)
