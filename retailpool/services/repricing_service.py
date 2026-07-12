@@ -266,10 +266,7 @@ async def process_single_rule(
         if new_price is None:
             return result
 
-        # Step 3: Push new price via Kaspi API
-        await kaspi_client.update_price(rule.kaspi_sku, new_price)
-
-        # Step 4: Log the change
+       # Step 3: Log the recommendation (audit trail)
         log = RepricingLog(
             rule_id=rule.id,
             old_price=rule.my_current_price,
@@ -279,9 +276,17 @@ async def process_single_rule(
         )
         db.add(log)
 
-        # Update rule's current price
-        rule.my_current_price = new_price
-        result["new_price"] = new_price
+        # Step 4: Notify user only when a competitor undercut them.
+        # We do NOT touch Kaspi — the user updates prices via safe Excel upload.
+        if action in ("undercut", "floor_hit"):
+            await _notify_user_undercut(
+                telegram_id=getattr(rule, "owner_telegram_id", None),
+                product_name=rule.product_name,
+                competitor_price=lowest,
+                recommended_price=new_price,
+            )
+
+        result["new_price"] = new_price  # recommended price, not applied
 
         logger.info(
             "Repricing [%s]: %s -> %s (competitor: %s, action: %s)",
