@@ -24,10 +24,13 @@ def upgrade() -> None:
     tables = inspector.get_table_names()
     
     # Add telegram_id to users
-    columns = [c["name"] for c in inspector.get_columns("users")]
-    if "telegram_id" not in columns:
-        op.add_column('users', sa.Column('telegram_id', sa.BigInteger(), nullable=True))
-        op.create_index(op.f('ix_users_telegram_id'), 'users', ['telegram_id'], unique=True)
+        # Add telegram_id to users (users table itself is created by the app's
+    # Base.metadata.create_all() on first boot, not by a migration)
+    if "users" in tables:
+        columns = [c["name"] for c in inspector.get_columns("users")]
+        if "telegram_id" not in columns:
+            op.add_column('users', sa.Column('telegram_id', sa.BigInteger(), nullable=True))
+            op.create_index(op.f('ix_users_telegram_id'), 'users', ['telegram_id'], unique=True)
     
     if "user_seller_settings" not in tables:
         op.create_table('user_seller_settings',
