@@ -21,7 +21,34 @@ from retailpool.models.repricing import RepricingRule, RepricingLog
 from retailpool.services.kaspi_api import KaspiSellerClient
 
 logger = logging.getLogger(__name__)
+async def _notify_user_undercut(
+    telegram_id: int | None,
+    product_name: str,
+    competitor_price: float,
+    recommended_price: float,
+) -> None:
+    """Send a Telegram alert that a competitor undercut the user."""
+    if not telegram_id:
+        return
+    from telegram import Bot
+    from retailpool.bot.config import bot_settings
 
+    if not bot_settings.BOT_TOKEN:
+        logger.warning("No BOT_TOKEN — cannot send repricing alert.")
+        return
+
+    text = (
+        f"⚠️ <b>Вас обошли по цене!</b>\n\n"
+        f"Товар: {product_name[:60]}\n"
+        f"Конкурент: {int(competitor_price)} ₸\n"
+        f"Рекомендуемая цена: <b>{int(recommended_price)} ₸</b>\n\n"
+        f"Обновите цену через загрузку прайс-листа в кабинете Kaspi."
+    )
+    try:
+        bot = Bot(token=bot_settings.BOT_TOKEN)
+        await bot.send_message(chat_id=telegram_id, text=text, parse_mode="HTML")
+    except Exception as exc:
+        logger.error("Failed to send repricing alert to %s: %s", telegram_id, exc)
 
 def _parse_price(text: str) -> float | None:
     """Parse a price string like '18 500 ₸' into a float."""
