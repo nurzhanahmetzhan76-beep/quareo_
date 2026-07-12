@@ -337,8 +337,16 @@ async def run_repricing_cycle(db: AsyncSession) -> list[dict]:
             continue
             
         client = KaspiSellerClient(token)
-        
+
+        # Fetch owner's telegram_id once for notifications
+        from retailpool.models.user import User
+        owner = (await db.execute(
+            select(User).where(User.id == user_id)
+        )).scalar_one_or_none()
+        owner_tg = owner.telegram_id if owner else None
+
         for rule in u_rules:
+            rule.owner_telegram_id = owner_tg  # attach for notifier
             result = await process_single_rule(rule, client, db)
             results.append(result)
 
