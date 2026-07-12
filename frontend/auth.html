@@ -251,6 +251,23 @@ async function handleLogin() {
     errBox.classList.add('visible');
   }
 }
+  // Render Google button on the Register tab too
+window.addEventListener('load', function () {
+  if (window.google && document.getElementById('g_id_signin_register')) {
+    google.accounts.id.renderButton(
+      document.getElementById('g_id_signin_register'),
+      {
+        type: 'standard',
+        size: 'large',
+        theme: 'outline',
+        text: 'signup_with',
+        shape: 'pill',
+        logo_alignment: 'center',
+        width: 320
+      }
+    );
+  }
+});
 
 async function handleRegister() {
   const t = RP_I18N[RP_LANG];
