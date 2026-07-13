@@ -35,7 +35,6 @@ from retailpool.routers.auth import router as auth_router
 from retailpool.routers.scan_api import router as scan_api_router
 from retailpool.routers.subscriptions import router as subscriptions_router
 from retailpool.routers.ntin import router as ntin_router
-from retailpool.routers.repricing import router as repricing_router
 from retailpool.routers.analytics import router as analytics_router
 from retailpool.routers.reviews import router as reviews_router
 from retailpool.routers.waybills import router as waybills_router
@@ -71,7 +70,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     from retailpool.models import subscription  # noqa: F401 — register model
     from retailpool.bot import models as _bot_models  # noqa: F401 — register bot models
     from retailpool.models import ntin as _ntin_models  # noqa: F401 — register NTIN models
-    from retailpool.models import repricing as _repricing_models  # noqa: F401 — register repricing models
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables ensured.")
@@ -138,7 +136,6 @@ app.include_router(scanner_router)
 app.include_router(scan_api_router)
 app.include_router(subscriptions_router)
 app.include_router(ntin_router)
-app.include_router(repricing_router)
 app.include_router(analytics_router)
 app.include_router(reviews_router)
 app.include_router(waybills_router)
@@ -191,6 +188,8 @@ _PAGE_ROUTES = [
     ("/reviews",     "reviews.html"),
     ("/waybills",    "waybills.html"),
     ("/dashboard",   "dashboard.html"),
+    ("/wb_scanner",  "wb_scanner.html"),
+    ("/ozon_scanner", "ozon_scanner.html"),
 ]
 
 for _path, _filename in _PAGE_ROUTES:

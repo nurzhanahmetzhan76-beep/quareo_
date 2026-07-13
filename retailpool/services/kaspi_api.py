@@ -45,6 +45,35 @@ class KaspiSellerClient:
             data = resp.json()
             return data.get("data", [])
 
+    async def get_all_products(self, size: int = 100) -> list[dict[str, Any]]:
+        """Fetch ALL merchant's products by paginating through Kaspi Seller API."""
+        url = f"{KASPI_SELLER_API_BASE}/products"
+        all_products = []
+        page = 0
+        
+        async with httpx.AsyncClient(timeout=30) as client:
+            while True:
+                params = {"page[number]": page, "page[size]": size}
+                resp = await client.get(url, headers=self._headers, params=params)
+                resp.raise_for_status()
+                data = resp.json()
+                
+                items = data.get("data", [])
+                if not items:
+                    break
+                    
+                all_products.extend(items)
+                
+                # Check pagination metadata
+                meta = data.get("meta", {})
+                page_count = meta.get("pageCount", 1)
+                
+                page += 1
+                if page >= page_count:
+                    break
+                    
+        return all_products
+
     async def update_price(self, master_sku: str, new_price: float) -> dict[str, Any]:
         """Update the price of a product via Kaspi Seller API.
 
@@ -70,6 +99,7 @@ class KaspiSellerClient:
             resp = await client.patch(url, headers=self._headers, json=payload)
             resp.raise_for_status()
             result = resp.json()
+
             logger.info(
                 "Kaspi price updated: SKU=%s new_price=%s",
                 master_sku, int(new_price)

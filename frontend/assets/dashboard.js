@@ -2,6 +2,21 @@
    Quareo Dashboard JS — Bulk NTIN automation engine
    ============================================================ */
 const API = window.location.origin;
+
+// Inject Auth headers into all API requests to fix 401 Unauthorized
+const _dashFetch = window.fetch;
+window.fetch = async function(...args) {
+  let [resource, config] = args;
+  if (typeof resource === 'string' && resource.startsWith(API + '/api/')) {
+    config = config || {};
+    config.headers = config.headers || {};
+    if (typeof rpAuthHeaders === 'function') {
+      Object.assign(config.headers, rpAuthHeaders());
+    }
+    args = [resource, config];
+  }
+  return _dashFetch(...args);
+};
 const ST = {
   draft:     { label: 'Черновик',     cls: 'st-draft' },
   ai_filled: { label: 'ИИ заполнен', cls: 'st-ai_filled' },
@@ -13,10 +28,10 @@ const ST = {
   revoked:   { label: 'Отозван',     cls: 'st-rejected' },
 };
 const PAGE_TITLES = {
-  connect: 'Подключение магазина', ntin: 'NTIN Маркировка',
-  robot: 'Робот-репрайсер', analytics: 'Аналитика магазина',
-  products: 'Товары без продавцов', cost: 'Себестоимость',
-  reviews: 'Отзывы', waybills: 'Накладные',
+  'connect': 'Информация о магазине',
+  'ntin': 'NTIN Маркировка',
+  'waybills': '📄 Накладные',
+  'analytics': '📊 Аналитика'
 };
 
 let allProducts = []; // cached product list for filtering
@@ -314,7 +329,34 @@ async function bulkSubmitNkt() {
 /* ── Init ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   updateShopBadge();
-  // Load NTIN data on startup since it's the default page
-  loadProducts();
-  loadStats();
+  
+  // Handle direct links to specific pages
+  const hash = window.location.hash.replace('#', '');
+  if (hash && PAGE_TITLES[hash]) {
+    showPage(hash);
+  } else {
+    showPage('connect');
+    loadProducts();
+    loadStats();
+  }
+});
+
+/* ── Kaspi Profile Tabs ───────────────────────────────────── */
+function switchKaspiTab(tabId, el) {
+  document.querySelectorAll('.kaspi-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  
+  document.querySelectorAll('.kaspi-tab-content').forEach(c => c.style.display = 'none');
+  
+  if(tabId === 'general') document.getElementById('kTabGeneral').style.display = 'block';
+  if(tabId === 'api') document.getElementById('kTabApi').style.display = 'block';
+}
+
+// Ensure the profile name matches the connected store
+document.addEventListener('DOMContentLoaded', () => {
+  const shopName = localStorage.getItem('quareo_shop');
+  if (shopName) {
+    const el = document.getElementById('kShopName');
+    if (el) el.textContent = shopName;
+  }
 });

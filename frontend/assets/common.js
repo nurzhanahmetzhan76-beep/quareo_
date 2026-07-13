@@ -48,7 +48,7 @@ function rpAuthHeaders() {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Kaspi-бот", nav_pricing: "Тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Kaspi-бот", nav_pricing: "Тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",
@@ -59,7 +59,7 @@ const RP_I18N = {
     footer_built: "Алматы · Казахстан",
   },
   en: {
-    nav_home: "Home", nav_scanner: "Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_kaspi_bot: "Kaspi-bot", nav_pricing: "Pricing", nav_cta: "Get started",
+    nav_home: "Home", nav_scanner: "Kaspi Scanner", nav_wb_scanner: "WB Scanner", nav_ozon_scanner: "Ozon Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_kaspi_bot: "Kaspi-bot", nav_pricing: "Pricing", nav_cta: "Get started",
     nav_login: "Sign in", nav_register: "Sign up", nav_logout: "Sign out", nav_profile: "Profile",
     footer_desc: "An AI radar for Kaspi.kz: we find low-competition niches and form co-buying syndicates for Kazakhstani SMBs.",
     footer_product: "Product", footer_company: "Company", footer_legal: "Legal",
@@ -110,14 +110,15 @@ function rpUpdateAuthNav() {
   const user = rpGetUser();
 
   if (user && rpGetToken()) {
-    // Logged in — show user badge + logout
+    // Logged in — show dashboard link + logout
     const badge = document.createElement('div');
     badge.className = 'auth-user-badge';
     badge.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:13px;';
 
-    const name = document.createElement('span');
-    name.style.cssText = 'color:var(--text-2);font-size:12px;';
-    name.textContent = user.full_name || user.email;
+    const dashLink = document.createElement('a');
+    dashLink.href = 'dashboard.html';
+    dashLink.style.cssText = 'color:var(--brand);font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-sm);background:rgba(37, 99, 235, 0.08);';
+    dashLink.innerHTML = `👤 Личный кабинет`;
 
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'auth-nav-btn';
@@ -125,7 +126,7 @@ function rpUpdateAuthNav() {
     logoutBtn.textContent = t.nav_logout;
     logoutBtn.onclick = rpLogout;
 
-    badge.appendChild(name);
+    badge.appendChild(dashLink);
     badge.appendChild(logoutBtn);
 
     // Insert before burger button

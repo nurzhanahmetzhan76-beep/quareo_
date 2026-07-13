@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quareo Niche Scanner</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .page-hero { padding-top: 108px; padding-bottom: 3rem; text-align: center; }
+  .page-hero .section-tag { justify-content: center; }
+  
+  /* ── Terminal panel ───────────────────────────────────────── */
+  .terminal {
+    border-radius: var(--radius-lg); border: 1px solid var(--border);
+    background: var(--bg); overflow: hidden;
+    margin-top: 2rem; box-shadow: var(--shadow-lg);
+  }
+  .terminal-bar {
+    padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; background: var(--bg-2);
+  }
+  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal-title {
+    font-family: var(--font-mono); font-size: 13px; color: var(--text-2); font-weight: 500;
+    margin-left: 6px;
+  }
+  .terminal-status {
+    margin-left: auto; font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    color: var(--green); display: flex; align-items: center; gap: 8px;
+  }
+  .terminal-status .dot-live {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 8px var(--green); animation: blip-pulse 2s ease-in-out infinite;
+  }
+  @keyframes blip-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+
+  .input-row {
+    padding: 1.5rem; display: flex; gap: 12px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .scan-input {
+    flex: 1; min-width: 240px;
+    background: var(--bg-2); border: 1px solid var(--border-2);
+    border-radius: var(--radius-sm); padding: 14px 20px;
+    color: var(--text); font-size: 15px; outline: none;
+    font-family: var(--font-body);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .scan-input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-light); }
+  .scan-input::placeholder { color: var(--text-3); }
+
+  .chip-row { padding: 0 1.5rem 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip {
+    font-size: 13px; font-weight: 500;
+    background: var(--bg-2); color: var(--text-2);
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 8px 16px; cursor: pointer; transition: all 0.2s;
+  }
+  .chip:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+
+  .scan-body { padding: 2rem; min-height: 180px; }
+
+  .scan-idle {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px; padding: 4rem 0; color: var(--text-3);
+  }
+  .scan-idle-ring {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px dashed var(--border-2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--text-3);
+    animation: idle-spin 20s linear infinite;
+  }
+  @keyframes idle-spin { to { transform: rotate(360deg); } }
+  .scan-idle p { font-size: 15px; font-weight: 500; }
+
+  .scan-loading { display: none; align-items: center; justify-content: center; flex-direction: column; gap: 20px; padding: 4rem 0; }
+  .scan-loading.active { display: flex; }
+  .scan-spinner {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 3px solid var(--border-2); border-top-color: var(--brand);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .scan-loading-text { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-2); }
+
+  .scan-result { display: none; }
+  .scan-result.active { display: block; animation: result-fade 0.5s ease; }
+  @keyframes result-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;
+    padding-bottom: 2rem; border-bottom: 1px solid var(--border);
+  }
+  .result-title { font-size: 1.8rem; font-family: var(--font-display); font-weight: 700; color: var(--text); }
+  .result-score { display: flex; align-items: center; gap: 14px; }
+  .score-ring {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; flex-shrink: 0;
+    border: 4px solid var(--brand); color: var(--brand);
+    box-shadow: 0 0 16px var(--brand-light);
+  }
+  .score-text-label { font-size: 13px; color: var(--text-2); font-weight: 500; }
+  .score-text-label strong { display: block; color: var(--text); font-size: 16px; font-weight: 700; margin-top: 2px; }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; margin-bottom: 2.5rem;
+  }
+  .metric-cell { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; }
+  .metric-cell-label {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 8px;
+  }
+  .metric-cell-val { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: var(--text); }
+
+  .result-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+  .result-block-title {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--brand); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .result-block-title::before { content: ''; width: 12px; height: 2px; background: var(--brand); border-radius: 2px; }
+  
+  .item-list { display: flex; flex-direction: column; gap: 12px; }
+  .item-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14.5px; color: var(--text-2); line-height: 1.6;
+    background: var(--bg); border-radius: var(--radius-sm); padding: 14px 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  }
+  .item-row.weak { border-left: 4px solid var(--red); }
+  .item-row.weak .item-mark { color: var(--red); }
+  .item-row.reco { border-left: 4px solid var(--green); }
+  .item-row.reco .item-mark { color: var(--green); }
+  .item-mark { font-size: 16px; flex-shrink: 0; font-weight: 700; margin-top: -2px; }
+
+  .analysis-block {
+    font-size: 15px; color: var(--text-2); line-height: 1.8;
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .cursor-blink {
+    display: inline-block; width: 2px; height: 16px;
+    background: var(--brand); margin-left: 4px;
+    animation: blink 0.8s step-end infinite; vertical-align: middle;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .pool-banner {
+    border-radius: var(--radius-lg); border: 1px solid var(--brand-mid);
+    background: linear-gradient(135deg, var(--brand-light) 0%, var(--purple-light) 100%);
+    padding: 2rem; display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem; flex-wrap: wrap; text-align: center;
+  }
+  .pool-banner-text { font-size: 16px; color: var(--text); flex: 1; }
+  .pool-banner-text strong { color: var(--brand); font-size: 18px; display: block; margin-bottom: 6px; }
+
+  @media (max-width: 760px) {
+    .result-cols { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      Quareo
+    </a>
+    <div class="nav-links" id="navLinks">
+
+      <a href="index.html" data-i="nav_home">Главная</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+      <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
+      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+      <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+        <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+      </div>
+      <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
+      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="page-hero" id="demo">
+    <div class="container-narrow">
+      <div class="section-tag" data-i="ph_eyebrow">Ozon Niche Scanner</div>
+      <h1 data-i="ph_title">Введите товар — получите разведданные</h1>
+      <p data-i="ph_sub">Живой анализ ниши на Ozon: спрос, слабые конкуренты и рекомендации по входу за секунды.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="terminal" data-reveal>
+        <div class="terminal-bar">
+          <span class="terminal-dot" style="background:#EF4444"></span>
+          <span class="terminal-dot" style="background:#F59E0B"></span>
+          <span class="terminal-dot" style="background:#10B981"></span>
+          <span class="terminal-title">quareo@scanner — ozon.ru</span>
+          <span class="terminal-status"><span class="dot-live"></span><span data-i="term_live">ОНЛАЙН</span></span>
+        </div>
+        <div class="input-row">
+          <input class="scan-input" id="nicheInput" data-i_ph="scan_ph" placeholder="увлажнитель воздуха, наушники TWS, товары для дачи..." onkeydown="if(event.key==='Enter')runAnalysis()">
+          <button class="btn-primary" id="analyzeBtn" onclick="runAnalysis()">
+            <span data-i="scan_btn">Сканировать</span>
+          </button>
+        </div>
+        <div class="chip-row">
+          <span class="chip" onclick="fillChip(this)" data-ru="увлажнитель воздуха" data-en="air humidifier">💧 <span data-i="chip1">Увлажнитель воздуха</span></span>
+          <span class="chip" onclick="fillChip(this)" data-ru="беспроводные наушники" data-en="wireless earbuds">🎧 <span data-i="chip2">Беспроводные наушники</span></span>
+          <span class="chip" onclick="fillChip(this)" data-ru="детские игрушки монтессори" data-en="montessori toys">🧸 <span data-i="chip3">Игрушки Монтессори</span></span>
+          <span class="chip" onclick="fillChip(this)" data-ru="витамины и бады" data-en="vitamins and supplements">💊 <span data-i="chip4">Витамины и БАДы</span></span>
+          <span class="chip" onclick="fillChip(this)" data-ru="товары для дачи" data-en="garden goods">🪴 <span data-i="chip5">Товары для дачи</span></span>
+        </div>
+
+        <div class="scan-body">
+          <div class="scan-idle" id="scanIdle">
+            <div class="scan-idle-ring">◎</div>
+            <p data-i="scan_idle">Введите товар выше и нажмите «Сканировать»</p>
+          </div>
+          <div class="scan-loading" id="scanLoading">
+            <div class="scan-spinner"></div>
+            <span class="scan-loading-text" id="loadingText" data-i="scan_loading">Сканирую Ozon...</span>
+          </div>
+          <div class="scan-result" id="scanResult">
+            <div class="result-head">
+              <div class="result-title" id="resultTitle"></div>
+              <div class="result-score">
+                <div class="score-ring" id="scoreRing"></div>
+                <div class="score-text-label">
+                  <span data-i="score_label">Niche Score</span>
+                  <strong id="scoreLabelText"></strong>
+                </div>
+              </div>
+            </div>
+            <div class="metric-grid" id="metricGrid"></div>
+            <div class="result-cols">
+              <div>
+                <div class="result-block-title" data-i="res_weak">Слабые места конкурентов</div>
+                <div class="item-list" id="weaknessList"></div>
+              </div>
+              <div>
+                <div class="result-block-title" data-i="res_reco">Рекомендации Quareo</div>
+                <div class="item-list" id="recoList"></div>
+              </div>
+            </div>
+            <div class="result-block-title" data-i="res_analysis">Полный анализ</div>
+            <div class="analysis-block" id="analysisBlock"></div>
+            
+            <div class="pool-banner" style="flex-direction: column; align-items: stretch; gap: 1.5rem;">
+              <div class="pool-banner-text" style="text-align: center;">
+                <strong data-i="pool_action_title">Оцените рентабельность</strong>
+                <span data-i="pool_action_desc" style="color: var(--text-2); font-size: 15px; display: inline-block; margin-top: 4px;">Используйте глубокий анализ магазина, чтобы рассчитать P&L и юнит-экономику перед закупкой.</span>
+              </div>
+              <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="analytics.html" class="btn-primary" data-i="store_scanner_btn" style="padding:12px 26px;">📊 Открыть Store Scanner</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Quareo</div>
+      <p class="footer-desc" data-i="footer_desc">ИИ-радар по Ozon: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_product">Продукт</div>
+      <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+        <a href="analytics.html" data-i="footer_l_analytics">Store Scanner</a>
+      <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+      <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_company">Компания</div>
+      <a href="#" data-i="footer_l_about">О проекте</a>
+      <a href="https://t.me/@Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
+      <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title" data-i="footer_legal">Документы</div>
+      <a href="#" data-i="footer_l_privacy">Политика конфиденциальности</a>
+      <a href="#" data-i="footer_l_terms">Условия использования</a>
+      <a href="#" data-i="footer_l_offer">Публичная оферта</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
+    <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
+  </div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script>
+const PAGE_I18N = {
+  ru: {
+    ph_eyebrow: "Ozon Niche Scanner",
+    ph_title: "Введите товар — получите реальные данные",
+    ph_sub: "Живой анализ ниши на Ozon: реальные товары, цены, конкуренты и рекомендации по входу.",
+    term_live: "ОНЛАЙН",
+    scan_ph: "увлажнитель воздуха, наушники TWS, товары для дачи...",
+    scan_btn: "Сканировать",
+    chip1: "Увлажнитель воздуха", chip2: "Беспроводные наушники", chip3: "Игрушки Монтессори", chip4: "Витамины и БАДы", chip5: "Товары для дачи",
+    scan_idle: "Введите товар выше и нажмите «Сканировать»",
+    scan_loading: "Сканирую Ozon...",
+    score_label: "Niche Score",
+    res_weak: "Слабые места конкурентов", res_reco: "Рекомендации Quareo", res_analysis: "Полный анализ",
+    res_products: "Найденные товары на Ozon",
+    pool_action_title: "Оцените рентабельность", pool_action_desc: "Используйте глубокий анализ магазина, чтобы рассчитать P&L.", store_scanner_btn: "📊 Открыть Store Scanner",
+    metric_demand: "Спрос", metric_sellers: "Продавцов", metric_price: "Средняя цена", metric_opp: "Потенциал",
+    scan_error: "Ошибка анализа. Попробуйте снова.",
+    scan_blocked: "Ozon заблокировал запрос. Подождите 30 сек и попробуйте снова.",
+    loading_msgs: ["Запускаю Playwright...","Открываю API Ozon...","Парсю результаты поиска...","Анализирую карточки товаров...","Считаю метрики ниши..."],
+    badge_real: "📊 РЕАЛЬНЫЕ ДАННЫЕ",
+  },
+  en: {
+    ph_eyebrow: "Ozon Niche Scanner",
+    ph_title: "Enter a product — get real data",
+    ph_sub: "Live niche analysis on Ozon: real products, prices, competitors and entry recommendations.",
+    term_live: "LIVE",
+    scan_ph: "air humidifier, TWS earbuds, garden goods...",
+    scan_btn: "Scan",
+    chip1: "Air humidifier", chip2: "Wireless earbuds", chip3: "Montessori toys", chip4: "Vitamins & supplements", chip5: "Garden goods",
+    scan_idle: "Enter a product above and click Scan",
+    scan_loading: "Scanning Ozon...",
+    score_label: "Niche Score",
+    res_weak: "Competitor weaknesses", res_reco: "Quareo recommendations", res_analysis: "Full analysis",
+    res_products: "Products found on Ozon",
+    pool_action_title: "Evaluate Profitability", pool_action_desc: "Use the deep store scanner to calculate P&L.", store_scanner_btn: "📊 Open Store Scanner",
+    metric_demand: "Demand", metric_sellers: "Sellers", metric_price: "Avg price", metric_opp: "Opportunity",
+    scan_error: "Analysis failed. Please try again.",
+    scan_blocked: "Ozon blocked the request. Wait 30s and try again.",
+    loading_msgs: ["Launching Playwright...","Opening Ozon...","Parsing search results...","Analyzing product cards...","Calculating niche metrics..."],
+    badge_real: "📊 REAL DATA",
+  }
+};
+Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+
+function onLangChange() {}
+
+function fillChip(el) {
+  const text = RP_LANG === 'ru' ? el.getAttribute('data-ru') : el.getAttribute('data-en');
+  document.getElementById('nicheInput').value = text;
+  runAnalysis();
+}
+
+async function runAnalysis() {
+  const niche = document.getElementById('nicheInput').value.trim();
+  if (!niche) return;
+
+  const t = RP_I18N[RP_LANG];
+  document.getElementById('scanIdle').style.display = 'none';
+  document.getElementById('scanResult').classList.remove('active');
+  const loading = document.getElementById('scanLoading');
+  loading.classList.add('active');
+  document.getElementById('analyzeBtn').disabled = true;
+
+  let mi = 0;
+  const lt = document.getElementById('loadingText');
+  const msgInterval = setInterval(() => {
+    mi = (mi + 1) % t.loading_msgs.length;
+    lt.textContent = t.loading_msgs[mi];
+  }, 3000);
+
+  try {
+    const resp = await fetch(RP_API_BASE + '/api/ozon_scan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...rpAuthHeaders(),
+      },
+      body: JSON.stringify({ query: niche }),
+    });
+
+   if (!resp.ok) {
+      let errMsg = `HTTP ${resp.status}`;
+      try {
+        const errBody = await resp.json();
+        if (errBody && errBody.detail) errMsg = errBody.detail;
+      } catch (_) {}
+      throw new Error(errMsg);
+    }
+
+    const r = await resp.json();
+
+    clearInterval(msgInterval);
+    loading.classList.remove('active');
+    document.getElementById('analyzeBtn').disabled = false;
+
+    if (!r.success) {
+      document.getElementById('scanIdle').style.display = 'flex';
+      const idleP = document.getElementById('scanIdle').querySelector('p');
+      idleP.textContent = r.analysis || t.scan_error;
+      idleP.style.color = 'var(--red)';
+      return;
+    }
+
+    // Render results
+    document.getElementById('resultTitle').textContent = niche;
+    document.getElementById('scoreRing').textContent = r.score;
+    const scoreRing = document.getElementById('scoreRing');
+    if (r.score >= 60) {
+      scoreRing.style.borderColor = 'var(--green)';
+      scoreRing.style.color = 'var(--green)';
+    } else if (r.score >= 35) {
+      scoreRing.style.borderColor = 'var(--amber)';
+      scoreRing.style.color = 'var(--amber)';
+    } else {
+      scoreRing.style.borderColor = 'var(--red)';
+      scoreRing.style.color = 'var(--red)';
+    }
+    document.getElementById('scoreLabelText').textContent = r.score_label;
+
+    document.getElementById('metricGrid').innerHTML = `
+      <div class="metric-cell"><div class="metric-cell-label">${t.metric_demand}</div><div class="metric-cell-val text-violet">${r.demand}</div></div>
+      <div class="metric-cell"><div class="metric-cell-label">${t.metric_sellers}</div><div class="metric-cell-val text-amber">${r.sellers}</div></div>
+      <div class="metric-cell"><div class="metric-cell-label">${t.metric_price}</div><div class="metric-cell-val text-signal">${r.avg_price}</div></div>
+      <div class="metric-cell"><div class="metric-cell-label">${t.metric_opp}</div><div class="metric-cell-val text-signal">${r.opportunity}</div></div>
+    `;
+
+    document.getElementById('weaknessList').innerHTML = (r.weaknesses || []).map(w =>
+      `<div class="item-row weak"><span class="item-mark">✗</span><span>${w}</span></div>`
+    ).join('') || '<div class="item-row"><span style="color:var(--text-3)">Слабых мест не обнаружено</span></div>';
+
+    document.getElementById('recoList').innerHTML = (r.recommendations || []).map(rc =>
+      `<div class="item-row reco"><span class="item-mark">✓</span><span>${rc}</span></div>`
+    ).join('');
+
+    const block = document.getElementById('analysisBlock');
+    block.textContent = '';
+    document.getElementById('scanResult').classList.add('active');
+    let i = 0;
+    const chars = (r.analysis || '').split('');
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor-blink';
+    block.appendChild(cursor);
+    const typer = setInterval(() => {
+      if (i < chars.length) {
+        block.insertBefore(document.createTextNode(chars[i]), cursor);
+        i++;
+      } else {
+        cursor.remove();
+        clearInterval(typer);
+      }
+    }, 12);
+
+    renderProducts(r.products || [], t);
+
+  } catch (e) {
+    clearInterval(msgInterval);
+    loading.classList.remove('active');
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('scanIdle').style.display = 'flex';
+    const idleP = document.getElementById('scanIdle').querySelector('p');
+    idleP.textContent = t.scan_error + ' (' + e.message + ')';
+    idleP.style.color = 'var(--red)';
+  }
+}
+
+function renderProducts(products, t) {
+  let container = document.getElementById('productsList');
+  if (!container) {
+    const parent = document.getElementById('scanResult');
+    const poolBanner = parent.querySelector('.pool-banner');
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'result-block-title';
+    titleDiv.setAttribute('data-i', 'res_products');
+    titleDiv.textContent = t.res_products || 'Найденные товары';
+    parent.insertBefore(titleDiv, poolBanner);
+
+    container = document.createElement('div');
+    container.id = 'productsList';
+    container.style.cssText = 'display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:2.5rem;';
+    parent.insertBefore(container, poolBanner);
+  }
+
+  if (!products.length) {
+    container.innerHTML = '<div style="color:var(--text-3);font-size:14px;padding:1.5rem;background:var(--bg-2);border-radius:var(--radius-sm);border:1px solid var(--border);">Товары не найдены</div>';
+    return;
+  }
+
+  container.innerHTML = products.slice(0, 10).map((p, idx) => {
+    const priceStr = p.price ? (p.price.toLocaleString('ru-RU') + ' ₽') : '—';
+    const ratingStr = p.rating ? ('⭐ ' + p.rating.toFixed(1)) : '';
+    const reviewStr = p.review_count ? (p.review_count + ' отз.') : '';
+    const weakClass = p.is_weak ? 'weak' : '';
+    const weakBadge = p.is_weak
+      ? '<span style="color:var(--red);font-size:11px;font-family:var(--font-mono);font-weight:700;margin-left:auto;background:var(--red-bg);padding:2px 6px;border-radius:4px;">УЯЗВИМ</span>'
+      : '<span style="color:var(--green);font-size:11px;font-family:var(--font-mono);font-weight:700;margin-left:auto;background:var(--green-bg);padding:2px 6px;border-radius:4px;">ОК</span>';
+
+    const reasons = (p.weakness_reasons || []).length
+      ? `<div style="font-size:12px;color:var(--text-3);margin-top:6px;padding-left:28px;">${p.weakness_reasons.join(' · ')}</div>`
+      : '';
+
+    return `
+      <div class="item-row ${weakClass}" style="flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:12px;align-items:center;width:100%;">
+          <span class="item-mark" style="font-size:13px;color:var(--text-3);width:16px;">${idx + 1}.</span>
+          <a href="${p.url || '#'}" target="_blank" rel="noopener" style="color:var(--text);font-weight:500;text-decoration:none;font-size:14px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.title}">${p.title}</a>
+          ${weakBadge}
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:13px;color:var(--text-2);padding-left:28px;font-weight:500;">
+          <span style="color:var(--brand);font-weight:700;">${priceStr}</span>
+          <span>${ratingStr}</span>
+          <span>${reviewStr}</span>
+        </div>
+        ${reasons}
+      </div>`;
+  }).join('');
+
+  const badge = document.createElement('div');
+  badge.style.cssText = 'text-align:center;margin-top:16px;font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--green);';
+  badge.textContent = (t.badge_real || '📊 РЕАЛЬНЫЕ ДАННЫЕ') + ' · ' + products.length + ' товаров с ozon.ru';
+  container.appendChild(badge);
+
+  const legend = document.createElement('div');
+  legend.style.cssText = 'margin-top:20px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text-2);';
+  legend.innerHTML = RP_LANG === 'ru' ? 
+    `<strong>Как читать результаты?</strong><br>
+    <span style="color:var(--red);font-weight:600;">Красные карточки (УЯЗВИМ)</span> — это слабые конкуренты. У них мало отзывов, низкий рейтинг, нет быстрой доставки Ozon или слишком высокая цена. <strong>Это ваши главные цели</strong>, их легко обойти.<br>
+    <span style="color:var(--green);font-weight:600;margin-top:6px;display:inline-block;">Зеленые карточки (ОК)</span> — это сильные конкуренты с хорошими отзывами и ценами. С ними конкурировать сложнее.` :
+    `<strong>How to read the results?</strong><br>
+    <span style="color:var(--red);font-weight:600;">Red cards (VULNERABLE)</span> — these are weak competitors. They have few reviews, low ratings, no Kaspi Delivery, or overpriced. <strong>These are your main targets</strong>, easy to beat.<br>
+    <span style="color:var(--green);font-weight:600;margin-top:6px;display:inline-block;">Green cards (OK)</span> — strong competitors with good reviews and prices. Harder to compete with.`;
+  container.appendChild(legend);
+}
+</script>
+</body>
+</html>

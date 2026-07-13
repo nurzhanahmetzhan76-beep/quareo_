@@ -84,12 +84,13 @@
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">Quareo</a>
     <div class="nav-links" id="navLinks">
+
       <a href="index.html" data-i="nav_home">Главная</a>
-      <a href="scanner.html" data-i="nav_scanner">Сканер</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
       <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
-      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
       <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
     </div>
     <div class="nav-right">
@@ -134,11 +135,15 @@
       </div>
 
       <!-- Error banner for Kaspi limitation -->
-      <div style="background:var(--bg-2);border:1px solid var(--brand);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;display:flex;gap:1rem;align-items:center">
-        <div style="font-size:24px">ℹ️</div>
-        <div>
-          <h4 style="margin-bottom:4px">Как добавить товар</h4>
-          <p style="font-size:13px;color:var(--text-2);margin:0">Официальный API Kaspi не позволяет скачивать список товаров автоматически. Вам нужно скопировать <strong>SKU</strong> из вашего кабинета Kaspi Pay (раздел Товары → Мои товары) и добавить его вручную.</p>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;display:flex;gap:1rem;align-items:flex-start">
+        <div style="font-size:24px;margin-top:2px">🛡️</div>
+        <div style="width:100%">
+          <h4 style="margin-bottom:6px">100% Безопасное обновление цен</h4>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Чтобы не затронуть ваши остатки и другие товары: <br>1. Скачайте свой текущий прайс в кабинете Kaspi (Управление товарами → Прайс-лист → <b>Скачать в Excel</b>).<br>2. Загрузите его сюда. Мы обновим цены для включенных товаров и отдадим вам файл обратно.<br>3. Загрузите полученный файл обратно в Kaspi (Загрузить файл вручную).</p>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="file" id="excelUpload" accept=".xlsx" style="font-size:13px">
+            <button class="btn-primary" onclick="processExcel()" style="padding:6px 16px;white-space:nowrap">⚙️ Обновить цены в файле</button>
+          </div>
         </div>
       </div>
 
@@ -146,24 +151,20 @@
       <div class="add-form visible" id="addForm">
         <h3 style="margin-bottom:1.5rem">➕ Добавить товар</h3>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Название товара</label>
-            <input class="form-input" type="text" id="fName" placeholder="Xiaomi Redmi Note 13 Pro">
+          <div class="form-group" style="flex:2">
+            <label class="form-label">Ссылка на товар (Kaspi) <span style="color:var(--brand)">*Обязательно</span></label>
+            <input class="form-input" type="url" id="fUrl" placeholder="Вставьте ссылку, и мы всё заполним..." oninput="autoFillSkuFromUrl(this.value)">
           </div>
           <div class="form-group">
-            <label class="form-label">SKU (masterSku) <span style="color:var(--brand)">*Обязательно</span></label>
-            <input class="form-input" type="text" id="fSku" placeholder="Из кабинета Kaspi Pay">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Ссылка на товар (Kaspi)</label>
-            <input class="form-input" type="url" id="fUrl" placeholder="https://kaspi.kz/shop/p/...">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Название вашего магазина</label>
+            <label class="form-label">Ваш магазин на Kaspi</label>
             <input class="form-input" type="text" id="fMerchant" placeholder="TechStore.kz">
           </div>
+        </div>
+
+        <!-- Hidden but required by API -->
+        <div style="display:none">
+          <input type="text" id="fName">
+          <input type="text" id="fSku">
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -188,6 +189,7 @@
       <div class="rp-panel" data-reveal>
         <div class="rp-header">
           <h2 style="font-size:1.3rem">📦 Товары на репрайсинге</h2>
+          <button class="btn-secondary" onclick="syncProducts()" id="syncBtn" style="padding:8px 16px;font-size:13px">🔄 Синхронизировать с Kaspi</button>
         </div>
 
         <div id="rulesContent">
@@ -230,8 +232,8 @@
 <footer>
   <div class="footer-grid">
     <div><div class="footer-brand">Quareo</div><p class="footer-desc">ИИ-радар по Kaspi.kz</p></div>
-    <div class="footer-col"><div class="footer-col-title">Продукт</div><a href="scanner.html">Сканер</a><a href="ntin.html">NTIN</a><a href="kaspi-bot.html">Kaspi-бот</a></div>
-    <div class="footer-col"><div class="footer-col-title">Инструменты</div><a href="analytics.html">Аналитика</a><a href="reviews.html">Отзывы</a><a href="waybills.html">Накладные</a></div>
+    <div class="footer-col"><div class="footer-col-title">Продукт</div><a href="scanner.html">Сканер</a><a href="ntin.html">NTIN</a></div>
+    <div class="footer-col"><div class="footer-col-title">Инструменты</div><a href="analytics.html">Аналитика</a><a href="waybills.html">Накладные</a></div>
     <div class="footer-col"><div class="footer-col-title">Поддержка</div><a href="https://t.me/@Lulsiok" target="_blank">Контакты</a></div>
   </div>
   <div class="footer-bottom"><span>© 2026 Quareo.</span><span class="mono">Алматы · Казахстан</span></div>
@@ -241,6 +243,25 @@
 <script>
 // ── State ──
 let rules = [];
+
+function autoFillSkuFromUrl(url) {
+  if (!url) return;
+  const match = url.match(/kaspi\.kz\/shop\/p\/([^/]+?)-(\d+)(?:\/|\?|$)/i);
+  if (match && match[1] && match[2]) {
+    const slug = match[1];
+    const sku = match[2];
+    
+    // Format slug into a readable name (e.g., "iphone-14-pro" -> "Iphone 14 pro")
+    let readableName = decodeURIComponent(slug).replace(/-/g, ' ');
+    readableName = readableName.charAt(0).toUpperCase() + readableName.slice(1);
+    
+    const skuInput = document.getElementById('fSku');
+    const nameInput = document.getElementById('fName');
+    
+    if (!skuInput.value) skuInput.value = sku;
+    if (!nameInput.value) nameInput.value = readableName;
+  }
+}
 
 // ── API helpers ──
 const API = RP_API_BASE + '/api/repricing';
@@ -263,6 +284,54 @@ async function apiFetch(path, opts = {}) {
 }
 
 // ── Load data ──
+async function processExcel() {
+  const fileInput = document.getElementById('excelUpload');
+  if(!fileInput.files.length) {
+    alert('Пожалуйста, выберите Excel-файл от Kaspi');
+    return;
+  }
+  
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const btn = event.target;
+  const oldText = btn.textContent;
+  btn.textContent = 'Обработка...';
+  btn.disabled = true;
+  
+  try {
+    const resp = await fetch(API + '/process_excel', {
+      method: 'POST',
+      headers: rpAuthHeaders(),
+      body: formData
+    });
+    
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    
+    // Download the modified file
+    const blob = await resp.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kaspi_prices_updated.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    
+    alert('Готово! Файл с обновленными ценами скачан. Теперь загрузите его в Kaspi.');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.textContent = oldText;
+    btn.disabled = false;
+  }
+}
+
 async function loadStats() {
   try {
     const s = await apiFetch('/stats');
@@ -412,6 +481,26 @@ async function deleteRule(ruleId) {
     await loadStats();
   } catch(e) {
     alert('Ошибка: ' + e.message);
+  }
+}
+
+// ── Sync Products ──
+async function syncProducts() {
+  const btn = document.getElementById('syncBtn');
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Синхронизация (может занять время)...';
+  
+  try {
+    const res = await apiFetch('/sync', { method: 'POST' });
+    alert(`Успех!\n${res.message}`);
+    await loadRules();
+    await loadStats();
+  } catch (e) {
+    alert('Ошибка синхронизации: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
   }
 }
 

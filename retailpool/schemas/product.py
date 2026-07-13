@@ -34,6 +34,21 @@ class ProductCard(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class WBProductCard(BaseModel):
+    """Representation of a product scraped from Wildberries."""
+
+    wb_id: str = Field(..., description="Wildberries article (nmId)")
+    title: str
+    brand: str | None = None
+    url: str
+    price_rub: float
+    price_kzt: float | None = Field(default=None, description="Converted price in KZT")
+    rating: float | None = None
+    review_count: int = 0
+
+    model_config = {"from_attributes": True}
+
+
 class NicheScoreOut(BaseModel):
     """Output schema for niche vulnerability analysis."""
 

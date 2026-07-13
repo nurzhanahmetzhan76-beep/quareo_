@@ -75,12 +75,13 @@
       Quareo
     </a>
     <div class="nav-links" id="navLinks">
+
       <a href="index.html" data-i="nav_home">Главная</a>
-      <a href="scanner.html" data-i="nav_scanner">Сканер</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
       <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
-      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
       <a href="pricing.html" class="active" data-i="nav_pricing">Тарифы</a>
     </div>
     <div class="nav-right">
@@ -126,6 +127,7 @@
           <div class="price-desc" data-i="tier1_desc">Для начинающих продавцов, которые хотят найти первую прибыльную нишу.</div>
           <ul class="price-features">
             <li><span class="feat-check">✓</span><span data-i="t1f1">50 сканирований ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t1f4">50 сканирований ВБ</span></li>
             <li><span class="feat-check">✓</span><span data-i="t1f2">20 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t1f3">Создание накладных для термопринтера</span></li>
 
@@ -141,6 +143,7 @@
           <div class="price-desc" data-i="tier2_desc">Для активных продавцов, которые работают сразу на нескольких площадках.</div>
           <ul class="price-features">
             <li><span class="feat-check">✓</span><span data-i="t2f1">200 сканирований ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t2f4">200 сканирований ВБ</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f2">100 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f3">Создание накладных для термопринтера</span></li>
             <li><span class="feat-check">✓</span><span data-i="t2f6">Приоритетная поддержка</span></li>
@@ -155,6 +158,7 @@
           <div class="price-desc" data-i="tier3_desc">Для агентств и крупных продавцов, управляющих несколькими магазинами.</div>
           <ul class="price-features">
             <li><span class="feat-check">✓</span><span data-i="t3f1">Безлимитные сканирования ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="t3f5">Безлимитные сканирования ВБ</span></li>
             <li><span class="feat-check">✓</span><span data-i="t3f2">200 регистраций карточек NTIN</span></li>
             <li><span class="feat-check">✓</span><span data-i="t3f3">Доступ к Telegram-боту</span></li>
             <li><span class="feat-check">✓</span><span data-i="t3f4">Создание накладных для термопринтера</span></li>
@@ -182,9 +186,7 @@
     <div class="footer-col">
       <div class="footer-col-title" data-i="footer_product">Продукт</div>
       <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
-        <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
-
-      <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
       <a href="scanner.html#demo" data-i="footer_l_demo">Демо</a>
     </div>
     <div class="footer-col">
@@ -218,9 +220,9 @@ const PAGE_I18N = {
     tier2_desc: "Для активных продавцов, которые работают сразу на нескольких площадках.",
     tier3_desc: "Для агентств и крупных продавцов, управляющих несколькими магазинами.",
     twbf1: "Безлимитные накладные", twbf2: "Сканер профиля", twbf3: "NTIN регистрация",
-    t1f1:"50 сканирований ниши",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",
-    t2f1:"200 сканирований ниши",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f6:"Приоритетная поддержка",
-    t3f1:"Безлимитные сканирования ниши",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",
+    t1f1:"50 сканирований ниши",t1f4:"50 сканирований ВБ",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",
+    t2f1:"200 сканирований ниши",t2f4:"200 сканирований ВБ",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f6:"Приоритетная поддержка",
+    t3f1:"Безлимитные сканирования ниши",t3f5:"Безлимитные сканирования ВБ",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",
     choose_plan: "Выбрать план",
     faq_eyebrow: "FAQ", faq_title: "Частые вопросы",
     faqs: [
@@ -238,9 +240,9 @@ const PAGE_I18N = {
     tier2_desc: "For active sellers working across multiple marketplaces.",
     tier3_desc: "For agencies and large sellers managing multiple stores.",
     twbf1: "Unlimited waybills", twbf2: "Profile scanner", twbf3: "NTIN registration",
-    t1f1:"50 Niche Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",
-    t2f1:"200 Niche Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f6:"Priority support",
-    t3f1:"Unlimited Niche Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",
+    t1f1:"50 Niche Scans",t1f4:"50 WB Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",
+    t2f1:"200 Niche Scans",t2f4:"200 WB Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f6:"Priority support",
+    t3f1:"Unlimited Niche Scans",t3f5:"Unlimited WB Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",
     choose_plan: "Choose plan",
     faq_eyebrow: "FAQ", faq_title: "Frequently asked questions",
     faqs: [

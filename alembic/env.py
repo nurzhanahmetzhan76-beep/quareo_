@@ -21,8 +21,6 @@ import retailpool.models.user     # noqa: F401
 import retailpool.models.subscription # noqa: F401
 import retailpool.bot.models      # noqa: F401
 import retailpool.models.ntin     # noqa: F401
-import retailpool.models.repricing # noqa: F401
-
 # ── Alembic Config object ────────────────────────────────────────────────
 config = context.config
 

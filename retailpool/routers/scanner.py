@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from retailpool.config import TARGET_CATEGORIES
 from retailpool.database import get_db
 from retailpool.models.product import NicheAnalysis
-from retailpool.schemas.product import CategoryScanResult, NicheScoreOut
+from retailpool.schemas.product import CategoryScanResult, NicheScoreOut, WBProductCard
 from retailpool.services.scanner_service import ScannerService
 
 router = APIRouter(prefix="/scanner", tags=["Kaspi Niche Scanner"])
@@ -92,3 +92,20 @@ async def get_niches(
 async def list_categories() -> list[dict]:
     """Return the hardcoded list of target Kaspi categories."""
     return TARGET_CATEGORIES
+
+
+@router.get("/wb/search", response_model=list[WBProductCard])
+async def search_wb(query: str, max_items: int = 10):
+    """Directly search Wildberries via their hidden JSON API."""
+    from retailpool.scraper.wb_scraper import WBScraper
+    from retailpool.scraper.antifraud import StaticProxyProvider, SmartProxyProvider
+    from retailpool.config import settings
+
+    proxy_provider = None
+    if settings.PROXY_URL:
+        proxy_provider = StaticProxyProvider()
+    elif settings.PROXY_PROVIDER_API_URL:
+        proxy_provider = SmartProxyProvider()
+
+    scraper = WBScraper(proxy_provider=proxy_provider)
+    return await scraper.search(query, max_items=max_items)

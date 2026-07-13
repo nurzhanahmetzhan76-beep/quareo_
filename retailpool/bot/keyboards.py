@@ -18,6 +18,7 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [
             InlineKeyboardButton("🔍 Сканер Kaspi", callback_data="menu:scanner"),
+            InlineKeyboardButton("🟣 Сканер WB", callback_data="menu:wb_scanner"),
         ],
         [
             InlineKeyboardButton("🔔 Мои алерты", callback_data="menu:alerts"),

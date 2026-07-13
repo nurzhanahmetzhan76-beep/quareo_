@@ -59,12 +59,13 @@
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">Quareo</a>
     <div class="nav-links" id="navLinks">
+
       <a href="index.html" data-i="nav_home">Главная</a>
-      <a href="scanner.html" data-i="nav_scanner">Сканер</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
       <a href="ntin.html" data-i="nav_ntin">NTIN</a>
       <a href="analytics.html" class="active" data-i="nav_analytics">Аналитика</a>
       <a href="waybills.html" data-i="nav_waybills">Накладные</a>
-      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
       <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
     </div>
     <div class="nav-right">
@@ -97,6 +98,20 @@
       <div class="scan-bar-wrapper" id="smsInputWrapper" style="display:none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-light);">
         <input type="text" id="smsInput" placeholder="Введите код из Kaspi Pay (4 цифры)" maxlength="6">
         <button class="btn-primary" onclick="verifySmsAndScan()">Подтвердить</button>
+      </div>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+        <button class="btn-secondary" onclick="downloadTemplate()" style="background: transparent; border: 1px solid var(--border); padding: 10px 24px; border-radius: 99px; color: var(--text-2); font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          📥 Скачать из токена/ссылки
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('xmlUploadInput').click()" style="background: transparent; border: 1px solid var(--amber); padding: 10px 24px; border-radius: 99px; color: var(--amber); font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          📄 Сделать Excel из моего XML файла
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('costUploadInput').click()" style="background: var(--brand); border: none; padding: 10px 24px; border-radius: 99px; color: #fff; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          📊 Загрузить готовые цены (Excel)
+        </button>
+        <input type="file" id="costUploadInput" style="display:none" accept=".xlsx, .xls, .csv" onchange="handleCostUpload(event)">
+        <input type="file" id="xmlUploadInput" style="display:none" accept=".xml" onchange="handleXmlUpload(event)">
       </div>
     </div>
   </section>
@@ -162,7 +177,7 @@
   <div class="footer-grid">
     <div><div class="footer-brand">Quareo</div><p class="footer-desc">ИИ-радар по Kaspi.kz</p></div>
     <div class="footer-col"><div class="footer-col-title">Продукт</div><a href="scanner.html">Сканер</a><a href="ntin.html">NTIN</a></div>
-    <div class="footer-col"><div class="footer-col-title">Инструменты</div><a href="kaspi-bot.html">Kaspi-бот</a><a href="analytics.html">Аналитика</a><a href="reviews.html">Отзывы</a><a href="waybills.html">Накладные</a></div>
+    <div class="footer-col"><div class="footer-col-title">Инструменты</div><a href="analytics.html">Аналитика</a><a href="waybills.html">Накладные</a></div>
     <div class="footer-col"><div class="footer-col-title">Документы</div><a href="#">Конфиденциальность</a><a href="#">Условия</a></div>
   </div>
   <div class="footer-bottom"><span>© 2026 Quareo.</span><span class="mono">Алматы · Казахстан</span></div>
@@ -368,6 +383,133 @@ async function runScanner(targetValue, scanType, smsCode = null) {
         document.getElementById('loader').style.display = 'none';
         alert(e.message);
     }
+}
+
+async function handleCostUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const token = rpGetToken();
+    if (!token) {
+        alert("Пожалуйста, авторизуйтесь.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        alert("Файл загружается, пожалуйста подождите...");
+        const res = await fetch('/store-scanner/upload-costs', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            body: formData
+        });
+        
+        const data = await res.json();
+        if (res.ok) {
+            alert("Себестоимость успешно загружена! " + (data.message || ""));
+            // Optionally, rescan to update analytics
+        } else {
+            alert("Ошибка загрузки: " + (data.detail || "Неизвестная ошибка"));
+        }
+    } catch (e) {
+        alert("Ошибка при загрузке файла: " + e.message);
+    }
+    
+    // Reset input
+    event.target.value = '';
+}
+
+async function downloadTemplate() {
+    const input = document.getElementById('storeInput').value.trim();
+    if(!input || input.length < 20) { 
+        alert("Пожалуйста, введите ваш Kaspi Seller API-ключ в поле выше, чтобы мы могли выгрузить именно ваши товары."); 
+        return; 
+    }
+
+    const token = rpGetToken();
+    if (!token) {
+        alert("Пожалуйста, авторизуйтесь.");
+        return;
+    }
+
+    try {
+        alert("Генерируем ваш прайс-лист... Пожалуйста, подождите пару секунд (Kaspi может отвечать медленно).");
+        const url = `/store-scanner/download-template?target=${encodeURIComponent(input)}`;
+        
+        const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        
+        if (!res.ok) {
+            throw new Error("Ошибка при выгрузке прайс-листа");
+        }
+        
+        // Handle file download
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = downloadUrl;
+        a.download = 'Quareo_Cost_Template.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        
+    } catch (e) {
+        alert("Ошибка: " + e.message);
+    }
+}
+
+async function handleXmlUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const token = rpGetToken();
+    if (!token) {
+        alert("Пожалуйста, авторизуйтесь.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        alert("Читаем ваш XML файл и генерируем Excel...");
+        const res = await fetch('/store-scanner/template-from-xml', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            body: formData
+        });
+        
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Ошибка генерации");
+        }
+        
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = downloadUrl;
+        a.download = 'Quareo_Cost_Template.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        
+    } catch (e) {
+        alert("Ошибка при обработке XML: " + e.message);
+    }
+    
+    event.target.value = '';
 }
 </script>
 </body>

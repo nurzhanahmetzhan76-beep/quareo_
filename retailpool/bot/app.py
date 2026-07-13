@@ -34,6 +34,7 @@ from retailpool.bot.handlers.scanner import (
     scan_command,
     kaspi_link_handler,
 )
+from retailpool.bot.handlers.wb_scanner import wb_scanner_conv
 
 from retailpool.bot.handlers.alerts import (
     alerts_command,
@@ -97,6 +98,9 @@ def create_application() -> Application:
 
     # ── Register callback query handlers ─────────────────────────────────
     # Order matters: more specific patterns first
+
+    # Register WB Scanner conversation handler
+    app.add_handler(wb_scanner_conv)
 
 
     app.add_handler(CallbackQueryHandler(alert_callback, pattern=r"^alert:"))

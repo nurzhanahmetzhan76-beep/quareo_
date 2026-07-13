@@ -263,3 +263,195 @@ textarea.form-input { resize: vertical; }
   .feature-grid { grid-template-columns: 1fr; }
   .modal-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Kaspi Style Profile ───────────────────────────────────── */
+.kaspi-tabs {
+  display: flex;
+  border-bottom: 1px solid #E0E0E0;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+.kaspi-tab {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.kaspi-tab:hover {
+  color: #E21836;
+}
+.kaspi-tab.active {
+  color: #333;
+  font-weight: 500;
+  border-bottom-color: #F14635; /* Kaspi red */
+}
+.k-section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.k-edit-icon {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+/* ── Premium Store Profile ─────────────────────────────────── */
+.store-profile-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  margin-bottom: 2rem;
+}
+.store-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px dashed #E2E8F0;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.store-logo-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #FFD100, #F59E0B);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
+}
+.store-title-area h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.store-id-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.btn-edit-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  color: #0F172A;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-edit-profile:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #2563EB;
+}
+.store-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.detail-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #F8FAFC;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.detail-card:hover {
+  background: #fff;
+  border-color: #E2E8F0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transform: translateY(-2px);
+}
+.detail-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.detail-label {
+  font-size: 12px;
+  color: #64748B;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.detail-value {
+  font-size: 14px;
+  color: #0F172A;
+  font-weight: 600;
+}
+.detail-value.link {
+  color: #2563EB;
+  text-decoration: none;
+}
+.detail-value.link:hover {
+  text-decoration: underline;
+}
+
+.phones-list {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.phone-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.phone-icon {
+  font-size: 20px;
+}
+.phone-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0F172A;
+}
+.phone-tag {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}

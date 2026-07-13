@@ -155,6 +155,24 @@ class BrowserManager:
             Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
             window.chrome = { runtime: {} };
         """)
+
+        # Block heavy resources and trackers to save proxy traffic
+        def _route_handler(route):
+            req = route.request
+            url = req.url
+            if req.resource_type in ["image", "media", "font"]:
+                route.abort()
+                return
+            if any(d in url for d in [
+                "googletagmanager.com", "facebook.net", "segmentstream.com", 
+                "google-analytics.com", "mc.yandex.ru", "vk.com"
+            ]):
+                route.abort()
+                return
+            route.continue_()
+
+        ctx.route("**/*", _route_handler)
+
         return ctx
 
     # ── Async interface ──────────────────────────────────────────────

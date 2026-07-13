@@ -1,35 +1,34 @@
 {
   "data": [
     {
-      "id": "OTc1NDA1NzEyIyMw",
+      "id": "OTgwMzI4NDQxIyMw",
       "type": "orderentries",
       "attributes": {
         "entryNumber": 0,
-        "deliveryCost": 0.0,
-        "quantity": 2,
-        "weight": 20.0,
-        "basePrice": 800.0,
-        "totalPrice": 1600.0,
+        "deliveryCost": 995.0,
+        "quantity": 1,
+        "basePrice": 6500.0,
+        "totalPrice": 6500.0,
         "unitType": "PIECES",
         "category": {
-          "code": "Master - Velcro for needlework",
-          "title": "Липучки для рукоделия"
+          "code": "Master - Composting toilets",
+          "title": "Биотуалеты"
         },
         "offer": {
-          "code": "146348624_859588406",
-          "name": "Круглая липучка 15 мм 102 пар"
+          "code": "103975050_604494404",
+          "name": "AUAstore переносной Xiomi-77 белый"
         },
         "isImeiRequired": false
       },
       "relationships": {
         "product": {
           "data": {
-            "id": "MTQ2MzQ4NjI0",
+            "id": "MTAzOTc1MDUw",
             "type": "masterproducts"
           },
           "links": {
-            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc1NDA1NzEyIyMw/relationships/product",
-            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc1NDA1NzEyIyMw/product"
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/relationships/product",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/product"
           }
         },
         "deliveryPointOfService": {
@@ -38,13 +37,13 @@
             "type": "pointofservices"
           },
           "links": {
-            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc1NDA1NzEyIyMw/relationships/deliveryPointOfService",
-            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTc1NDA1NzEyIyMw/deliveryPointOfService"
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/relationships/deliveryPointOfService",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/deliveryPointOfService"
           }
         }
       },
       "links": {
-        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTc1NDA1NzEyIyMw"
+        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw"
       }
     }
   ],
