@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quareo — Вход в систему</title>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.jpg">
 <style>
   body {
     background: var(--bg-2);
@@ -51,6 +52,7 @@
   .auth-footer a { color: var(--brand); font-weight: 600; text-decoration: none; }
   .auth-footer a:hover { text-decoration: underline; }
 </style>
+  <script src="https://accounts.google.com/gsi/client" async></script>
 </head>
 <body>
 
@@ -79,6 +81,21 @@
       <div class="form-error" id="loginError"></div>
       
       <button class="btn-primary btn-block" style="margin-top: 2rem; padding: 14px;" id="btnLogin" onclick="handleLogin()" data-i="login_btn">Войти в систему</button>
+      <div style="text-align:center; margin:16px 0; color:#888;">или</div>
+
+<div id="g_id_onload"
+     data-client_id="687335345297-diao34la1d8l0663tpojovn05vp6k441.apps.googleusercontent.com"
+     data-callback="handleGoogleLogin"
+     data-auto_prompt="false"></div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="continue_with"
+     data-shape="pill"
+     data-logo_alignment="center"
+     data-width="320"></div>
       
       <div class="auth-footer">
         <span data-i="login_no_account">Нет аккаунта?</span> <a href="#" onclick="switchTab('register'); return false;" data-i="auth_tab_register">Зарегистрируйтесь</a>
@@ -106,6 +123,9 @@
       <div class="form-success" id="regSuccess"></div>
       
       <button class="btn-primary btn-block" style="margin-top: 2rem; padding: 14px;" id="btnRegister" onclick="handleRegister()" data-i="reg_btn">Создать аккаунт</button>
+      
+      <div style="text-align:center; margin:16px 0; color:#888;">или</div>
+      <div id="g_id_signin_register"></div>
       
       <div class="auth-footer">
         <span data-i="reg_has_account">Уже есть аккаунт?</span> <a href="#" onclick="switchTab('login'); return false;" data-i="auth_tab_login">Войти</a>
@@ -212,6 +232,43 @@ async function handleLogin() {
     btn.classList.remove('btn-loading');
   }
 }
+  async function handleGoogleLogin(response) {
+  const errBox = document.getElementById('loginError');
+  errBox.classList.remove('visible');
+  try {
+    const res = await fetch(RP_API_BASE + '/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential: response.credential })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.detail || 'Google login failed');
+    }
+    rpSetAuth(data.access_token, data.user);
+    window.location.href = 'scanner.html';
+  } catch (err) {
+    errBox.textContent = err.message;
+    errBox.classList.add('visible');
+  }
+}
+  // Render Google button on the Register tab too
+window.addEventListener('load', function () {
+  if (window.google && document.getElementById('g_id_signin_register')) {
+    google.accounts.id.renderButton(
+      document.getElementById('g_id_signin_register'),
+      {
+        type: 'standard',
+        size: 'large',
+        theme: 'outline',
+        text: 'signup_with',
+        shape: 'pill',
+        logo_alignment: 'center',
+        width: 320
+      }
+    );
+  }
+});
 
 async function handleRegister() {
   const t = RP_I18N[RP_LANG];

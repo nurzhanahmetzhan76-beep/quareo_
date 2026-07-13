@@ -86,6 +86,11 @@ class Settings(BaseSettings):
         default=24,
         description="JWT token expiration time in hours.",
     )
+    # ── Google OAuth ──────────────────────────────────────────────────────
+    GOOGLE_CLIENT_ID: str = Field(
+        default="",
+        description="Google OAuth Client ID for Sign in with Google.",
+    )
 
     # ── Proxy Provider ────────────────────────────────────────────────────
     PROXY_PROVIDER_API_URL: str = Field(
