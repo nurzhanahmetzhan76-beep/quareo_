@@ -439,8 +439,11 @@ async def sync_products(
         "skipped": skipped,
         "message": f"Импортировано {synced} товаров. Пропущено (уже есть): {skipped}.",
     }
-    @router.post("/process_excel", summary="Обновить цены в прайс-листе Kaspi")
+    
+
+@router.post("/process_excel", summary="Обновить цены в прайс-листе Kaspi")
 async def process_excel(
+    
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
