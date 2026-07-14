@@ -439,3 +439,75 @@ async def sync_products(
         "skipped": skipped,
         "message": f"Импортировано {synced} товаров. Пропущено (уже есть): {skipped}.",
     }
+    @router.post("/process_excel", summary="Обновить цены в прайс-листе Kaspi")
+async def process_excel(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Принимает ПОЛНЫЙ Excel-прайс пользователя из кабинета Kaspi.
+    Обновляет ТОЛЬКО колонку price у товаров, где бот включён (is_active),
+    беря новую цену из my_current_price. Ничего больше не трогает.
+    """
+    result = await db.execute(
+        select(RepricingRule).where(
+            RepricingRule.user_id == current_user.id,
+            RepricingRule.is_active == True,  # noqa: E712
+        )
+    )
+    rules = result.scalars().all()
+    price_map = {
+        str(r.kaspi_sku).strip(): r.my_current_price
+        for r in rules
+        if r.kaspi_sku and r.my_current_price
+    }
+
+    if not price_map:
+        raise HTTPException(
+            status_code=400,
+            detail="Нет активных товаров с посчитанной ценой. Включите бота и дождитесь расчёта.",
+        )
+
+    raw = await file.read()
+    try:
+        wb = openpyxl.load_workbook(io.BytesIO(raw))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Не удалось открыть файл. Нужен Excel-прайс из Kaspi.")
+
+    ws = wb.worksheets[0]
+
+    headers = {}
+    for c in range(1, ws.max_column + 1):
+        v = ws.cell(1, c).value
+        if v is not None:
+            headers[str(v).strip().lower()] = c
+
+    if "sku" not in headers or "price" not in headers:
+        raise HTTPException(
+            status_code=400,
+            detail="Неверный формат: в файле нет колонок SKU/price. Скачайте прайс из кабинета Kaspi.",
+        )
+
+    sku_col, price_col = headers["sku"], headers["price"]
+
+    changed = 0
+    for r in range(2, ws.max_row + 1):
+        sku = ws.cell(r, sku_col).value
+        if sku is None:
+            continue
+        sku = str(sku).strip()
+        if sku in price_map:
+            ws.cell(r, price_col).value = price_map[sku]
+            changed += 1
+
+    logger.info("process_excel: user=%s changed=%d rows", current_user.id, changed)
+
+    out = io.BytesIO()
+    wb.save(out)
+    out.seek(0)
+    return StreamingResponse(
+        out,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": 'attachment; filename="kaspi_updated_prices.xlsx"'},
+    )
