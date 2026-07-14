@@ -43,3 +43,5 @@ pypdf>=4.0.0
 # ── Security ──────────────────────────────────────────────
 cryptography>=42.0.0
 slowapi>=0.1.9
+
+openpyxl>=3.1
