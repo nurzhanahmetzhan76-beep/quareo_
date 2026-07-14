@@ -55,6 +55,15 @@ class User(Base):
     scans_used: Mapped[int] = mapped_column(
         Integer, default=0
     )
+    analytics_used: Mapped[int] = mapped_column(
+        Integer, default=0
+    )
+    wb_scans_used: Mapped[int] = mapped_column(
+        Integer, default=0
+    )
+    waybills_used: Mapped[int] = mapped_column(
+        Integer, default=0
+    )
     is_active: Mapped[bool] = mapped_column(
         Boolean, default=True
     )

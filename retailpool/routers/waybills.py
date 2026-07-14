@@ -14,6 +14,8 @@ import re
 
 from retailpool.models.user import User
 from retailpool.services.auth_service import get_current_user
+from sqlalchemy.ext.asyncio import AsyncSession
+from retailpool.database import get_db
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +43,8 @@ async def process_waybills(
     file: UploadFile = File(...),
     format: str = Form(...),
     sort: str = Form("none"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Takes a ZIP file of Kaspi waybills/labels and converts them.
@@ -49,10 +52,34 @@ async def process_waybills(
     sort: 'none', 'date', or 'product'
     """
     user_plan = (current_user.plan or "free").lower()
-    allowed_plans = ["накладные", "waybills", "start", "business", "unlimited", "старт", "бизнес", "безлимит", "агентство"]
     
-    if user_plan not in allowed_plans and current_user.email != "karimbai.ali10@mail.ru":
-        raise HTTPException(status_code=403, detail="Доступ к накладным доступен только на платных тарифах (Накладные, Старт, Бизнес и выше).")
+    plan_limits = {
+        "free": 1,
+        "накладные": 999999,
+        "waybills": 999999,
+        "start": 999999,
+        "старт": 999999,
+        "business": 999999,
+        "бизнес": 999999,
+        "unlimited": 999999,
+        "безлимит": 999999,
+        "агентство": 999999
+    }
+    
+    if user_plan not in plan_limits and current_user.email != "karimbai.ali10@mail.ru":
+        raise HTTPException(status_code=403, detail="Доступ к накладным доступен только для авторизованных планов.")
+
+    limit = plan_limits.get(user_plan, 0)
+    if getattr(current_user, 'waybills_used', 0) >= limit and current_user.email != "karimbai.ali10@mail.ru":
+        if user_plan == "free":
+            raise HTTPException(
+                status_code=403,
+                detail="Вы исчерпали лимит бесплатного тарифа (1 генерация накладных). Пожалуйста, выберите платный тариф."
+            )
+        raise HTTPException(
+            status_code=403,
+            detail="Лимит накладных по вашему тарифу исчерпан."
+        )
 
     if not file.filename.lower().endswith(".zip"):
         raise HTTPException(status_code=400, detail="Пожалуйста, загрузите ZIP архив.")
@@ -191,6 +218,10 @@ async def process_waybills(
     out_pdf = io.BytesIO()
     writer.write(out_pdf)
     out_pdf.seek(0)
+    
+    if current_user.email != "karimbai.ali10@mail.ru":
+        current_user.waybills_used = getattr(current_user, 'waybills_used', 0) + 1
+        await db.commit()
     
     return StreamingResponse(
         out_pdf,

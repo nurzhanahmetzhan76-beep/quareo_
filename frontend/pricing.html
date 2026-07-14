@@ -109,6 +109,21 @@
     <div class="container">
       <div class="pricing-grid">
         <div class="price-card" data-reveal>
+          <div class="price-tier" data-i="tier_free">Бесплатный</div>
+          <div class="price-amount">0 ₸</div>
+          <div class="price-period" data-i="per_month">/ месяц</div>
+          <div class="price-desc" data-i="tier_free_desc">Для тестирования базовых возможностей платформы.</div>
+          <ul class="price-features">
+            <li><span class="feat-check">✓</span><span data-i="tf_1">2 сканирования ниши</span></li>
+            <li><span class="feat-check">✓</span><span data-i="tf_2">2 сканирования ВБ</span></li>
+            <li><span class="feat-check">✓</span><span data-i="tf_3">1 базовая аналитика</span></li>
+            <li><span class="feat-check">✓</span><span data-i="tf_4">1 создание накладных</span></li>
+            <li><span class="feat-check">✓</span><span data-i="tf_5">2 регистрации карточек NTIN</span></li>
+          </ul>
+          <a class="btn-secondary btn-block" href="checkout.html?plan=Бесплатный&price=0" style="padding: 14px; font-size: 15px;" data-i="choose_free">Начать бесплатно</a>
+        </div>
+
+        <div class="price-card" data-reveal>
           <div class="price-tier" data-i="tier_wb">Накладные</div>
           <div class="price-amount">500 ₸</div>
           <div class="price-period" data-i="per_month">/ месяц</div>
@@ -215,16 +230,18 @@ const PAGE_I18N = {
   ru: {
     ph_eyebrow: "Тарифы", ph_title: "Выберите план для вашего масштаба",
     ph_sub: "Начните с разведки одной ниши или подключите весь синдикат — цена растёт вместе с вашим бизнесом.",
-    tier1: "Старт", tier2: "Бизнес", tier3: "Безлимит", per_month: "/ месяц", popular: "Популярный",
+    tier_free: "Бесплатный", tier1: "Старт", tier2: "Бизнес", tier3: "Безлимит", per_month: "/ месяц", popular: "Популярный",
+    tier_free_desc: "Для тестирования базовых возможностей платформы.",
     tier_wb: "Накладные", tier_wb_desc: "Доступ только к инструменту массовой печати накладных для термопринтера.",
     tier1_desc: "Для начинающих продавцов, которые хотят найти первую прибыльную нишу.",
     tier2_desc: "Для активных продавцов, которые работают сразу на нескольких площадках.",
     tier3_desc: "Для агентств и крупных продавцов, управляющих несколькими магазинами.",
     twbf1: "Безлимитные накладные", twbf2: "Сканер профиля", twbf3: "NTIN регистрация",
+    tf_1: "2 сканирования ниши", tf_2: "2 сканирования ВБ", tf_3: "1 базовая аналитика", tf_4: "1 создание накладных", tf_5: "2 регистрации карточек NTIN",
     t1f1:"50 сканирований ниши",t1f4:"50 сканирований ВБ",t1f2:"20 регистраций карточек NTIN",t1f3:"Создание накладных для термопринтера",
     t2f1:"200 сканирований ниши",t2f4:"200 сканирований ВБ",t2f2:"100 регистраций карточек NTIN",t2f3:"Создание накладных для термопринтера",t2f6:"Приоритетная поддержка",
     t3f1:"Безлимитные сканирования ниши",t3f5:"Безлимитные сканирования ВБ",t3f2:"200 регистраций карточек NTIN",t3f3:"Доступ к Telegram-боту",t3f4:"Создание накладных для термопринтера",
-    choose_plan: "Выбрать план",
+    choose_free: "Начать бесплатно", choose_plan: "Выбрать план",
     faq_eyebrow: "FAQ", faq_title: "Частые вопросы",
     faqs: [
       {q:"Как быстро я увижу первые инсайты?",a:"После регистрации Scouting Engine начинает сканирование немедленно. Первые алерты в Telegram приходят уже в течение нескольких часов."},
@@ -235,16 +252,18 @@ const PAGE_I18N = {
   en: {
     ph_eyebrow: "Pricing", ph_title: "Choose a plan for your scale",
     ph_sub: "Start by scouting a single niche, or connect your whole syndicate — price grows with your business.",
-    tier1: "Starter", tier2: "Business", tier3: "Unlimited", per_month: "/ month", popular: "Most popular",
+    tier_free: "Free", tier1: "Starter", tier2: "Business", tier3: "Unlimited", per_month: "/ month", popular: "Most popular",
+    tier_free_desc: "To test the basic platform features.",
     tier_wb: "Waybills", tier_wb_desc: "Access only to the mass printing tool for thermal printer waybills.",
     tier1_desc: "For new sellers looking for their first profitable niche.",
     tier2_desc: "For active sellers working across multiple marketplaces.",
     tier3_desc: "For agencies and large sellers managing multiple stores.",
     twbf1: "Unlimited waybills", twbf2: "Profile scanner", twbf3: "NTIN registration",
+    tf_1: "2 Niche Scans", tf_2: "2 WB Scans", tf_3: "1 Basic Analytics", tf_4: "1 Waybill creation", tf_5: "2 NTIN registrations",
     t1f1:"50 Niche Scans",t1f4:"50 WB Scans",t1f2:"20 NTIN product registrations",t1f3:"Thermal printer waybills creation",
     t2f1:"200 Niche Scans",t2f4:"200 WB Scans",t2f2:"100 NTIN product registrations",t2f3:"Thermal printer waybills creation",t2f6:"Priority support",
     t3f1:"Unlimited Niche Scans",t3f5:"Unlimited WB Scans",t3f2:"200 NTIN product registrations",t3f3:"Telegram Bot Access",t3f4:"Thermal printer waybills creation",
-    choose_plan: "Choose plan",
+    choose_free: "Start for free", choose_plan: "Choose plan",
     faq_eyebrow: "FAQ", faq_title: "Frequently asked questions",
     faqs: [
       {q:"How quickly will I see first insights?",a:"After registration, the Scouting Engine starts scanning immediately. First Telegram alerts arrive within hours."},

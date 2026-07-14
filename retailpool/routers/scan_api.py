@@ -391,7 +391,7 @@ async def scan_niche(
             
         if current_user.email != "karimbai.ali10@mail.ru":
             plan_limits = {
-                "free": 0,
+                "free": 2,
                 "start": 50,
                 "business": 200,
                 "unlimited": 999999
@@ -399,13 +399,18 @@ async def scan_niche(
             user_plan = (current_user.plan or "free").lower()
             limit = plan_limits.get(user_plan, 0)
 
-            if user_plan == "free" or user_plan not in plan_limits:
+            if user_plan not in plan_limits:
                 raise HTTPException(
                     status_code=403,
                     detail="У вас нет активного тарифа. Пожалуйста, выберите тариф, чтобы пользоваться сканером."
                 )
 
             if getattr(current_user, 'scans_used', 0) >= limit:
+                if user_plan == "free":
+                    raise HTTPException(
+                        status_code=403,
+                        detail="Вы исчерпали лимит бесплатного тарифа (2 сканирования). Пожалуйста, выберите платный тариф."
+                    )
                 raise HTTPException(
                     status_code=403,
                     detail="Лимит сканирований по вашему тарифу исчерпан. Пожалуйста, обновите тариф."
@@ -632,6 +637,36 @@ async def scan_wb_niche(
     query = req.query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
+        
+    if current_user and current_user.email != "karimbai.ali10@mail.ru":
+        plan_limits = {
+            "free": 2,
+            "start": 50,
+            "business": 200,
+            "unlimited": 999999
+        }
+        user_plan = (current_user.plan or "free").lower()
+        limit = plan_limits.get(user_plan, 0)
+
+        if user_plan not in plan_limits:
+            raise HTTPException(
+                status_code=403,
+                detail="У вас нет активного тарифа. Пожалуйста, выберите тариф, чтобы пользоваться сканером."
+            )
+
+        if getattr(current_user, 'wb_scans_used', 0) >= limit:
+            if user_plan == "free":
+                raise HTTPException(
+                    status_code=403,
+                    detail="Вы исчерпали лимит бесплатного тарифа (2 сканирования ВБ). Пожалуйста, выберите платный тариф."
+                )
+            raise HTTPException(
+                status_code=403,
+                detail="Лимит сканирований ВБ по вашему тарифу исчерпан. Пожалуйста, обновите тариф."
+            )
+            
+        current_user.wb_scans_used = getattr(current_user, 'wb_scans_used', 0) + 1
+        await db.commit()
 
     from retailpool.scraper.wb_scraper import WBScraper
     from retailpool.scraper.antifraud import StaticProxyProvider, SmartProxyProvider

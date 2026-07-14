@@ -99,6 +99,39 @@
     .form-panel { order: 1; padding: 2rem; }
     .card-row { grid-template-columns: 1fr; }
   }
+
+  /* ── Virtual Card UX ──────────────────────────────────────── */
+  .virtual-card {
+    position: relative; width: 100%; max-width: 360px; margin: 0 auto;
+    aspect-ratio: 1.586; border-radius: 16px; padding: 24px;
+    background: linear-gradient(135deg, #2a2a35 0%, #1a1a24 100%);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.1);
+    color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden; text-align: left;
+  }
+  .virtual-card::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .vc-top { display: flex; justify-content: space-between; align-items: flex-start; z-index: 1; }
+  .vc-chip {
+    width: 44px; height: 32px; background: linear-gradient(135deg, #e5c378 0%, #c49942 100%);
+    border-radius: 6px; position: relative; overflow: hidden;
+  }
+  .vc-chip::after {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.2);
+  }
+  .vc-logo {
+    font-family: var(--font-display); font-size: 24px; font-weight: 800; font-style: italic; opacity: 0.9;
+  }
+  .vc-number {
+    font-family: var(--font-mono); font-size: 22px; font-weight: 500; letter-spacing: 2px;
+    margin-top: auto; margin-bottom: 16px; z-index: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .vc-bottom { display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
+  .vc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 4px; }
+  .vc-val { font-family: var(--font-mono); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 </style>
 </head>
 <body>
@@ -181,13 +214,34 @@
 
           <!-- P2P card transfer instructions (fetched from API) -->
           <div id="cardTransferInfo" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
               <span style="font-size:24px">💳</span>
               <div>
                 <div style="font-size:13px;color:var(--text-3);font-family:var(--font-mono);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Реквизиты для перевода</div>
               </div>
             </div>
-            <div id="paymentCardDetails" style="text-align:center;padding:1rem;color:var(--text-3);">Загрузка реквизитов...</div>
+            
+            <div id="paymentCardDetails">
+              <!-- Animated Virtual Card -->
+              <div class="virtual-card" id="virtualCard" style="display:none;">
+                <div class="vc-top">
+                  <div class="vc-chip"></div>
+                  <div class="vc-logo">VISA</div>
+                </div>
+                <div class="vc-number" id="vcNumber">**** **** **** ****</div>
+                <div class="vc-bottom">
+                  <div>
+                    <div class="vc-label">Cardholder</div>
+                    <div class="vc-val" id="vcName">Loading...</div>
+                  </div>
+                  <div>
+                    <div class="vc-label">Valid Thru</div>
+                    <div class="vc-val" id="vcExpiry">00/00</div>
+                  </div>
+                </div>
+              </div>
+              <div id="cardLoadingText" style="text-align:center;padding:1rem;color:var(--text-3);">Загрузка реквизитов...</div>
+            </div>
           </div>
 
           <div id="kaspiTransferInfo" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;display:none;">
@@ -215,9 +269,13 @@
 
         <div class="success-view" id="successView">
           <div class="success-ring">✓</div>
-          <h2 data-i="success_title">Заявка принята</h2>
-          <p data-i="success_sub">Мы свяжемся с вами в течение 1 часа и активируем доступ к платформе. Проверьте Telegram и Email.</p>
-          <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;" data-i="success_home">На главную</a>
+          <h2>Оплата зафиксирована</h2>
+          <p>Пожалуйста, <strong>отправьте скриншот чека (квитанции)</strong> нашему менеджеру в Telegram для быстрой активации тарифа.</p>
+          <a href="https://t.me/AliIla67" target="_blank" class="btn-primary" style="padding: 14px 28px; font-size: 16px; margin-bottom: 1rem; display: inline-block;">
+            <span style="font-size: 20px; vertical-align: middle; margin-right: 8px;">💬</span> Отправить чек в Telegram
+          </a>
+          <br>
+          <a href="index.html" class="btn-secondary" style="padding: 10px 20px; font-size: 14px; display: inline-block;">Вернуться на главную</a>
         </div>
       </div>
 
@@ -242,6 +300,7 @@ const PAGE_I18N = {
     fill_error: "Пожалуйста, заполните все обязательные поля.",
     processing: "Обработка...",
     plan_features: {
+      "Бесплатный": ["2 сканирования ниши", "2 сканирования ВБ", "1 базовая аналитика", "1 создание накладных", "2 регистрации NTIN"],
       "Накладные": ["Безлимитные накладные для термопринтера"],
       "Старт": ["5 Niche Scanner отчётов в месяц","Smart Alerts в Telegram","Базовая аналитика"],
       "Бизнес": ["Неограниченные Niche Scanner отчёты","Приоритетные Smart Alerts","Мультиканальный выход (Kaspi+WB+Ozon)","Генерация карточек товара"],
@@ -262,6 +321,7 @@ const PAGE_I18N = {
     fill_error: "Please fill in all required fields.",
     processing: "Processing...",
     plan_features: {
+      "Бесплатный": ["2 Niche Scans", "2 WB Scans", "1 Basic Analytics", "1 Waybill creation", "2 NTIN registrations"],
       "Накладные": ["Unlimited thermal printer waybills"],
       "Старт": ["5 Niche Scanner reports/month","Smart Alerts via Telegram","Access to 1 buying pool","Basic analytics"],
       "Бизнес": ["Unlimited Niche Scanner reports","Priority Smart Alerts","Unlimited pool participation","Multichannel launch (Kaspi+WB+Ozon)","Product card generation"],
@@ -309,13 +369,21 @@ async function loadPaymentInfo() {
     const res = await fetch(RP_API_BASE + '/api/payment-info');
     if (res.ok) {
       paymentCardData = await res.json();
-      const el = document.getElementById('paymentCardDetails');
-      if (el) {
-        el.innerHTML = `
-          <div style="font-size:14px;color:var(--text-2);margin-bottom:0.5rem">Переведите <strong>${fmtMoney(planPrice)}</strong> на карту:</div>
-          <div style="font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;letter-spacing:0.05em">${paymentCardData.card_number}</div>
-          <div style="font-size:14px;color:var(--text-2);text-transform:uppercase;font-family:var(--font-mono)">${paymentCardData.card_holder}</div>
-        `;
+      const loading = document.getElementById('cardLoadingText');
+      const vCard = document.getElementById('virtualCard');
+      if (loading) loading.style.display = 'none';
+      if (vCard) {
+        vCard.style.display = 'flex';
+        document.getElementById('vcNumber').textContent = paymentCardData.card_number;
+        document.getElementById('vcName').textContent = paymentCardData.card_holder;
+        document.getElementById('vcExpiry').textContent = paymentCardData.card_expiry || '02/29';
+      }
+      
+      const pd = document.getElementById('paymentCardDetails');
+      if (pd && vCard) {
+        const infoDiv = document.createElement('div');
+        infoDiv.innerHTML = `<div style="font-size:14px;color:var(--text-2);margin-bottom:1.5rem;text-align:center;">Пожалуйста, переведите <strong>${fmtMoney(planPrice)}</strong> на карту:</div>`;
+        pd.insertBefore(infoDiv, vCard);
       }
     }
   } catch (e) {

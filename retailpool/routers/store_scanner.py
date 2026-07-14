@@ -27,20 +27,47 @@ async def request_sms_code(
 @router.post("/scan", response_model=StoreScanResponse, summary="Run Kaspi Profile Scanner")
 async def scan_store(
     request: StoreScanRequest,
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ) -> StoreScanResponse:
     """
     Initiate a Kaspi profile scan.
     Requires an active subscription plan (Unlimited or Business).
     """
-    if current_user.plan.lower() not in ["unlimited", "business"] and current_user.email != "karimbai.ali10@mail.ru":
+    plan_limits = {
+        "free": 1,
+        "start": 5,
+        "business": 999999,
+        "unlimited": 999999
+    }
+    user_plan = (current_user.plan or "free").lower()
+    
+    if user_plan not in plan_limits and current_user.email != "karimbai.ali10@mail.ru":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Эта функция доступна только для тарифов Business и Unlimited."
+            detail="Эта функция доступна только для авторизованных пользователей."
+        )
+
+    limit = plan_limits.get(user_plan, 0)
+    if getattr(current_user, 'analytics_used', 0) >= limit and current_user.email != "karimbai.ali10@mail.ru":
+        if user_plan == "free":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Вы исчерпали лимит бесплатного тарифа (1 базовая аналитика). Пожалуйста, обновите тариф."
+            )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Лимит аналитики по вашему тарифу исчерпан."
         )
 
     try:
         response = await StoreScannerService.scan_store(request)
+        
+        # Increment usage if not admin
+        if current_user.email != "karimbai.ali10@mail.ru":
+            current_user.analytics_used = getattr(current_user, 'analytics_used', 0) + 1
+            await db.commit()
+        
         return response
     except Exception as e:
         logger.error(f"Error scanning store: {e}")

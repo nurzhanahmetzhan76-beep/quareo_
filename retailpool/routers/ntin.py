@@ -217,7 +217,7 @@ async def create_product(data: NtinProductCreate, current_user: User = Depends(g
             if current_user.email != "karimbai.ali10@mail.ru":
                 stats = await svc.get_stats(current_user.id)
                 plan_limits = {
-                    "free": 0,
+                    "free": 2,
                     "start": 20,
                     "business": 100,
                     "unlimited": 200
@@ -225,6 +225,8 @@ async def create_product(data: NtinProductCreate, current_user: User = Depends(g
                 user_plan = current_user.plan or "free"
                 limit = plan_limits.get(user_plan.lower(), 0)
                 if stats["total"] >= limit:
+                    if user_plan.lower() == "free":
+                         raise HTTPException(status_code=403, detail="Вы исчерпали лимит бесплатного тарифа (2 NTIN регистрации). Пожалуйста, выберите платный тариф.")
                     raise HTTPException(status_code=403, detail="Лимит NTIN регистраций исчерпан. Пожалуйста, обновите тариф.")
                     
             product = await svc.create_product(current_user.id, data.model_dump())
