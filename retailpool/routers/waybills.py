@@ -10,6 +10,7 @@ import logging
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter, PageObject, Transformation
+import re
 
 from retailpool.models.user import User
 from retailpool.services.auth_service import get_current_user
@@ -21,15 +22,31 @@ router = APIRouter(prefix="/api/waybills", tags=["Waybills"])
 A4_WIDTH = 595.276
 A4_HEIGHT = 842.0
 
+MONTHS = {"янв.":1, "фев.":2, "мар.":3, "апр.":4, "мая":5, "июн.":6, 
+          "июл.":7, "авг.":8, "сен.":9, "окт.":10, "ноя.":11, "дек.":12,
+          "янв":1, "фев":2, "мар":3, "апр":4, "июн":6, "июл":7, "авг":8, "сен":9, "окт":10, "ноя":11, "дек":12}
+
+def parse_date(date_str):
+    if not date_str: return (99, 99)
+    parts = date_str.lower().strip().split()
+    if len(parts) >= 2:
+        day = int(parts[0]) if parts[0].isdigit() else 99
+        month_str = parts[1]
+        month = MONTHS.get(month_str, 99)
+        return (month, day)
+    return (99, 99)
+
 @router.post("/process")
 async def process_waybills(
     file: UploadFile = File(...),
     format: str = Form(...),
+    sort: str = Form("none"),
     current_user: User = Depends(get_current_user)
 ):
     """
     Takes a ZIP file of Kaspi waybills/labels and converts them.
     format: 'thermal' (1 per page) or 'a4' (4 per page)
+    sort: 'none', 'date', or 'product'
     """
     user_plan = (current_user.plan or "free").lower()
     allowed_plans = ["накладные", "waybills", "start", "business", "unlimited", "старт", "бизнес", "безлимит", "агентство"]
@@ -53,12 +70,65 @@ async def process_waybills(
             if not pdf_files:
                 raise HTTPException(status_code=400, detail="ZIP архив не содержит PDF файлов.")
                 
-            all_pages = []
-            
-            # Read and extract the top-left quadrant of all pages
+            parsed_files = []
             for pdf_name in pdf_files:
                 pdf_bytes = z.read(pdf_name)
-                reader = PdfReader(io.BytesIO(pdf_bytes))
+                sort_date = (99, 99)
+                product_val = ""
+                quantity_val = 999
+                
+                if sort != "none":
+                    try:
+                        reader = PdfReader(io.BytesIO(pdf_bytes))
+                        text = reader.pages[0].extract_text() or ""
+                        
+                        if sort in ["date", "product", "quantity"]:
+                            date_match = re.search(r"(?:дата доставки|доставки):?\s*(\d{1,2}\s+[а-яА-ЯёЁ.]+)", text, re.IGNORECASE)
+                            if date_match:
+                                sort_date = parse_date(date_match.group(1))
+                                
+                            prod_match = re.search(r"1\.\s+(.*?)(?:\.{3,}|…|\s{3,})\s*\d+\s*шт", text, re.IGNORECASE)
+                            if prod_match:
+                                product_val = prod_match.group(1).strip()
+                            elif "1." in text:
+                                lines = text.split('\n')
+                                for line in lines:
+                                    if line.strip().startswith("1."):
+                                        product_val = line.split("1.", 1)[1].split(".")[0].strip()
+                                        break
+                                        
+                            qty_matches = re.findall(r"(\d+)\s*шт", text, re.IGNORECASE)
+                            if qty_matches:
+                                quantity_val = sum(int(q) for q in qty_matches)
+                    except Exception as e:
+                        logger.warning(f"Error parsing PDF text for {pdf_name}: {e}")
+                
+                parsed_files.append({
+                    "name": pdf_name,
+                    "bytes": pdf_bytes,
+                    "date": sort_date,
+                    "product": product_val,
+                    "quantity": quantity_val
+                })
+            
+            def get_order_id(name):
+                match = re.search(r'\d+', name)
+                return int(match.group()) if match else 0
+
+            if sort == "date":
+                parsed_files.sort(key=lambda x: (x["date"][0], x["date"][1], x["product"]))
+            elif sort == "product":
+                parsed_files.sort(key=lambda x: (x["product"], x["date"][0], x["date"][1]))
+            elif sort == "quantity":
+                parsed_files.sort(key=lambda x: (x["quantity"], x["date"][0], x["date"][1]))
+            elif sort == "time":
+                parsed_files.sort(key=lambda x: get_order_id(x["name"]))
+
+            all_pages = []
+            
+            # Read and extract the top-left quadrant of all pages in sorted order
+            for item in parsed_files:
+                reader = PdfReader(io.BytesIO(item["bytes"]))
                 for page in reader.pages:
                     # Kaspi default label is on top-left of A4
                     # Crop to A6 size (top-left quadrant)
