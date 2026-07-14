@@ -37,7 +37,7 @@ class StoreScannerService:
             # Парсинг Kaspi XML фида (по URL или локальному файлу)
             try:
                 if is_xml_url:
-                    async with httpx.AsyncClient(timeout=10.0, verify=False) as client:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
                         resp = await client.get(api_token)
                         if resp.status_code == 200:
                             root = ET.fromstring(resp.content)
@@ -94,7 +94,7 @@ class StoreScannerService:
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             }
             try:
-                async with httpx.AsyncClient(timeout=15.0, verify=False) as client:
+                async with httpx.AsyncClient(timeout=15.0) as client:
                     # 1. Сначала пытаемся вытащить каталог товаров (Products API), 
                     # чтобы обойти "скрытые товары" в Orders API.
                     catalog_dict = {}

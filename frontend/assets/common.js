@@ -45,6 +45,13 @@ function rpAuthHeaders() {
   return token ? { 'Authorization': 'Bearer ' + token } : {};
 }
 
+function esc(s) {
+  if (typeof s !== 'string') return s;
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {

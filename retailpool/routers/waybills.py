@@ -41,6 +41,9 @@ async def process_waybills(
         raise HTTPException(status_code=400, detail="Пожалуйста, загрузите ZIP архив.")
         
     zip_data = await file.read()
+    MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB
+    if len(zip_data) > MAX_UPLOAD_SIZE:
+        raise HTTPException(status_code=400, detail="Файл слишком большой (макс. 50 МБ).")
     writer = PdfWriter()
     
     try:

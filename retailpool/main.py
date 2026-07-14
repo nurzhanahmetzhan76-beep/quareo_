@@ -150,11 +150,29 @@ if FRONTEND_DIR.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
 
 
-# ── Health check (no auth required) ──────────────────────────────────────
+# ── Health check (no auth required) ──────────────────────────────────
 
 @app.get("/health", tags=["System"])
 async def health_check() -> dict:
     return {"status": "ok", "service": "retailpool-ai", "version": "2.0.0-mvp"}
+
+
+# ── Payment info endpoint ────────────────────────────────────────
+
+@app.get("/api/payment-info", tags=["Payment"])
+async def get_payment_info() -> dict:
+    """Return masked card details for P2P payment instructions."""
+    card = settings.PAYMENT_CARD_NUMBER
+    holder = settings.PAYMENT_CARD_HOLDER
+    if not card:
+        raise HTTPException(status_code=503, detail="Payment not configured")
+    # Return full card number (needed for transfer) but mask middle digits for display
+    masked = card[:4] + " **** **** " + card[-4:] if len(card) >= 16 else card
+    return {
+        "card_number": card,
+        "card_masked": masked,
+        "card_holder": holder,
+    }
 
 
 # ── Protected endpoint example (API key) ─────────────────────────────────

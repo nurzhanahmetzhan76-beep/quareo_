@@ -21,6 +21,7 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         await update.message.reply_text(
             "🔑 <b>Авторизация</b>\n\n"
             "Использование: <code>/login ваш_email пароль</code>\n\n"
+            "⚠️ Сообщение с паролем будет автоматически удалено.\n\n"
             "Пример:\n<code>/login ivan@mail.ru 12345678</code>",
             parse_mode="HTML"
         )
@@ -29,7 +30,13 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     email = context.args[0]
     password = context.args[1]
 
-    await update.message.reply_text("⏳ Проверка данных...")
+    # SECURITY: immediately delete the message containing the password
+    try:
+        await update.message.delete()
+    except Exception:
+        pass  # may fail in groups without admin rights
+
+    await update.effective_chat.send_message("⏳ Проверка данных...")
 
     try:
         async with httpx.AsyncClient(base_url=bot_settings.API_BASE_URL) as client:

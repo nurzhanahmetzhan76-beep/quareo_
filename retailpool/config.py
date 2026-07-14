@@ -134,6 +134,20 @@ class Settings(BaseSettings):
         description="Interval in minutes between alert checks.",
     )
 
+    # ── Payment (P2P receiving card) ───────────────────────────────────────
+    PAYMENT_CARD_NUMBER: str = Field(
+        default="",
+        description="Card number for receiving P2P payments.",
+    )
+    PAYMENT_CARD_HOLDER: str = Field(
+        default="",
+        description="Cardholder name.",
+    )
+    PAYMENT_CARD_EXPIRY: str = Field(
+        default="",
+        description="Card expiry (MM/YY).",
+    )
+
     # ── NKT (National Catalog) API ────────────────────────────────────────
     NKT_API_KEY: str = Field(
         default="",

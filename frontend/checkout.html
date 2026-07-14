@@ -175,39 +175,48 @@
 
           <div class="form-section-title" data-i="payment_title" style="margin-top:2.5rem">Способ оплаты</div>
           <div class="pay-methods">
-            <div class="pay-method active" onclick="selectMethod(this)" data-i="method_card">Карта</div>
-            <div class="pay-method" onclick="selectMethod(this)" data-i="method_kaspi">Kaspi Pay</div>
+            <div class="pay-method active" onclick="selectMethod(this)" data-method="card" data-i="method_card">💳 Перевод на карту</div>
+            <div class="pay-method" onclick="selectMethod(this)" data-method="kaspi" data-i="method_kaspi">📱 Kaspi перевод</div>
           </div>
 
-          <div id="cardFields">
-            <div class="form-group">
-              <label class="form-label" data-i="form_card">Номер карты</label>
-              <input class="form-input" type="text" id="fCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+          <!-- P2P card transfer instructions (fetched from API) -->
+          <div id="cardTransferInfo" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+              <span style="font-size:24px">💳</span>
+              <div>
+                <div style="font-size:13px;color:var(--text-3);font-family:var(--font-mono);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Реквизиты для перевода</div>
+              </div>
             </div>
-            <div class="card-row">
-              <div class="form-group">
-                <label class="form-label" data-i="form_expiry">Срок</label>
-                <input class="form-input" type="text" id="fExpiry" placeholder="ММ/ГГ" maxlength="5" oninput="formatExpiry(this)">
+            <div id="paymentCardDetails" style="text-align:center;padding:1rem;color:var(--text-3);">Загрузка реквизитов...</div>
+          </div>
+
+          <div id="kaspiTransferInfo" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;display:none;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+              <span style="font-size:24px">📱</span>
+              <div>
+                <div style="font-size:13px;color:var(--text-3);font-family:var(--font-mono);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Kaspi перевод</div>
               </div>
-              <div class="form-group">
-                <label class="form-label">CVV</label>
-                <input class="form-input" type="password" id="fCvv" placeholder="•••" maxlength="3">
-              </div>
+            </div>
+            <div style="background:var(--bg);border-radius:var(--radius-sm);padding:1rem;">
+              <p style="margin-bottom:0.75rem;font-size:14px;color:var(--text-2);">1. Откройте приложение <strong>Kaspi.kz</strong></p>
+              <p style="margin-bottom:0.75rem;font-size:14px;color:var(--text-2);">2. Переведите <strong style="font-family:var(--font-mono);color:var(--brand)" id="kaspiAmount">—</strong> по номеру:</p>
+              <p style="font-family:var(--font-mono);font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;">+7 778 805 88 45</p>
+              <p style="font-size:14px;color:var(--text-2);">3. Получатель: <strong>Али К.</strong></p>
             </div>
           </div>
 
           <div class="security-note">
             <span class="lock">🔒</span>
-            <span data-i="form_note">Данные надежно защищены.</span>
+            <span data-i="form_note">Переведите оплату и нажмите кнопку ниже — мы активируем тариф в течение 1 часа.</span>
           </div>
 
-          <button class="btn-primary btn-block" id="btnPay" onclick="submitPayment()" style="padding: 16px; font-size: 16px;" data-i="form_pay">Оплатить подписку</button>
+          <button class="btn-primary btn-block" id="btnPay" onclick="submitPayment()" style="padding: 16px; font-size: 16px;" data-i="form_pay">✅ Я оплатил(а) — активировать тариф</button>
         </div>
 
         <div class="success-view" id="successView">
           <div class="success-ring">✓</div>
           <h2 data-i="success_title">Заявка принята</h2>
-          <p data-i="success_sub">Мы свяжемся с вами в течение 24 часов и настроим доступ к платформе. Проверьте Telegram и Email.</p>
+          <p data-i="success_sub">Мы свяжемся с вами в течение 1 часа и активируем доступ к платформе. Проверьте Telegram и Email.</p>
           <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;" data-i="success_home">На главную</a>
         </div>
       </div>
@@ -284,22 +293,42 @@ function renderSummary() {
 function selectMethod(el) {
   document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
   el.classList.add('active');
-  const isKaspi = el.getAttribute('data-i') === 'method_kaspi';
-  const cardFields = document.getElementById('cardFields');
-  if (cardFields) cardFields.style.display = isKaspi ? 'none' : 'block';
-  const t = RP_I18N[RP_LANG];
-  document.getElementById('btnPay').textContent = isKaspi ? (t.form_get_details || 'Получить реквизиты') : (t.form_pay || 'Оплатить подписку');
+  const isKaspi = el.getAttribute('data-method') === 'kaspi';
+  
+  const cardInfo = document.getElementById('cardTransferInfo');
+  const kaspiInfo = document.getElementById('kaspiTransferInfo');
+  
+  if (cardInfo) cardInfo.style.display = isKaspi ? 'none' : 'block';
+  if (kaspiInfo) kaspiInfo.style.display = isKaspi ? 'block' : 'none';
 }
 
-function formatCard(el) {
-  let v = el.value.replace(/\D/g,'').substring(0,16);
-  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+let paymentCardData = null;
+
+async function loadPaymentInfo() {
+  try {
+    const res = await fetch(RP_API_BASE + '/api/payment-info');
+    if (res.ok) {
+      paymentCardData = await res.json();
+      const el = document.getElementById('paymentCardDetails');
+      if (el) {
+        el.innerHTML = `
+          <div style="font-size:14px;color:var(--text-2);margin-bottom:0.5rem">Переведите <strong>${fmtMoney(planPrice)}</strong> на карту:</div>
+          <div style="font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;letter-spacing:0.05em">${paymentCardData.card_number}</div>
+          <div style="font-size:14px;color:var(--text-2);text-transform:uppercase;font-family:var(--font-mono)">${paymentCardData.card_holder}</div>
+        `;
+      }
+    }
+  } catch (e) {
+    console.error('Error loading payment info', e);
+  }
+  
+  const kaspiAm = document.getElementById('kaspiAmount');
+  if (kaspiAm) kaspiAm.textContent = fmtMoney(planPrice);
 }
-function formatExpiry(el) {
-  let v = el.value.replace(/\D/g,'').substring(0,4);
-  if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2);
-  el.value = v;
-}
+
+document.addEventListener('DOMContentLoaded', loadPaymentInfo);
+
+// formatting functions unused now but kept for safety
 
 async function submitPayment() {
   const t = RP_I18N[RP_LANG];
@@ -313,7 +342,7 @@ async function submitPayment() {
   }
 
   const activeMethod = document.querySelector('.pay-method.active');
-  const paymentMethod = activeMethod && activeMethod.getAttribute('data-i') === 'method_kaspi'
+  const paymentMethod = activeMethod && activeMethod.getAttribute('data-method') === 'kaspi'
     ? 'kaspi_transfer' : 'card';
 
   const btn = document.getElementById('btnPay');
@@ -355,15 +384,23 @@ async function submitPayment() {
       <div style="font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--text-3);margin-bottom:1.5rem;">Заявка №${subId}</div>
     `;
 
-    if (paymentMethod === 'kaspi_transfer') {
+    if (paymentMethod === 'kaspi_transfer' || paymentMethod === 'card') {
+      const isKaspi = paymentMethod === 'kaspi_transfer';
+      const titleText = isKaspi ? 'Инструкция по оплате Kaspi Gold' : 'Инструкция по переводу на карту';
+      const instructions = isKaspi 
+        ? `<p style="margin-bottom:0.5rem">2. Переведите <strong style="font-family:var(--font-mono)">${fmtMoney(planPrice)}</strong> по номеру: <strong style="font-family:var(--font-mono);color:var(--text)">+7 778 805 88 45</strong></p>
+           <p style="margin-bottom:1rem">3. Получатель: <strong>Али К.</strong></p>`
+        : `<p style="margin-bottom:0.5rem">2. Переведите <strong style="font-family:var(--font-mono)">${fmtMoney(planPrice)}</strong> на карту:</p>
+           <p style="font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:0.25rem;">${paymentCardData ? paymentCardData.card_number : '4400 4300 5531 0293'}</p>
+           <p style="margin-bottom:1rem;font-family:var(--font-mono);font-size:14px;color:var(--text-2);text-transform:uppercase;">${paymentCardData ? paymentCardData.card_holder : 'NURASSYL KUNANBAY'}</p>`;
+
       successHtml += `
         <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:2rem;text-align:left;margin-bottom:2rem;">
-          <h3 style="margin-bottom:1rem;color:var(--brand)">Инструкция по оплате Kaspi Gold</h3>
-          <p style="margin-bottom:0.5rem">1. Откройте приложение Kaspi.kz</p>
-          <p style="margin-bottom:0.5rem">2. Переведите <strong style="font-family:var(--font-mono)">${fmtMoney(planPrice)}</strong> по номеру: <strong style="font-family:var(--font-mono);color:var(--text)">+7 778 805 88 45</strong></p>
-          <p style="margin-bottom:1rem">3. Получатель: <strong>Али К.</strong></p>
+          <h3 style="margin-bottom:1rem;color:var(--brand)">${titleText}</h3>
+          <p style="margin-bottom:0.5rem">1. Откройте ваше банковское приложение</p>
+          ${instructions}
           <div style="background:var(--brand-light);padding:1rem;border-radius:var(--radius-sm);color:var(--text);font-size:0.9rem;border-left:4px solid var(--brand)">
-            ❗️ <strong>Важно:</strong> В сообщении к переводу обязательно укажите ваш Email: <strong>${email}</strong>
+            ❗️ <strong>Важно:</strong> Отправьте чек об оплате на WhatsApp для активации тарифа.
           </div>
           <div style="margin-top:1.5rem;text-align:center;">
             <a href="https://wa.me/77788058845?text=Здравствуйте,%20я%20оплатил(а)%20подписку%20${planName}.%20Мой%20email:%20${email}" target="_blank" class="btn-primary" style="background:#25D366;color:#fff;border:none;display:inline-flex;align-items:center;gap:8px;padding:12px 24px;text-decoration:none;">
@@ -373,11 +410,6 @@ async function submitPayment() {
           </div>
         </div>
         <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;">На главную</a>
-      `;
-    } else {
-      successHtml += `
-        <p data-i="success_sub">${t.success_sub || 'Мы свяжемся с вами в течение 24 часов и настроим доступ к платформе. Проверьте Telegram и Email.'}</p>
-        <a href="index.html" class="btn-secondary" style="padding: 14px 28px; font-size: 15px;" data-i="success_home">${t.success_home || 'На главную'}</a>
       `;
     }
     

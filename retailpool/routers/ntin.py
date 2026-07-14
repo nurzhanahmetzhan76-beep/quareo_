@@ -330,6 +330,7 @@ async def search_oktru(
     headers = {"X-API-KEY": api_key, "Accept": "application/json"}
     url = f"{base_url}/portal/api/v1/dictionaries/OKTRU/items?page=1&size=100&search={urllib.parse.quote(q)}"
     root_word = q.lower()[:5] if len(q) > 5 else q.lower()
+    safe_root = root_word.replace("%", "\\%").replace("_", "\\_")
     
     def score_item(item):
         name_ru = str(item.get("nameRu", "")).lower()
@@ -361,7 +362,7 @@ async def search_oktru(
     # Fetch from local OKTRU dictionary
     from sqlalchemy import select
     from retailpool.models.ntin import OktruDictionary
-    local_results = await db.execute(select(OktruDictionary).where(OktruDictionary.search_vector.like(f"%{root_word}%")).limit(20))
+    local_results = await db.execute(select(OktruDictionary).where(OktruDictionary.search_vector.like(f"%{safe_root}%")).limit(20))
     local_codes = local_results.scalars().all()
     
     added_codes = {r["code"] for r in results}

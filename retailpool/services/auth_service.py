@@ -53,6 +53,8 @@ def create_access_token(user_id: str, email: str) -> str:
         "email": email,
         "exp": expire,
         "iat": datetime.now(timezone.utc),
+        "iss": "quareo",
+        "aud": "quareo-api",
     }
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
@@ -75,7 +77,8 @@ async def get_current_user(
     token = credentials.credentials
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
+            token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM],
+            audience="quareo-api", issuer="quareo",
         )
         user_id: str | None = payload.get("sub")
         if user_id is None:

@@ -46,7 +46,7 @@ async def scan_store(
         logger.error(f"Error scanning store: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Ошибка сканирования: {str(e)}"
+            detail="Произошла ошибка при сканировании. Попробуйте позже."
         )
 
 @router.post("/upload-costs", summary="Upload Cost Excel File")
@@ -69,6 +69,8 @@ async def upload_costs(
         # and store costs per Kaspi ID into the database.
         
         contents = await file.read()
+        if len(contents) > 10 * 1024 * 1024:  # 10 MB
+            raise HTTPException(status_code=400, detail="Файл слишком большой (макс. 10 МБ).")
         logger.info(f"User {current_user.id} uploaded costs excel: {file.filename} ({len(contents)} bytes)")
         
         return {"success": True, "message": f"Обработано товаров: {len(contents) % 100 + 10}."}
@@ -102,7 +104,7 @@ async def download_template(
         import xml.etree.ElementTree as ET
         try:
             if is_xml_url:
-                async with httpx.AsyncClient(timeout=15.0, verify=False) as client:
+                async with httpx.AsyncClient(timeout=15.0) as client:
                     resp = await client.get(target)
                     if resp.status_code == 200:
                         root = ET.fromstring(resp.content)
@@ -150,7 +152,7 @@ async def download_template(
                 "Accept": "application/vnd.api+json"
             }
             # Fetch user's active products (read-only, 100% safe)
-            async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
+            async with httpx.AsyncClient(timeout=30.0) as client:
                 page_num = 0
                 while page_num < 20: # up to 2000 items
                     resp = await client.get(f"https://kaspi.kz/shop/api/v2/products?page[size]=100&page[number]={page_num}", headers=headers)

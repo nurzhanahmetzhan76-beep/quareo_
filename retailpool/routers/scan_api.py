@@ -611,8 +611,8 @@ async def scan_niche(
             opportunity="—",
             weaknesses=[],
             recommendations=[],
-            analysis=f"Ошибка при сканировании: {str(exc)}. Kaspi.kz мог заблокировать запрос. Подождите 30 секунд и попробуйте снова.",
-            error=str(exc),
+            analysis="Ошибка при сканировании. Kaspi.kz мог заблокировать запрос. Подождите 30 секунд и попробуйте снова.",
+            error="scan_error",
         )
     finally:
         await proxy_provider.close()
@@ -745,8 +745,8 @@ async def scan_wb_niche(
             opportunity="—",
             weaknesses=[],
             recommendations=[],
-            analysis=f"Ошибка при сканировании WB: {str(exc)}.",
-            error=str(exc),
+            analysis="Ошибка при сканировании WB. Попробуйте позже.",
+            error="wb_scan_error",
         )
     finally:
         if proxy_provider:
@@ -892,8 +892,8 @@ async def scan_ozon_niche(
             opportunity="—",
             weaknesses=[],
             recommendations=[],
-            analysis=f"Ошибка при сканировании Ozon: {str(exc)}. Возможно сработала защита от ботов.",
-            error=str(exc),
+            analysis="Ошибка при сканировании Ozon. Попробуйте позже.",
+            error="ozon_scan_error",
         )
     finally:
         if proxy_provider:

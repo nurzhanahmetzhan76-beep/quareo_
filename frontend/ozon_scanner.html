@@ -517,7 +517,7 @@ function renderProducts(products, t) {
       <div class="item-row ${weakClass}" style="flex-direction:column;gap:6px;">
         <div style="display:flex;gap:12px;align-items:center;width:100%;">
           <span class="item-mark" style="font-size:13px;color:var(--text-3);width:16px;">${idx + 1}.</span>
-          <a href="${p.url || '#'}" target="_blank" rel="noopener" style="color:var(--text);font-weight:500;text-decoration:none;font-size:14px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.title}">${p.title}</a>
+          <a href="${esc(p.url) || '#'}" target="_blank" rel="noopener" style="color:var(--text);font-weight:500;text-decoration:none;font-size:14px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(p.title)}">${esc(p.title)}</a>
           ${weakBadge}
         </div>
         <div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:13px;color:var(--text-2);padding-left:28px;font-weight:500;">

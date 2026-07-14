@@ -13,7 +13,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from retailpool.database import get_db
 from retailpool.models.subscription import Subscription
+from retailpool.models.user import User
 from retailpool.schemas.subscription import SubscriptionCreate, SubscriptionOut
+from retailpool.services.auth_service import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -73,9 +75,12 @@ async def get_subscription(
     summary="List all subscriptions (admin)",
 )
 async def list_subscriptions(
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> list[SubscriptionOut]:
-    """List all subscription requests (for admin view)."""
+    """List all subscription requests (admin only — checks email whitelist)."""
+    if current_user.email != "karimbai.ali10@mail.ru":
+        raise HTTPException(status_code=403, detail="Admin access required")
     stmt = select(Subscription).order_by(Subscription.created_at.desc()).limit(100)
     result = await db.execute(stmt)
     rows = result.scalars().all()
