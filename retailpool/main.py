@@ -30,6 +30,7 @@ from slowapi.errors import RateLimitExceeded
 from retailpool.config import settings
 from retailpool.database import engine
 from retailpool.routers.scanner import router as scanner_router
+from retailpool.routers.repricing import router as repricing_router
 
 from retailpool.routers.auth import router as auth_router
 from retailpool.routers.google_auth import router as google_auth_router
@@ -142,6 +143,7 @@ app.include_router(analytics_router)
 app.include_router(reviews_router)
 app.include_router(waybills_router)
 app.include_router(store_scanner_router)
+app.include_router(repricing_router)
 
 # ── Static assets (CSS, JS) ─────────────────────────────────────────────
 if FRONTEND_DIR.exists():
