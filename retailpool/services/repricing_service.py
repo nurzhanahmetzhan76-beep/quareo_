@@ -275,6 +275,8 @@ async def process_single_rule(
             action=action,
         )
         db.add(log)
+        
+        rule.my_current_price = new_price
 
         # Step 4: Notify user only when a competitor undercut them.
         # We do NOT touch Kaspi — the user updates prices via safe Excel upload.
