@@ -304,7 +304,9 @@ async def process_single_rule(
 async def run_repricing_cycle(db: AsyncSession) -> list[dict]:
     """Run one full repricing cycle for all active rules across all users.
 
-    This is called by the background worker.
+    This is called by the background worker. It only reads public
+    competitor prices (no Kaspi API token needed) and never writes
+    anything to Kaspi — see kaspi_repricer_handover.md.
     """
     stmt = select(RepricingRule).where(RepricingRule.is_active == True)  # noqa: E712
     rows = await db.execute(stmt)
@@ -313,8 +315,7 @@ async def run_repricing_cycle(db: AsyncSession) -> list[dict]:
     if not rules:
         return []
 
-    from retailpool.models.ntin import UserSellerSettings
-    from retailpool.services.crypto import decrypt_secret
+    from retailpool.models.user import User
 
     # Group rules by user_id
     user_rules = {}
@@ -324,22 +325,7 @@ async def run_repricing_cycle(db: AsyncSession) -> list[dict]:
     results = []
 
     for user_id, u_rules in user_rules.items():
-        # Get Kaspi token for this user
-        settings_stmt = select(UserSellerSettings).where(UserSellerSettings.user_id == user_id)
-        settings = (await db.execute(settings_stmt)).scalar_one_or_none()
-        
-        if not settings or not settings.kaspi_api_key:
-            logger.warning("Repricing skipped for user %s: no Kaspi token.", user_id)
-            continue
-            
-        token = decrypt_secret(settings.kaspi_api_key)
-        if not token:
-            continue
-            
-        client = KaspiSellerClient(token)
-
         # Fetch owner's telegram_id once for notifications
-        from retailpool.models.user import User
         owner = (await db.execute(
             select(User).where(User.id == user_id)
         )).scalar_one_or_none()
@@ -347,7 +333,7 @@ async def run_repricing_cycle(db: AsyncSession) -> list[dict]:
 
         for rule in u_rules:
             rule.owner_telegram_id = owner_tg  # attach for notifier
-            result = await process_single_rule(rule, client, db)
+            result = await process_single_rule(rule, None, db)
             results.append(result)
 
     await db.commit()
