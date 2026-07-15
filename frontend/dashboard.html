@@ -16,8 +16,8 @@
   <div class="sb-nav">
     <a class="sb-link active" data-page="connect" onclick="showPage('connect')">👤 Мой профиль</a>
     <a class="sb-link" data-page="scanner" onclick="showPage('scanner')">🔍 Сканер Kaspi</a>
-    <a class="sb-link" data-page="ntin" onclick="showPage('ntin')">📋 NTIN Маркировка</a>
     <a class="sb-link" data-page="analytics" onclick="showPage('analytics')">📊 Аналитика</a>
+    <a class="sb-link" data-page="calculator" onclick="showPage('calculator')">🧮 Калькулятор Kaspi</a>
     <a class="sb-link" data-page="waybills" onclick="showPage('waybills')">🖨️ Накладные</a>
   </div>
   <div class="sb-footer">
@@ -250,6 +250,115 @@
   </section>
 
 
+
+  <!-- ═══════ PAGE: Kaspi Calculator ═══════ -->
+  <section class="page" id="page-calculator" style="background:#F8FAFC; padding: 2rem 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">Калькулятор прибыли Kaspi</h2>
+    </div>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <!-- Ввод данных -->
+      <div class="card" style="flex: 1.5; min-width: 320px; border: 1px solid #E2E8F0; box-shadow: none;">
+        <h3 style="margin-bottom: 20px; font-size: 18px;">Параметры товара</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label class="form-label">Цена продажи (₸)</label>
+            <input class="form-input calc-input" id="calcPrice" type="number" value="15000" oninput="calculateProfit()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Себестоимость (₸)</label>
+            <input class="form-input calc-input" id="calcCost" type="number" value="8000" oninput="calculateProfit()">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label class="form-label">Вес товара (кг)</label>
+            <input class="form-input calc-input" id="calcWeight" type="number" step="0.1" value="1.5" oninput="calculateProfit()">
+            <div style="font-size: 11px; color: #64748B; margin-top: 4px;">Нужен только если цена > 10 000 ₸</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Зона доставки</label>
+            <select class="form-input calc-input" id="calcZone" onchange="calculateProfit()">
+              <option value="city">Внутри города (Ваш город)</option>
+              <option value="kz" selected>Межгород (Казахстан)</option>
+              <option value="express">Kaspi Express</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label">Спец. категория для доставки</label>
+            <select class="form-input calc-input" id="calcCategory" onchange="calculateProfit()">
+              <option value="standard" selected>Обычный товар</option>
+              <option value="tire_light">Легковые шины (до 25 кг/шт)</option>
+              <option value="tire_heavy">Грузовые шины (> 25 кг/шт)</option>
+            </select>
+        </div>
+
+        <h3 style="margin: 24px 0 16px; font-size: 16px; color: #475569; border-top: 1px solid #E2E8F0; padding-top: 20px;">Комиссии и расходы</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label">Комиссия Kaspi (%)</label>
+            <input class="form-input calc-input" id="calcCommKaspi" type="number" step="0.1" value="12.5" oninput="calculateProfit()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Эквайринг/Рассрочка (%)</label>
+            <input class="form-input calc-input" id="calcCommBank" type="number" step="0.1" value="3.0" oninput="calculateProfit()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Упаковка (₸)</label>
+            <input class="form-input calc-input" id="calcPackage" type="number" value="100" oninput="calculateProfit()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Результат -->
+      <div class="card" style="flex: 1; min-width: 300px; background: #fff; border: 1px solid #E2E8F0; box-shadow: none;">
+        <h3 style="margin-bottom: 20px; font-size: 18px;">Юнит-экономика</h3>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+          <span>Выручка:</span>
+          <span id="resRevenue" style="font-weight: 600; color: #0F172A;">15 000 ₸</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+          <span>Общая комиссия Kaspi:</span>
+          <span id="resCommission" style="font-weight: 600; color: #EF4444;">- 2 325 ₸</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+          <span>Доставка (Kaspi Доставка):</span>
+          <span id="resDelivery" style="font-weight: 600; color: #EF4444;">- 1 507 ₸</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+          <span>Упаковка:</span>
+          <span id="resPackage" style="font-weight: 600; color: #EF4444;">- 100 ₸</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; color: #475569;">
+          <span>Себестоимость:</span>
+          <span id="resCost" style="font-weight: 600; color: #EF4444;">- 8 000 ₸</span>
+        </div>
+        
+        <div style="border-top: 1px solid #E2E8F0; padding-top: 16px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 16px; font-weight: 600; color: #0F172A;">Чистая прибыль:</span>
+            <span id="resProfit" style="font-size: 24px; font-weight: 800; color: #10B981;">3 068 ₸</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #E2E8F0;">
+            <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">Маржинальность</div>
+            <div id="resMargin" style="font-size: 18px; font-weight: 700; color: #3B82F6;">20.5%</div>
+          </div>
+          <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #E2E8F0;">
+            <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">ROI (Окупаемость)</div>
+            <div id="resRoi" style="font-size: 18px; font-weight: 700; color: #8B5CF6;">31.9%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ═══════ PAGE: Waybills ═══════ -->
   <section class="page" id="page-waybills">

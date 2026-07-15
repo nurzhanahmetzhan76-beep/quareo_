@@ -31,7 +31,8 @@ const PAGE_TITLES = {
   'connect': 'Информация о магазине',
   'ntin': 'NTIN Маркировка',
   'waybills': '📄 Накладные',
-  'analytics': '📊 Аналитика'
+  'analytics': '📊 Аналитика',
+  'calculator': '🧮 Калькулятор Kaspi'
 };
 
 let allProducts = []; // cached product list for filtering
@@ -359,4 +360,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('kShopName');
     if (el) el.textContent = shopName;
   }
+  
+  if (document.getElementById('calcPrice')) {
+    calculateProfit();
+  }
 });
+
+/* ── Kaspi Calculator Logic ───────────────────────────────── */
+function getDeliveryCost(price, weight, zone, category) {
+  if (category === 'tire_light') {
+    return zone === 'city' ? 1217 : zone === 'kz' ? 1913 : 1565;
+  }
+  if (category === 'tire_heavy') {
+    return zone === 'city' ? 4871 : zone === 'kz' ? 7016 : 6669;
+  }
+
+  if (price <= 10000) {
+    if (price <= 1000) return 57;
+    if (price <= 3000) return 173;
+    if (price <= 5000) return 231;
+    if (price <= 10000) return zone === 'city' ? 811 : 927;
+  } else {
+    if (weight <= 5) return zone === 'city' ? 1275 : zone === 'kz' ? 1507 : 1971;
+    if (weight <= 15) return zone === 'city' ? 1565 : zone === 'kz' ? 1971 : 2146;
+    if (weight <= 30) return zone === 'city' ? 2667 : zone === 'kz' ? 4175 : 3653;
+    if (weight <= 60) return zone === 'city' ? 3363 : zone === 'kz' ? 6553 : 4175;
+    if (weight <= 100) return zone === 'city' ? 4813 : zone === 'kz' ? 9917 : 6495;
+    return zone === 'city' ? 7481 : zone === 'kz' ? 13919 : 9801;
+  }
+}
+
+function calculateProfit() {
+  const price = parseFloat(document.getElementById('calcPrice').value) || 0;
+  const cost = parseFloat(document.getElementById('calcCost').value) || 0;
+  const weight = parseFloat(document.getElementById('calcWeight').value) || 0;
+  const zone = document.getElementById('calcZone').value;
+  const category = document.getElementById('calcCategory').value;
+  
+  const commKaspiPerc = parseFloat(document.getElementById('calcCommKaspi').value) || 0;
+  const commBankPerc = parseFloat(document.getElementById('calcCommBank').value) || 0;
+  const packageCost = parseFloat(document.getElementById('calcPackage').value) || 0;
+
+  const totalCommPerc = commKaspiPerc + commBankPerc;
+  const commissionAmount = price * (totalCommPerc / 100);
+  
+  const delivery = getDeliveryCost(price, weight, zone, category);
+  
+  const profit = price - commissionAmount - delivery - packageCost - cost;
+  
+  const expenses = cost + delivery + packageCost;
+  const margin = price > 0 ? (profit / price) * 100 : 0;
+  const roi = expenses > 0 ? (profit / expenses) * 100 : 0;
+
+  const fmt = (num) => Math.round(num).toLocaleString('ru-RU') + ' ₸';
+
+  document.getElementById('resRevenue').textContent = fmt(price);
+  document.getElementById('resCommission').textContent = '- ' + fmt(commissionAmount);
+  document.getElementById('resDelivery').textContent = '- ' + fmt(delivery);
+  document.getElementById('resPackage').textContent = '- ' + fmt(packageCost);
+  document.getElementById('resCost').textContent = '- ' + fmt(cost);
+  
+  const elProfit = document.getElementById('resProfit');
+  elProfit.textContent = fmt(profit);
+  elProfit.style.color = profit > 0 ? '#10B981' : '#EF4444';
+
+  const elMargin = document.getElementById('resMargin');
+  elMargin.textContent = margin.toFixed(1) + '%';
+  elMargin.style.color = margin > 15 ? '#3B82F6' : (margin > 0 ? '#F59E0B' : '#EF4444');
+
+  const elRoi = document.getElementById('resRoi');
+  elRoi.textContent = roi.toFixed(1) + '%';
+  elRoi.style.color = roi > 30 ? '#8B5CF6' : (roi > 0 ? '#F59E0B' : '#EF4444');
+}
