@@ -119,6 +119,10 @@ class StoreScannerService:
                     fourteen_days_ago_ms = now_ms - (14 * 24 * 60 * 60 * 1000)
                     # Kaspi по умолчанию отдает только статус NEW, если не указать фильтр.
                     # Для аналитики продаж нам нужны завершенные/исторические заказы (ARCHIVE).
+                    kaspi_total_revenue = 0
+                    actual_products_dict = {}
+                    all_entry_urls = []
+                    
                     url_base = f"https://kaspi.kz/shop/api/v2/orders?page[size]=50&filter[orders][state]=ARCHIVE&filter[orders][creationDate][$ge]={fourteen_days_ago_ms}&filter[orders][creationDate][$le]={now_ms}&include=entries"
                     
                     page_number = 0
@@ -441,9 +445,6 @@ class StoreScannerService:
             title = f"Kaspi Store: Internal API (Kaspi Pay Verified - {api_token})"
         else:
             title = "Kaspi Store: Гостевой анализ"
-            
-        if kaspi_error:
-            title += f" (Live Data Error: {kaspi_error})"
 
         return StoreScanResponse(
             store_name=title,
@@ -454,5 +455,6 @@ class StoreScannerService:
             seasonal_heatmap=seasonal_heatmap,
             strong_cards=strong_cards,
             weak_cards=weak_cards,
-            loss_making_cards=loss_making_cards
+            loss_making_cards=loss_making_cards,
+            error_message=kaspi_error
         )

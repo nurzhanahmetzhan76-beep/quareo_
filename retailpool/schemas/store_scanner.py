@@ -43,3 +43,4 @@ class StoreScanResponse(BaseModel):
     strong_cards: List[ProductAnalytics]
     weak_cards: List[ProductAnalytics]
     loss_making_cards: List[ProductAnalytics]
+    error_message: Optional[str] = None

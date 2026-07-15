@@ -101,16 +101,26 @@
         <button class="btn-primary" onclick="verifySmsAndScan()">Подтвердить</button>
       </div>
 
-      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
-        <button class="btn-secondary" onclick="downloadTemplate()" style="background: transparent; border: 1px solid var(--border); padding: 10px 24px; border-radius: 99px; color: var(--text-2); font-weight: 600; cursor: pointer; transition: all 0.2s;">
-          📥 Скачать из токена/ссылки
-        </button>
-        <button class="btn-secondary" onclick="document.getElementById('xmlUploadInput').click()" style="background: transparent; border: 1px solid var(--amber); padding: 10px 24px; border-radius: 99px; color: var(--amber); font-weight: 600; cursor: pointer; transition: all 0.2s;">
-          📄 Сделать Excel из моего XML файла
-        </button>
-        <button class="btn-secondary" onclick="document.getElementById('costUploadInput').click()" style="background: var(--brand); border: none; padding: 10px 24px; border-radius: 99px; color: #fff; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-          📊 Загрузить готовые цены (Excel)
-        </button>
+      <div style="margin-top: 3rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-1);">Управление себестоимостью (Для точного P&L)</h3>
+        <p style="color: var(--text-2); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4;">Чтобы сканер считал чистую прибыль со 100% точностью, загрузите себестоимость ваших товаров. Вы можете выгрузить шаблон со своими товарами, заполнить цены и загрузить его обратно.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <button class="btn-secondary hover-bg" onclick="downloadTemplate()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text-1); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">📥</div>
+            Шаг 1: Скачать товары<br><span style="font-size: 0.8rem; color: var(--text-3); font-weight: 400; margin-top: 4px;">(По введённому API ключу)</span>
+          </button>
+          
+          <button class="btn-secondary hover-bg" onclick="document.getElementById('xmlUploadInput').click()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text-1); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">📄</div>
+            Или из XML-фида<br><span style="font-size: 0.8rem; color: var(--text-3); font-weight: 400; margin-top: 4px;">(Сгенерировать шаблон)</span>
+          </button>
+          
+          <button class="btn-secondary hover-bg" onclick="document.getElementById('costUploadInput').click()" style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--brand); padding: 12px; border-radius: 12px; color: var(--brand); font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">📊</div>
+            Шаг 2: Загрузить цены<br><span style="font-size: 0.8rem; font-weight: 400; opacity: 0.8; margin-top: 4px;">(Заполненный Excel файл)</span>
+          </button>
+        </div>
         <input type="file" id="costUploadInput" style="display:none" accept=".xlsx, .xls, .csv" onchange="handleCostUpload(event)">
         <input type="file" id="xmlUploadInput" style="display:none" accept=".xml" onchange="handleXmlUpload(event)">
       </div>
@@ -124,7 +134,8 @@
       </div>
 
       <div id="dashboardResults">
-        <h2 id="storeNameTitle" style="margin-bottom: 2rem;"></h2>
+        <h2 id="storeNameTitle" style="margin-bottom: 0.5rem;"></h2>
+        <div id="scanErrorAlert" style="display: none; background: rgba(245, 158, 11, 0.1); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.3); border-left: 4px solid var(--amber); padding: 1rem 1.2rem; border-radius: var(--radius-md); margin-bottom: 2rem; font-size: 0.95rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;"></div>
         
         <!-- KPI Cards -->
         <div class="analytics-grid">
@@ -303,6 +314,15 @@ async function runScanner(targetValue, scanType, smsCode = null) {
         
         // Populate KPI
         document.getElementById('storeNameTitle').innerText = data.store_name;
+        
+        const alertEl = document.getElementById('scanErrorAlert');
+        if (data.error_message) {
+            alertEl.innerHTML = `<span>⚠️</span> <span>${data.error_message}</span>`;
+            alertEl.style.display = 'flex';
+        } else {
+            alertEl.style.display = 'none';
+        }
+
         document.getElementById('totalRevenue').innerText = formatMoney(data.total_revenue);
         document.getElementById('totalProfit').innerText = formatMoney(data.total_profit);
         document.getElementById('avgMargin').innerText = data.avg_margin_percent + '%';
