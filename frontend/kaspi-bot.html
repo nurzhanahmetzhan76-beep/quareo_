@@ -318,7 +318,7 @@ async function processExcel() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'kaspi_prices_updated.xlsx';
+    a.download = file.name;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
