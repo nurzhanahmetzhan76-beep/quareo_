@@ -512,5 +512,5 @@ async def process_excel(
     return StreamingResponse(
         out,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": 'attachment; filename="kaspi_updated_prices.xlsx"'},
+        headers={"Content-Disposition": f'attachment; filename="{file.filename or "kaspi_updated_prices.xlsx"}"'},
     )
