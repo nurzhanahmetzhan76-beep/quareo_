@@ -180,22 +180,8 @@
       <!-- Past Scans History -->
       <div class="card" style="flex: 1; min-width: 300px;">
         <h3 style="margin-bottom: 16px; font-size: 18px;">История сканирований</h3>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <!-- History Item -->
-          <div style="border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-weight: 600; font-size: 14px; color: #0F172A;">Увлажнители воздуха</div>
-              <div style="font-size: 12px; color: #64748B;">12.07.2026 • 240 товаров найдено</div>
-            </div>
-            <button class="btn-action" style="padding: 6px 12px; font-size: 12px;" onclick="window.location.href='scanner.html'">Смотреть</button>
-          </div>
-          <div style="border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-weight: 600; font-size: 14px; color: #0F172A;">Смартфоны Apple</div>
-              <div style="font-size: 12px; color: #64748B;">10.07.2026 • 115 товаров найдено</div>
-            </div>
-            <button class="btn-action" style="padding: 6px 12px; font-size: 12px;" onclick="window.location.href='scanner.html'">Смотреть</button>
-          </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;" id="scanHistoryList">
+          <div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Загрузка истории...</div>
         </div>
       </div>
     </div>
@@ -216,32 +202,8 @@
 
     <div class="card" style="margin-top: 24px;">
       <h3 style="margin-bottom: 16px; font-size: 18px;">Последнее сканирование рынка</h3>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="border: 1px solid #E2E8F0; padding: 16px; border-radius: 8px; background: #F8FAFC;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <div>
-              <div style="font-weight: bold; font-size: 16px; color: #0F172A;">Увлажнители воздуха</div>
-              <div style="font-size: 13px; color: #64748B; margin-top: 4px;">Сканирование от 12.07.2026</div>
-            </div>
-            <span style="background: #ECFDF5; color: #10B981; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 600;">Успешно завершено</span>
-          </div>
-          
-          <div style="display: flex; gap: 2rem; margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
-            <div>
-              <div style="font-size: 12px; color: #64748B;">Найдено товаров</div>
-              <div style="font-size: 16px; font-weight: 600; color: #0F172A;">240</div>
-            </div>
-            <div>
-              <div style="font-size: 12px; color: #64748B;">Средняя маржа</div>
-              <div style="font-size: 16px; font-weight: 600; color: #10B981;">18%</div>
-            </div>
-            <div>
-              <div style="font-size: 12px; color: #64748B;">Топ конкурентов</div>
-              <div style="font-size: 16px; font-weight: 600; color: #0F172A;">12</div>
-            </div>
-          </div>
-          <button class="btn-action primary" style="margin-top: 16px;" onclick="window.location.href='scanner.html'">Открыть полный отчет</button>
-        </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;" id="latestScanBlock">
+        <div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Загрузка данных...</div>
       </div>
     </div>
   </section>

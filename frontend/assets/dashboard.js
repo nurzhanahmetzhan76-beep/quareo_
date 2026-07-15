@@ -138,6 +138,68 @@ async function loadUserProfile() {
   } catch(e) { console.error('Profile error', e); }
 }
 
+async function loadScanHistory() {
+  try {
+    const r = await fetch(API + '/api/scanner/niches');
+    if (!r.ok) return;
+    const scans = await r.json();
+    
+    const historyList = document.getElementById('scanHistoryList');
+    if (historyList) {
+        if (!scans || scans.length === 0) {
+            historyList.innerHTML = '<div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">История пуста</div>';
+        } else {
+            historyList.innerHTML = scans.slice(0, 3).map(s => {
+                const dateStr = new Date(s.analyzed_at).toLocaleDateString('ru-RU');
+                return `<div style="border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600; font-size: 14px; color: #0F172A;">${s.query}</div>
+              <div style="font-size: 12px; color: #64748B;">${dateStr} • Оценка: ${s.score}</div>
+            </div>
+            <button class="btn-action" style="padding: 6px 12px; font-size: 12px;" onclick="window.location.href='scanner.html'">Смотреть</button>
+          </div>`;
+            }).join('');
+        }
+    }
+    
+    const latestScanBlock = document.getElementById('latestScanBlock');
+    if (latestScanBlock) {
+        if (!scans || scans.length === 0) {
+            latestScanBlock.innerHTML = '<div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Нет данных о сканированиях</div>';
+        } else {
+            const s = scans[0];
+            const dateStr = new Date(s.analyzed_at).toLocaleDateString('ru-RU');
+            latestScanBlock.innerHTML = `
+        <div style="border: 1px solid #E2E8F0; padding: 16px; border-radius: 8px; background: #F8FAFC;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <div style="font-weight: bold; font-size: 16px; color: #0F172A;">${s.query}</div>
+              <div style="font-size: 13px; color: #64748B; margin-top: 4px;">Сканирование от ${dateStr}</div>
+            </div>
+            <span style="background: #ECFDF5; color: #10B981; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 600;">Завершено</span>
+          </div>
+          
+          <div style="display: flex; gap: 2rem; margin-top: 16px; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+            <div>
+              <div style="font-size: 12px; color: #64748B;">Niche Score</div>
+              <div style="font-size: 16px; font-weight: 600; color: #0F172A;">${s.score}/100</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748B;">Конкуренция</div>
+              <div style="font-size: 16px; font-weight: 600; color: #10B981;">${s.sellers} прод.</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748B;">Средняя цена</div>
+              <div style="font-size: 16px; font-weight: 600; color: #0F172A;">${s.avg_price}</div>
+            </div>
+          </div>
+          <button class="btn-action primary" style="margin-top: 16px;" onclick="window.location.href='scanner.html'">Открыть сканер</button>
+        </div>`;
+        }
+    }
+  } catch(e) { console.error('Scan history error', e); }
+}
+
 async function loadStats() {
   try {
     const r = await fetch(API + '/api/ntin/stats');
@@ -385,6 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   loadUserProfile();
+  loadScanHistory();
 });
 
 /* ── Kaspi Profile Tabs ───────────────────────────────────── */
