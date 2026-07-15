@@ -95,6 +95,49 @@ function updateShopBadge() {
 }
 
 /* ── Stats ─────────────────────────────────────────────────── */
+async function loadUserProfile() {
+  try {
+    const r = await fetch(API + '/api/auth/me');
+    if (r.ok) {
+      const user = await r.json();
+      const plan = user.plan || 'free';
+      
+      const planNames = { 'free': 'Free', 'start': 'Start', 'business': 'Business', 'unlimited': 'Unlimited', 'waybills': 'Накладные' };
+      const badgeText = planNames[plan] || plan;
+      
+      const sbBadge = document.getElementById('sidebarPlanBadge');
+      if (sbBadge) sbBadge.textContent = badgeText;
+      
+      const profBadge = document.getElementById('profilePlanBadge');
+      if (profBadge) {
+          profBadge.textContent = badgeText;
+          if (plan === 'free') {
+              profBadge.style.background = '#64748B';
+          } else if (plan === 'business' || plan === 'unlimited') {
+              profBadge.style.background = 'linear-gradient(135deg, #2563EB, #7C3AED)';
+          } else {
+              profBadge.style.background = '#10B981';
+          }
+      }
+      
+      const profFeatures = document.getElementById('profilePlanFeatures');
+      if (profFeatures) {
+          if (plan === 'free') {
+              profFeatures.innerHTML = '<li>2 сканирования (Kaspi/WB)</li><li>1 AI-аналитика</li><li>Генерация 2-х NTIN</li>';
+          } else if (plan === 'start') {
+              profFeatures.innerHTML = '<li>Безлимитная генерация NTIN</li><li>Авто-заполнение ИИ для товаров</li>';
+          } else if (plan === 'business') {
+              profFeatures.innerHTML = '<li>Безлимитная генерация NTIN</li><li>Безлимитный доступ к сканеру Kaspi/WB</li><li>Доступ к AI-Аналитике</li>';
+          } else if (plan === 'unlimited') {
+              profFeatures.innerHTML = '<li>Полный безлимит на все инструменты</li><li>Доступ к Telegram-боту Quareo</li><li>Радар VIP связок</li>';
+          } else if (plan === 'waybills') {
+              profFeatures.innerHTML = '<li>Массовая печать накладных (PDF)</li>';
+          }
+      }
+    }
+  } catch(e) { console.error('Profile error', e); }
+}
+
 async function loadStats() {
   try {
     const r = await fetch(API + '/api/ntin/stats');
@@ -340,6 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     loadStats();
   }
+  
+  loadUserProfile();
 });
 
 /* ── Kaspi Profile Tabs ───────────────────────────────────── */
