@@ -82,7 +82,10 @@ async def _send_vip_notifications(query: str, score: int, avg_price: float, sell
     """Send a Telegram notification to all VIP users when a hot niche is scanned."""
     import httpx
     
+    logger.info("VIP Radar triggered for query: %s. Chat IDs from DB: %s", query, vip_chat_ids)
+    
     if not settings.TELEGRAM_BOT_TOKEN:
+        logger.warning("TELEGRAM_BOT_TOKEN not set, skipping VIP notification.")
         return
         
     chat_ids = set(vip_chat_ids)
@@ -90,6 +93,7 @@ async def _send_vip_notifications(query: str, score: int, avg_price: float, sell
         chat_ids.add(int(settings.ADMIN_CHAT_ID))
         
     if not chat_ids:
+        logger.warning("No VIP chat IDs found to send notification.")
         return
         
     text = (
@@ -120,6 +124,8 @@ async def _send_vip_notifications(query: str, score: int, avg_price: float, sell
     
     url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage"
     
+    logger.info("Sending VIP notification to chat_ids: %s", chat_ids)
+    
     async with httpx.AsyncClient() as client:
         for chat_id in chat_ids:
             payload = {
@@ -129,9 +135,10 @@ async def _send_vip_notifications(query: str, score: int, avg_price: float, sell
                 "disable_web_page_preview": True
             }
             try:
-                await client.post(url, json=payload, timeout=5.0)
+                resp = await client.post(url, json=payload, timeout=5.0)
+                logger.info("VIP notification sent to %s, status: %s, response: %s", chat_id, resp.status_code, resp.text)
             except Exception as e:
-                logger.error(f"Failed to send VIP notification to {chat_id}: {e}")
+                logger.error("Failed to send VIP notification to %s: %s", chat_id, e)
 
 
 
@@ -567,7 +574,10 @@ async def scan_niche(
             
             user_email = current_user.email if current_user else "Неизвестный пользователь"
             
-            stmt = select(User.telegram_id).where(User.plan == "unlimited", User.telegram_id.is_not(None))
+            stmt = select(User.telegram_id).where(
+                (User.plan.ilike("unlimited")) | (User.email == "karimbai.ali10@mail.ru") | (User.email == user_email),
+                User.telegram_id.is_not(None)
+            )
             result = await db.execute(stmt)
             vip_chat_ids = list(result.scalars().all())
             

@@ -26,7 +26,7 @@ def _get_client() -> httpx.AsyncClient:
         _client = httpx.AsyncClient(
             base_url=bot_settings.API_BASE_URL,
             headers={"X-API-Key": bot_settings.API_KEY},
-            timeout=60.0,
+            timeout=180.0,
         )
     return _client
 
