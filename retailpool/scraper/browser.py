@@ -156,6 +156,11 @@ class BrowserManager:
             window.chrome = { runtime: {} };
         """)
 
+        # Add Kaspi city cookie to avoid modal blocks
+        ctx.add_cookies([
+            {"name": "kaspi.store.city", "value": "750000000", "domain": ".kaspi.kz", "path": "/"}
+        ])
+
         # Block heavy resources and trackers to save proxy traffic
         def _route_handler(route):
             req = route.request

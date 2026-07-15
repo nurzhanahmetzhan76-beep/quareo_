@@ -1,34 +1,35 @@
 {
   "data": [
     {
-      "id": "OTgwMzI4NDQxIyMw",
+      "id": "OTgyMzYwOTI1IyMw",
       "type": "orderentries",
       "attributes": {
         "entryNumber": 0,
         "deliveryCost": 995.0,
         "quantity": 1,
-        "basePrice": 6500.0,
-        "totalPrice": 6500.0,
+        "basePrice": 4200.0,
+        "totalPrice": 4200.0,
         "unitType": "PIECES",
         "category": {
-          "code": "Master - Composting toilets",
-          "title": "Биотуалеты"
+          "code": "Master - Canning machines and accessories",
+          "title": "Закаточные машинки и аксессуары"
         },
         "offer": {
-          "code": "103975050_604494404",
-          "name": "AUAstore переносной Xiomi-77 белый"
+          "code": "105257582_146325565",
+          "name": "Закаточная машинка КредМаш МЗП1-1 , сталь"
         },
-        "isImeiRequired": false
+        "isImeiRequired": false,
+        "barCode": "0200120632987"
       },
       "relationships": {
         "product": {
           "data": {
-            "id": "MTAzOTc1MDUw",
+            "id": "MTA1MjU3NTgy",
             "type": "masterproducts"
           },
           "links": {
-            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/relationships/product",
-            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/product"
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgyMzYwOTI1IyMw/relationships/product",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgyMzYwOTI1IyMw/product"
           }
         },
         "deliveryPointOfService": {
@@ -37,13 +38,13 @@
             "type": "pointofservices"
           },
           "links": {
-            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/relationships/deliveryPointOfService",
-            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw/deliveryPointOfService"
+            "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgyMzYwOTI1IyMw/relationships/deliveryPointOfService",
+            "related": "https://kaspi.kz/shop/api/v2/orderentries/OTgyMzYwOTI1IyMw/deliveryPointOfService"
           }
         }
       },
       "links": {
-        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgwMzI4NDQxIyMw"
+        "self": "https://kaspi.kz/shop/api/v2/orderentries/OTgyMzYwOTI1IyMw"
       }
     }
   ],
