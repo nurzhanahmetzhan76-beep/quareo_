@@ -212,6 +212,9 @@ _PAGE_ROUTES = [
     ("/dashboard",   "dashboard.html"),
     ("/wb_scanner",  "wb_scanner.html"),
     ("/ozon_scanner", "ozon_scanner.html"),
+    ("/privacy",     "privacy.html"),
+    ("/terms",       "terms.html"),
+    ("/about",       "about.html"),
 ]
 
 for _path, _filename in _PAGE_ROUTES:

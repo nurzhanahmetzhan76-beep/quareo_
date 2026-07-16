@@ -218,12 +218,22 @@ class UserSellerSettings(Base):
         String(256), nullable=True,
         comment="Store name on Kaspi"
     )
+    kaspi_xml_url: Mapped[str | None] = mapped_column(
+        Text, nullable=True,
+        comment="Link to Kaspi XML feed for pulling assortment"
+    )
 
     # ── НКТ (National Catalog) API ───────────────────────────────
     nkt_api_key: Mapped[str | None] = mapped_column(
         Text, nullable=True,
         comment="User's НКТ API key from nationalcatalog.kz"
     )
+
+    # ── Templates (Auto-fill Defaults) ───────────────────────────
+    tpl_country: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    tpl_brand: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    tpl_unit: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    tpl_qty: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     # ── Timestamps ───────────────────────────────────────────────
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)

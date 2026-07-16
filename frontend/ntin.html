@@ -320,6 +320,58 @@
       line-height: 1.7
     }
 
+    /* New Action Toolbar and Instructions */
+    .actions-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      background: var(--bg-2);
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .desktop-divider {
+      width: 1px; 
+      height: 24px; 
+      background: var(--border); 
+      margin: 0 4px;
+    }
+
+    .instruction-box {
+      background: linear-gradient(to right, var(--bg-2), var(--bg));
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--brand);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+    }
+
+    .instruction-box h4 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .instruction-box ol {
+      margin-left: 1.5rem;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .instruction-box li {
+      margin-bottom: 0.5rem;
+    }
+
+    .instruction-box strong {
+      color: var(--text);
+    }
+
     @media(max-width:760px) {
       .field-row {
         grid-template-columns: 1fr
@@ -332,6 +384,20 @@
 
       .step::after {
         display: none
+      }
+
+      .actions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .desktop-divider {
+        display: none;
+      }
+      
+      .actions-toolbar button {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -421,14 +487,47 @@
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="tab-bar">
-          <div class="tab active" onclick="switchTab('add')">➕ Добавить товар</div>
-          <div class="tab" onclick="switchTab('list')">📋 Мои товары</div>
-          <div class="tab" onclick="switchTab('settings')">⚙️ Настройки API</div>
+        <!-- Full Integration Welcome Screen -->
+        <div id="integrationScreen" style="display: none; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 4rem 2rem; text-align: center; margin-top: 2rem; box-shadow: var(--shadow-lg);">
+          <div style="font-size: 48px; margin-bottom: 1rem;">🔗</div>
+          <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem;">Подключите интеграции</h2>
+          <p style="color: var(--text-2); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6;">Чтобы скачивать товары и автоматически получать штрих-коды, необходимо указать ключи доступа. Это безопасно и нужно сделать только один раз.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; text-align: left;">
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">🇰🇿 API-ключ НКТ</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Национальный каталог товаров. <br>Где взять: <i>nationalcatalog.kz -> Настройки интеграции -> API ключи</i>.</p>
+              <input class="form-input" id="welcomeNktKey" type="password" placeholder="Вставьте API-ключ НКТ" style="margin-bottom: 1rem;">
+            </div>
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">🛒 Ссылка на Kaspi XML</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Прайс-лист для загрузки ваших товаров. <br>Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+              <input class="form-input" id="welcomeKaspiXml" type="url" placeholder="https://ваша-ссылка-на-xml.kz/feed.xml" style="margin-bottom: 1rem;">
+            </div>
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">📁 Загрузка файла (XML/Excel)</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Скачайте файл прайс-листа из Kaspi.<br>Где взять: <i>Управление товарами -> Действия с файлами -> Загрузить прайс-лист</i>.</p>
+              <input type="file" id="welcomeFileInput" style="display: none" accept=".xml,.xlsx,.xls" onchange="uploadKaspiFile(this)">
+              <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; background: var(--purple);" onclick="document.getElementById('welcomeFileInput').click()">📁 Выбрать файл</button>
+            </div>
+          </div>
+          <div style="margin-top: 2.5rem; display:flex; gap:10px; justify-content:center;">
+            <button class="btn-primary" onclick="saveWelcomeKeys()" style="padding: 14px 32px; font-size: 16px;">Сохранить и продолжить</button>
+            <button class="btn-secondary" onclick="skipWelcomeScreen()" style="padding: 14px 32px; font-size: 16px;">Пропустить</button>
+          </div>
+          <div id="welcomeKeyStatus" style="margin-top: 1rem; font-weight: 500;"></div>
         </div>
 
-        <!-- TAB: Add product -->
+        <div id="mainNtinApp" style="display: none;">
+          <!-- Tabs -->
+          <div class="tab-bar">
+            <div class="tab" onclick="switchTab('list')">📋 Товары Kaspi (Без NTIN)</div>
+            <div class="tab" onclick="switchTab('add')">➕ Добавить вручную</div>
+            <div class="tab" onclick="switchTab('templates')">📑 Шаблоны (Автозаполнение)</div>
+            <div class="tab" onclick="switchTab('settings')">⚙️ Настройки API</div>
+          </div>
+
+          <!-- TAB: Add product -->
         <div class="tab-content active" id="tab-add">
           <div class="add-form">
             <div class="info-banner" data-reveal>
@@ -502,15 +601,93 @@
 
         <!-- TAB: Product list -->
         <div class="tab-content" id="tab-list">
-          <div style="display:flex; justify-content: flex-end; margin-bottom: 1rem;">
-            <button class="btn-secondary" style="padding:10px 20px" onclick="syncAllNkt()">🔄 Синхронизировать
-              НКТ</button>
+          
+          <div class="instruction-box">
+            <h4>📖 Инструкция по работе с NTIN</h4>
+            <ol>
+              <li><strong>Загрузите товары:</strong> Нажмите «Загрузить прайс» и выберите XML/Excel файл из Kaspi.</li>
+              <li><strong>Заполните ИИ:</strong> Нажмите «🤖 Массово заполнить ИИ». Наш алгоритм подберет коды ТН ВЭД и ОКТРУ для всех товаров.</li>
+              <li><strong>Отправьте в НКТ:</strong> Нажмите «🚀 Массово подать в НКТ». Заявки уйдут на модерацию в Каталог.</li>
+              <li><strong>Проверьте статусы:</strong> Нажимайте «🔄 Обновить статусы», пока товары не получат статус «NTIN привязан».</li>
+            </ol>
+          </div>
+
+          <div class="actions-toolbar">
+            <button class="btn-primary" style="background: #007bff;" onclick="massAiFill()">🤖 Заполнить ИИ</button>
+            <button class="btn-primary" style="background: #eab308; color: #1f2937;" onclick="massSubmit()">🚀 Подать в НКТ</button>
+            <button class="btn-primary" style="background: #8b5cf6;" onclick="bindViaExtension()">🔗 Привязать к Kaspi</button>
+            
+            <div class="desktop-divider"></div>
+            
+            <button class="btn-secondary" onclick="syncAllNkt()">🔄 Статусы</button>
+            <button class="btn-secondary" onclick="exportExcel()">📥 Excel</button>
+            
+            <div class="desktop-divider"></div>
+            
+            <input type="file" id="kaspiFileInput" style="display: none" accept=".xml,.xlsx,.xls" onchange="uploadKaspiFile(this)">
+            <button class="btn-secondary" onclick="document.getElementById('kaspiFileInput').click()">📁 Загрузить файл</button>
+            <button class="btn-secondary" onclick="fetchKaspiXml()" title="Загрузить по ссылке из настроек">⬇️ По ссылке</button>
           </div>
           <div id="productListContainer">
-            <div class="empty-state">
-              <div class="empty-state-icon">📦</div>
-              <p>Товаров пока нет. Добавьте первый товар для маркировки.</p>
+            <div class="empty-state" style="max-width: 600px; margin: 2rem auto; text-align: left; padding: 2rem; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Как добавить товары?</h3>
+              <p style="color: var(--text-2); margin-bottom: 1.5rem; font-size: 14px;">Загрузите ваш прайс-лист из Kaspi или вставьте ссылку на XML-фид (1С, МойСклад).</p>
+
+              <div style="background: var(--bg); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem;">
+                  <h4 style="margin-bottom: 0.5rem; font-size: 15px;">Загрузка файла (XML/Excel)</h4>
+                  <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Скачайте файл прайс-листа (XML или Excel) из Кабинета продавца Kaspi.<br>Где взять: <i>Управление товарами -> Действия с файлами -> Загрузить прайс-лист.</i></p>
+                  <button class="btn-primary" style="padding:10px 20px; background: var(--purple);" onclick="document.getElementById('kaspiFileInput').click()">📁 Загрузить файл</button>
+              </div>
+
+              <div style="background: var(--bg); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                  <h4 style="margin-bottom: 0.5rem; font-size: 15px;">🛒 Ссылка на Kaspi XML</h4>
+                  <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Прайс-лист для загрузки ваших товаров.<br>Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+                  <div style="display:flex; gap: 8px;">
+                      <button class="btn-secondary" onclick="fetchKaspiXml()">⬇️ Загрузить по ссылке</button>
+                      <button class="btn-secondary" onclick="switchTab('settings')" style="border:none;background:transparent;text-decoration:underline">Указать ссылку в настройках</button>
+                  </div>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- TAB: Templates -->
+        <div class="tab-content" id="tab-templates">
+          <div class="settings-card">
+            <div class="section-tag">Автозаполнение</div>
+            <h3>Шаблоны значений для НКТ</h3>
+            <p>Укажите значения, которые будут автоматически подставляться ко всем товарам при отправке на модерацию. Это сэкономит часы рутинной работы.</p>
+            
+            <div class="field-row" style="margin-top: 1.5rem;">
+              <div class="form-group">
+                <label class="form-label">Страна происхождения (заглавными)</label>
+                <input class="form-input" id="tplCountry" placeholder="Например: КИТАЙ" value="КИТАЙ">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Наименование производителя</label>
+                <input class="form-input" id="tplBrand" placeholder="Например: Отсутствует" value="Отсутствует">
+              </div>
+            </div>
+            
+            <div class="field-row">
+              <div class="form-group">
+                <label class="form-label">Единица измерения</label>
+                <select class="form-input" id="tplUnit">
+                  <option value="шт">Штука (шт)</option>
+                  <option value="кг">Килограмм (кг)</option>
+                  <option value="компл">Комплект (компл)</option>
+                  <option value="упак">Упаковка (упак)</option>
+                  <option value="пара">Пара (пара)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Количественное значение</label>
+                <input class="form-input" type="number" id="tplQty" value="1">
+              </div>
+            </div>
+            
+            <button class="btn-primary" onclick="saveTemplates()" style="margin-top: 1rem;">Сохранить шаблоны</button>
+            <div id="templateStatus" style="margin-top: 8px; font-size: 13px; font-weight: 500;"></div>
           </div>
         </div>
 
@@ -531,6 +708,7 @@
             <h3>🏪 Kaspi Seller API</h3>
             <p>Для автоимпорта товаров и репрайсинга. Каждый пользователь вводит <strong>свой</strong> ключ — он никому
               не передаётся.</p>
+              не передаётся.</p>
             <div class="form-group">
               <label class="form-label">API-ключ Kaspi</label>
               <div class="key-input-row">
@@ -550,6 +728,18 @@
             </div>
             <div id="kaspiKeyStatus" style="margin-top:8px;font-size:13px"></div>
           </div>
+          <div class="settings-card">
+            <h3>🛒 Ссылка на Kaspi XML</h3>
+            <p>Прайс-лист для загрузки ваших товаров. Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+            <div class="key-input-row">
+              <input class="form-input" id="kaspiXmlUrl" type="url" placeholder="https://ваша-ссылка-на-xml.kz/feed.xml">
+              <button class="btn-primary" onclick="saveKaspiXmlUrl()">Сохранить</button>
+            </div>
+            <div id="kaspiXmlStatus" style="margin-top:8px;font-size:13px"></div>
+          </div>
+        </div>
+        
+        <!-- End of mainNtinApp -->
         </div>
       </div>
     </section>
@@ -559,24 +749,28 @@
     <div class="footer-grid">
       <div>
         <div class="footer-brand">Quareo</div>
-        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz</p>
+        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и оптимизируем ваши продажи через глубокую аналитику.</p>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Продукт</div>
-        <a href="scanner.html">Niche Scanner</a>
-        <a href="ntin.html">NTIN Маркировка</a>
-
-        <a href="pricing.html">Тарифы</a>
+        <div class="footer-col-title" data-i="footer_product">Продукт</div>
+        <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+        <a href="wb_scanner.html" data-i="footer_l_wb">Сканер WB</a>
+        <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
+        <a href="ntin.html" data-i="footer_l_ntin">NTIN</a>
+        <a href="waybills.html" data-i="footer_l_waybills">Накладные</a>
+        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Инструменты</div>
-        <a href="analytics.html">Аналитика</a>
-        <a href="waybills.html">Накладные</a>
+        <div class="footer-col-title" data-i="footer_company">Компания</div>
+        <a href="about.html" data-i="footer_l_about">О проекте</a>
+        <a href="https://t.me/Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
+        <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Документы</div>
-        <a href="#">Политика конфиденциальности</a>
-        <a href="#">Условия использования</a>
+        <div class="footer-col-title" data-i="footer_legal">Документы</div>
+        <a href="privacy.html" data-i="footer_l_privacy">Политика конфиденциальности</a>
+        <a href="terms.html" data-i="footer_l_terms">Условия использования</a>
+        <a href="terms.html" data-i="footer_l_offer">Публичная оферта</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -591,12 +785,123 @@
     const STATUS_LABELS = { draft: 'Черновик', ai_filled: 'ИИ заполнен', ready: 'Готов', submitted: 'На модерации', revision: 'На доработку', approved: 'NTIN привязан', rejected: 'Отклонено', revoked: 'Отозвано' };
     const STATUS_CLASS = { draft: 'status-draft', ai_filled: 'status-ai_filled', ready: 'status-ai_filled', submitted: 'status-submitted', revision: 'status-revision', approved: 'status-approved', rejected: 'status-rejected' };
 
+    function stopPolling() {
+      if (window.aiFillInterval) {
+        clearInterval(window.aiFillInterval);
+        window.aiFillInterval = null;
+      }
+    }
+
     function switchTab(t) {
-      document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', ['add', 'list', 'settings'][i] === t));
+      document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', ['list', 'add', 'templates', 'settings'].includes(t) && el.getAttribute('onclick').includes(t)));
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + t).classList.add('active');
+      
+      stopPolling();
+      
       if (t === 'list') loadProducts();
       if (t === 'settings') loadSettings();
+      if (t === 'templates') loadTemplates();
+    }
+
+    function skipWelcomeScreen() {
+      document.getElementById('integrationScreen').style.display = 'none';
+      document.getElementById('mainNtinApp').style.display = 'block';
+      loadProducts(); loadStats();
+    }
+
+    // Check integration status on load
+    async function checkIntegrationStatus() {
+      try {
+        const r = await fetch(API + '/api/ntin/settings', { headers: rpAuthHeaders() });
+        if (r.ok) {
+          const d = await r.json();
+          if (d.has_nkt_key && d.kaspi_xml_url) {
+            document.getElementById('integrationScreen').style.display = 'none';
+            document.getElementById('mainNtinApp').style.display = 'block';
+            switchTab('list');
+            loadStats();
+          } else {
+            document.getElementById('integrationScreen').style.display = 'block';
+            document.getElementById('mainNtinApp').style.display = 'none';
+          }
+        }
+      } catch (e) { console.error('Settings check error', e); }
+    }
+    
+    // Call on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (rpGetToken()) checkIntegrationStatus();
+    });
+
+    async function saveWelcomeKeys() {
+      const nkt = document.getElementById('welcomeNktKey').value.trim();
+      const xml_url = document.getElementById('welcomeKaspiXml').value.trim();
+      const stat = document.getElementById('welcomeKeyStatus');
+      
+      if (!nkt || !xml_url) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = 'Пожалуйста, заполните оба поля.';
+        return;
+      }
+      
+      stat.style.color = 'var(--text-3)';
+      stat.innerText = 'Проверка и сохранение...';
+      
+      try {
+        const r = await fetch(API + '/api/ntin/settings', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, 
+          body: JSON.stringify({ nkt_api_key: nkt, kaspi_xml_url: xml_url }) 
+        });
+        if (!r.ok) throw new Error('Ошибка сохранения');
+        stat.style.color = 'var(--green)';
+        stat.innerText = 'Успешно подключено!';
+        setTimeout(() => checkIntegrationStatus(), 1000);
+      } catch (e) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = e.message;
+      }
+    }
+
+    async function loadTemplates() {
+      try {
+        const r = await fetch(API + '/api/ntin/templates', { headers: rpAuthHeaders() });
+        if (r.ok) {
+          const d = await r.json();
+          if (d.tpl_country) document.getElementById('tplCountry').value = d.tpl_country;
+          if (d.tpl_brand) document.getElementById('tplBrand').value = d.tpl_brand;
+          if (d.tpl_unit) document.getElementById('tplUnit').value = d.tpl_unit;
+          if (d.tpl_qty) document.getElementById('tplQty').value = d.tpl_qty;
+        }
+      } catch (e) { console.error('Templates load error', e); }
+    }
+
+    async function saveTemplates() {
+      const stat = document.getElementById('templateStatus');
+      const data = {
+        tpl_country: document.getElementById('tplCountry').value.trim(),
+        tpl_brand: document.getElementById('tplBrand').value.trim(),
+        tpl_unit: document.getElementById('tplUnit').value,
+        tpl_qty: parseInt(document.getElementById('tplQty').value) || 1
+      };
+      
+      stat.style.color = 'var(--text-3)';
+      stat.innerText = 'Сохранение...';
+      try {
+        const r = await fetch(API + '/api/ntin/templates', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, 
+          body: JSON.stringify(data) 
+        });
+        if (!r.ok) throw new Error('Ошибка сохранения');
+        stat.style.color = 'var(--green)';
+        stat.innerText = '✓ Шаблоны сохранены. Они будут применяться ко всем новым товарам.';
+        setTimeout(() => { stat.innerText = ''; }, 3000);
+      } catch (e) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = e.message;
+      }
     }
 
     async function loadStats() {
@@ -715,7 +1020,15 @@
       try {
         const r = await fetch(API + '/api/ntin/products', { headers: rpAuthHeaders() });
         const products = await r.json();
-        if (!products.length) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><p>Товаров пока нет</p></div>'; return }
+        if (!products.length) { 
+          c.innerHTML = `<div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <p>Товаров пока нет. Загрузите свой XML прайс-лист в разделе "Настройки" или добавьте товары вручную.<br>
+            <br>
+            <small style="color:var(--text-3)">Чтобы загрузить товары файлом, используйте кнопку в верхней панели.</small></p>
+          </div>`; 
+          return 
+        }
         let html = '<div style="overflow-x:auto"><table class="product-table"><thead><tr><th>Товар</th><th>ТН ВЭД / ОКТРУ</th><th>NTIN</th><th>Статус</th><th>Действия</th></tr></thead><tbody>';
         products.forEach(p => {
           const st = STATUS_LABELS[p.status] || p.status;
@@ -761,12 +1074,33 @@
     }
 
     async function syncAllNkt() {
+      const btn = document.querySelector('button[onclick="syncAllNkt()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Синхронизация...';
+      btn.disabled = true;
       try {
-        const r = await fetch(API + '/api/ntin/sync', { method: 'POST', headers: rpAuthHeaders() });
-        const d = await r.json();
-        alert(`Проверено: ${d.checked}, Обновлено: ${d.updated}`);
-        loadProducts(); loadStats();
-      } catch (e) { alert('Ошибка: ' + e.message) }
+        const r = await fetch(API + '/api/ntin/requests/sync', { method: 'POST', headers: rpAuthHeaders() });
+        if (r.ok) {
+          alert('Синхронизация с НКТ запущена в фоновом режиме! Подождите пару минут и просто обновите страницу.');
+          
+          if (!window.aiFillInterval) {
+            let retries = 0;
+            window.aiFillInterval = setInterval(() => {
+              loadProducts();
+              loadStats();
+              retries++;
+              if (retries > 12) stopPolling(); // stop after 1 minute
+            }, 5000);
+          }
+        } else {
+          alert('Ошибка синхронизации');
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
     }
 
     async function deleteProduct(id) {
@@ -775,6 +1109,211 @@
         await fetch(API + '/api/ntin/products/' + id, { method: 'DELETE', headers: rpAuthHeaders() });
         loadProducts(); loadStats();
       } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function massAiFill() {
+      if (!confirm('Запустить массовое ИИ-заполнение для всех товаров со статусом "Черновик"? Процесс пройдет в фоновом режиме.')) return;
+      const btn = document.querySelector('button[onclick="massAiFill()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Запущено...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/mass-ai-fill', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка заполнения');
+        }
+        alert('Массовое заполнение запущено в фоновом режиме! Вы можете продолжать работу или даже закрыть вкладку. Товары будут обновляться по мере готовности.');
+        // Poll every 5 seconds to show progress
+        if (!window.aiFillInterval) {
+          let retries = 0;
+          window.aiFillInterval = setInterval(() => {
+            loadProducts();
+            loadStats();
+            retries++;
+            if (retries > 12) stopPolling(); // stop after 1 minute
+          }, 5000);
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    async function massSubmit() {
+      if (!confirm('Отправить все товары со статусом "ИИ заполнен" в НКТ? Процесс пройдет в фоновом режиме.')) return;
+      const btn = document.querySelector('button[onclick="massSubmit()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Запущено...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/mass-submit', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка запуска подачи');
+        }
+        alert('Массовая подача в НКТ запущена в фоновом режиме!');
+        
+        if (!window.aiFillInterval) {
+          let retries = 0;
+          window.aiFillInterval = setInterval(() => {
+            loadProducts();
+            loadStats();
+            retries++;
+            if (retries > 12) stopPolling(); // stop after 1 minute
+          }, 5000);
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    function exportExcel() {
+      // Create a temporary link to download the file, sending the auth token in the URL or using fetch
+      // Since it's a GET request and we use Bearer token, we can use fetch and then blob
+      fetch(API + '/api/ntin/export-excel', {
+        headers: rpAuthHeaders()
+      })
+      .then(r => {
+        if(!r.ok) throw new Error('Ошибка экспорта');
+        return r.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'kaspi_ntin_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(e => alert(e.message));
+    }
+
+    async function bindViaExtension() {
+      if (!confirm('Расширение сейчас безопасно (точечно) привяжет готовые NTIN-коды ко всем вашим товарам в Kaspi. Продолжить?')) return;
+      try {
+        const r = await fetch(API + '/api/ntin/export-json', { headers: rpAuthHeaders() });
+        const data = await r.json();
+        
+        if (!data.products || data.products.length === 0) {
+            alert("Нет товаров с готовым NTIN кодом для привязки.");
+            return;
+        }
+        
+        console.log("Отправляем команду расширению, товаров:", data.products.length);
+        window.postMessage({
+          type: "QUAREO_BIND_NTIN",
+          payload: { products: data.products }
+        }, "*");
+        
+        window.extensionTimeout = setTimeout(() => {
+          alert("Расширение Quareo Connector не найдено! Обновите страницу или установите его в Chrome.");
+        }, 2000);
+        
+      } catch(e) {
+        alert("Ошибка: " + e.message);
+      }
+    }
+
+    window.addEventListener("message", function(event) {
+      if (event.source !== window) return;
+      if (event.data.type === "QUAREO_BIND_RESULT") {
+        clearTimeout(window.extensionTimeout);
+        const res = event.data.result;
+        if (res && res.success) {
+          let logStr = "";
+          if (res.details && res.details.logs && res.details.logs.length > 0) {
+              logStr = "\n\nПодробности:\n" + res.details.logs.join("\n");
+          }
+          alert(`Расширение ответило: ${res.message} (Обработано: ${res.details ? res.details.processed : 0})` + logStr);
+        } else {
+          alert("Ошибка расширения: " + (res ? res.message : "Неизвестная ошибка"));
+        }
+      }
+    });
+
+    async function fetchKaspiXml() {
+      const btn = document.querySelector('button[onclick="fetchKaspiXml()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Загрузка XML...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/fetch-kaspi', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка загрузки XML');
+        }
+        const res = await r.json();
+        alert(`Успешно загружено ${res.imported} новых товаров без штрих-кода!`);
+        loadProducts(); loadStats();
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    async function uploadKaspiFile(input) {
+      if (!input.files || input.files.length === 0) return;
+      
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Attempt to find the specific button that was clicked to update its text
+      let btn = input.nextElementSibling;
+      if (!btn || btn.tagName !== 'BUTTON') {
+         btn = document.querySelector('button[onclick*="kaspiFileInput"]');
+      }
+      
+      let oldText = 'Загрузить файл';
+      if (btn) {
+          oldText = btn.innerText;
+          btn.innerText = '⏳ Обработка...';
+          btn.disabled = true;
+      }
+      
+      try {
+        const r = await fetch(API + '/api/ntin/upload-kaspi', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + rpGetToken()
+          },
+          body: formData
+        });
+        
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка загрузки файла');
+        }
+        
+        const res = await r.json();
+        alert(`Успешно загружено ${res.imported} новых товаров!`);
+        
+        // Hide welcome screen if we are there
+        document.getElementById('integrationScreen').style.display = 'none';
+        document.getElementById('mainNtinApp').style.display = 'block';
+        
+        switchTab('list');
+        loadProducts(); 
+        loadStats();
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        if (btn) {
+            btn.innerText = oldText;
+            btn.disabled = false;
+        }
+        input.value = ''; // Reset input so same file can be selected again
+      }
     }
 
     async function loadSettings() {

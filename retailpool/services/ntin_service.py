@@ -299,7 +299,7 @@ class NtinService:
             # First, check our local downloaded dictionary
             from retailpool.models.ntin import OktruDictionary
             root_word = product.title_ru.lower()[:5] if len(product.title_ru) > 5 else product.title_ru.lower()
-            local_res = await self.session.execute(select(OktruDictionary).where(OktruDictionary.search_vector.like(f"%{root_word}%")).limit(1))
+            local_res = await self.session.execute(select(OktruDictionary).where(OktruDictionary.name_ru.ilike(f"%{root_word}%")).limit(1))
             local_match = local_res.scalars().first()
             
             if local_match:
@@ -342,18 +342,25 @@ class NtinService:
             
             # Fallback if dynamic search fails or no key
             if not product.oktru_code or product.oktru_code == "1106-0001-0001-100011943":
-                product.oktru_code = "1106-0001-0001-100011943"
+                product.oktru_code = "3203-0001-0001-100017260"
 
         # 2. Translate to Kazakh
         product.title_kz = _translate_to_kazakh(product.title_ru)
         if product.description_ru:
             product.description_kz = _translate_to_kazakh(product.description_ru)
 
-        # 3. Set defaults if missing
+        # 3. Get templates and apply defaults
+        settings = await self.get_settings(user_id)
+        tpl_country = settings.tpl_country if settings and settings.tpl_country else "КИТАЙ"
+        tpl_brand = settings.tpl_brand if settings and settings.tpl_brand else "Отсутствует"
+        tpl_unit = settings.tpl_unit if settings and settings.tpl_unit else "шт"
+        
         if not product.country_of_origin:
-            product.country_of_origin = "Китай"
+            product.country_of_origin = tpl_country
         if not product.unit_of_measure:
-            product.unit_of_measure = "шт"
+            product.unit_of_measure = tpl_unit
+        if not product.brand or product.brand.lower() == 'none':
+            product.brand = tpl_brand
 
         product.status = NtinStatus.AI_FILLED
         await self.session.flush()
@@ -397,8 +404,8 @@ class NtinService:
             "Accept": "application/json",
         }
 
-    def _build_nkt_payload(self, product: NtinProduct) -> dict[str, Any]:
-        """Build payload for НКТ API create request.
+    async def _build_nkt_payload(self, user_id: uuid.UUID, product: NtinProduct) -> dict[str, Any]:
+        """Build payload for НКТ API create request. (Fixed)
 
         Uses the real НКТ OpenAPI spec format:
         POST /portal/api/v1/products/requests
@@ -437,8 +444,29 @@ class NtinService:
             attributes.append({"code": "short_name_kk", "value": short_kz})
 
         attributes.append({"code": "country", "value": country_code})
+        
+        settings = await self.get_settings(user_id)
+        tpl_qty = settings.tpl_qty if settings and settings.tpl_qty else 1
+        
+        # OKEI unit mapping for NKT API
+        unit_map = {
+            "шт": "796", "штука": "796", "шт.": "796",
+            "кг": "166", "килограмм": "166",
+            "компл": "839", "комплект": "839",
+            "упак": "778", "упаковка": "778",
+            "пара": "715", "пар": "715"
+        }
+        raw_unit = (product.unit_of_measure or "шт").lower().strip()
+        nkt_unit = unit_map.get(raw_unit, "796")
+        
+        attributes.append({"code": "measure_unit", "value": nkt_unit})
+        attributes.append({"code": "quantity", "value": str(tpl_qty)})
+        
+        # Наименование производителя (a4282e5d) is mandatory
+        manufacturer = product.brand if product.brand and product.brand.lower() != 'none' else "Не указано"
+        attributes.append({"code": "a4282e5d", "value": manufacturer})
 
-        if product.brand:
+        if product.brand and product.brand.lower() != 'none':
             attributes.append({"code": "brand", "value": product.brand})
 
         if product.barcode:
@@ -505,7 +533,7 @@ class NtinService:
             return product
 
         headers = self._build_nkt_headers(api_key)
-        payload = self._build_nkt_payload(product)
+        payload = await self._build_nkt_payload(user_id, product)
 
         nkt_response_text = ""
         try:
@@ -703,7 +731,7 @@ class NtinService:
         stmt = select(NtinProduct).where(
             NtinProduct.user_id == user_id,
             NtinProduct.nkt_request_id.isnot(None),
-            NtinProduct.status.in_([NtinStatus.SUBMITTED]),
+            NtinProduct.status.in_([NtinStatus.SUBMITTED, NtinStatus.REVISION]),
         )
         result = await self.session.execute(stmt)
         products = list(result.scalars().all())
@@ -732,6 +760,148 @@ class NtinService:
         logger.info("Bulk imported %d products for user %s", len(created), user_id)
         return created
 
+    async def _parse_kaspi_xml_content(self, user_id: uuid.UUID, text: str) -> int:
+        from xml.etree import ElementTree as ET
+        root = ET.fromstring(text)
+        
+        # Strip namespaces to avoid ElementTree xpath limitations
+        for elem in root.iter():
+            if '}' in elem.tag:
+                elem.tag = elem.tag.split('}', 1)[1]
+        
+        offers = root.findall('.//offer')
+        
+        products_to_create = []
+        stmt = select(NtinProduct.kaspi_sku).where(
+            NtinProduct.user_id == user_id,
+            NtinProduct.kaspi_sku.isnot(None)
+        )
+        result = await self.session.execute(stmt)
+        existing_skus = {row[0] for row in result.all()}
+        
+        for offer in offers:
+            sku = offer.get('sku')
+            if not sku or sku in existing_skus:
+                continue
+                
+            model_node = offer.find('.//model')
+            title = None
+            if model_node is not None and model_node.text and model_node.text.strip():
+                title = model_node.text.strip()
+            if not title:
+                title = f"Товар {sku}"
+            
+            brand_node = offer.find('.//brand')
+            brand = brand_node.text.strip() if brand_node is not None and brand_node.text else None
+            
+            price_node = offer.find('.//price')
+            
+            try:
+                price = float(price_node.text) if price_node is not None and price_node.text else None
+            except (ValueError, TypeError):
+                price = None
+                
+            products_to_create.append({
+                "title_ru": title,
+                "kaspi_sku": sku,
+                "brand": brand,
+                "price": price,
+            })
+        
+        if products_to_create:
+            await self.bulk_import(user_id, products_to_create)
+        
+        return len(products_to_create)
+
+    async def fetch_kaspi_xml(self, user_id: uuid.UUID, xml_url: str) -> int:
+        """Fetch Kaspi XML feed, parse it, and import products without barcodes."""
+        import httpx
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                resp = await client.get(xml_url)
+                resp.raise_for_status()
+                return await self._parse_kaspi_xml_content(user_id, resp.text)
+        except Exception as e:
+            logger.error("Failed to fetch/parse Kaspi XML: %s", e)
+            raise
+
+    async def parse_kaspi_file(self, user_id: uuid.UUID, content: bytes, filename: str) -> int:
+        """Parse uploaded Kaspi XML or Excel file."""
+        if filename.lower().endswith('.xml'):
+            text = content.decode('utf-8', errors='replace')
+            return await self._parse_kaspi_xml_content(user_id, text)
+        elif filename.lower().endswith('.xlsx') or filename.lower().endswith('.xls'):
+            import openpyxl
+            import io
+            wb = openpyxl.load_workbook(io.BytesIO(content), data_only=True)
+            sheet = wb.active
+            
+            stmt = select(NtinProduct.kaspi_sku).where(
+                NtinProduct.user_id == user_id,
+                NtinProduct.kaspi_sku.isnot(None)
+            )
+            result = await self.session.execute(stmt)
+            existing_skus = {row[0] for row in result.all()}
+            
+            products_to_create = []
+            
+            # Find column indices
+            # Some excel files start data on row 1, some on row 2, let's find the header row
+            headers = []
+            header_row_idx = 1
+            for row_idx, row in enumerate(sheet.iter_rows(min_row=1, max_row=5, values_only=True), 1):
+                row_strs = [str(cell).lower().strip() if cell else "" for cell in row]
+                if any(x in row_strs for x in ["sku", "артикул", "код", "код товара"]):
+                    headers = row_strs
+                    header_row_idx = row_idx
+                    break
+            
+            if not headers:
+                # Fallback assuming row 1 is header
+                headers = [str(cell.value).lower().strip() if cell.value else "" for cell in sheet[1]]
+                
+            sku_idx = -1
+            title_idx = -1
+            brand_idx = -1
+            price_idx = -1
+            
+            for i, h in enumerate(headers):
+                if "sku" in h or "артикул" in h or "код" in h: sku_idx = i
+                if "название" in h or "модель" in h or "наименование" in h or "товар" in h: title_idx = i
+                if "бренд" in h or "производитель" in h: brand_idx = i
+                if "цена" in h: price_idx = i
+                
+            if sku_idx == -1 or title_idx == -1:
+                # If we really can't find columns, assume Col A is SKU, Col B is Name
+                sku_idx, title_idx = 0, 1
+                
+            for row in sheet.iter_rows(min_row=header_row_idx + 1, values_only=True):
+                if not row or len(row) <= max(sku_idx, title_idx) or not row[sku_idx]: continue
+                sku = str(row[sku_idx]).strip()
+                if not sku or sku in existing_skus or sku.lower() == 'none':
+                    continue
+                    
+                title = str(row[title_idx]).strip() if row[title_idx] and str(row[title_idx]).lower() != 'none' else f"Товар {sku}"
+                brand = str(row[brand_idx]).strip() if brand_idx != -1 and len(row) > brand_idx and row[brand_idx] and str(row[brand_idx]).lower() != 'none' else None
+                price = None
+                if price_idx != -1 and len(row) > price_idx and row[price_idx]:
+                    try: price = float(str(row[price_idx]).replace(' ', '').replace(',', '.'))
+                    except ValueError: pass
+                    
+                products_to_create.append({
+                    "title_ru": title,
+                    "kaspi_sku": sku,
+                    "brand": brand,
+                    "price": price,
+                })
+                
+            if products_to_create:
+                await self.bulk_import(user_id, products_to_create)
+            
+            return len(products_to_create)
+        else:
+            raise ValueError("Поддерживаются только XML и XLSX/XLS файлы")
+
     # ── Settings ──────────────────────────────────────────────────
 
     async def get_settings(self, user_id: uuid.UUID) -> UserSellerSettings | None:
@@ -757,8 +927,15 @@ class NtinService:
             settings.kaspi_merchant_id = data["kaspi_merchant_id"]
         if "kaspi_shop_name" in data:
             settings.kaspi_shop_name = data["kaspi_shop_name"]
+        if "kaspi_xml_url" in data:
+            settings.kaspi_xml_url = data["kaspi_xml_url"]
         if "nkt_api_key" in data:
             settings.nkt_api_key = encrypt_secret(data["nkt_api_key"])
+            
+        if "tpl_country" in data: settings.tpl_country = data["tpl_country"]
+        if "tpl_brand" in data: settings.tpl_brand = data["tpl_brand"]
+        if "tpl_unit" in data: settings.tpl_unit = data["tpl_unit"]
+        if "tpl_qty" in data: settings.tpl_qty = data["tpl_qty"]
 
         await self.session.flush()
         logger.info("Saved seller settings for user %s", user_id)

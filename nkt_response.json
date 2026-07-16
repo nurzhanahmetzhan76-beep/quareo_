@@ -1,0 +1,519 @@
+{
+  "id": 41178098,
+  "categoryId": 148770,
+  "categoryAncestors": [
+    {
+      "level": 1,
+      "code": "1113",
+      "nameRu": "Машины, оборудование и их части"
+    },
+    {
+      "level": 2,
+      "code": "1113-0015",
+      "nameRu": "Машины и агрегаты для бурения"
+    },
+    {
+      "level": 3,
+      "code": "1113-0015-0008",
+      "nameRu": "Части буровых станков"
+    },
+    {
+      "level": 4,
+      "code": "1113-0015-0008-100095264",
+      "nameRu": "Блоки шламоотбойника для буровых станков"
+    }
+  ],
+  "status": {
+    "code": "underRevision",
+    "value": "Returned for revision"
+  },
+  "requestType": {
+    "code": "base",
+    "value": "Base"
+  },
+  "autoPublication": true,
+  "createdDate": "2026-07-16T18:07:28",
+  "updatedDate": "2026-07-16T18:21:28",
+  "attributes": [
+    {
+      "code": "gtin",
+      "attributeOrder": 2,
+      "attributeType": "standard",
+      "nameRu": "Код GTIN",
+      "descriptionRu": "Код (штрих-код) на упаковке товара, макс. длина - 14 цифр",
+      "nameKk": "Код GTIN",
+      "descriptionKk": "Тауардың қаптамасындағы код (штрих-код), максималды ұзындығы - 14 сан",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "maxLength": 14,
+      "pattern": "^(?:\\\\d{8}|\\\\d{12}|\\\\d{13}|\\\\d{14})$",
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "xtin",
+      "attributeOrder": 3,
+      "attributeType": "standard",
+      "nameRu": "Временный код XTIN",
+      "descriptionRu": "Введите ранее предоставленный 13-значный временный код",
+      "nameKk": "XTIN уақытша коды",
+      "descriptionKk": "Бұрын берілген 13 таңбалы уақытша кодты енгізіңіз",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "maxLength": 13,
+      "pattern": "^004\\d{10}$",
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "name_ru",
+      "attributeOrder": 4,
+      "attributeType": "standard",
+      "nameRu": "Полное наименование товара (рус)",
+      "descriptionRu": "Введите полное наименование товара в формате: *[Вид товара] [Бренд]* [Модель или Артикул] / [Ключевые характеристики] [Фасовка]",
+      "nameKk": "Тауардың толық атауы (орыс)",
+      "descriptionKk": "Тауардың толық атауын келесі форматта енгізіңіз: *[Тауар түрі] [Бренді]* [Моделі немесе Артикул] / [Негізгі сипаттамалар] [Орама]",
+      "dataType": "string",
+      "isRequired": true,
+      "isUnique": false,
+      "maxLength": 2000,
+      "isSingle": false,
+      "value": "Интерактивная игрушка паровоз мультиколор"
+    },
+    {
+      "code": "name_kk",
+      "attributeOrder": 5,
+      "attributeType": "standard",
+      "nameRu": "Полное наименование товара (қаз)",
+      "descriptionRu": "\"Введите полное наименование товара на казахском языке в формате: *[Вид товара] [Бренд]* [Модель или Артикул] / [Ключевые характеристики] [Фасовка]\"",
+      "nameKk": "Тауардың толық атауы (қаз)",
+      "descriptionKk": "«Тауардың толық атауын қазақ тілінде келесі форматта енгізіңіз:\n[Тауар түрі] [Бренд] [Модель немесе Артикул] / [Негізгі сипаттамалар] [Қаптама көлемі]»",
+      "dataType": "string",
+      "isRequired": true,
+      "isUnique": false,
+      "maxLength": 2000,
+      "isSingle": false,
+      "value": "Интерактивная ойыншық паровоз мультиколор"
+    },
+    {
+      "code": "name_en",
+      "attributeOrder": 6,
+      "attributeType": "standard",
+      "nameRu": "Полное наименование товара (англ)",
+      "descriptionRu": "Введите полное наименование товара",
+      "nameKk": "Тауардың толық атауы (ағылш)",
+      "descriptionKk": "Тауардың толық атауын келесі енгізіңіз",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "maxLength": 2000,
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "short_name_ru",
+      "attributeOrder": 7,
+      "attributeType": "standard",
+      "nameRu": "Краткое наименование товара (рус)",
+      "descriptionRu": "Введите сокращенное наименование в формате: [Основное наименование] [Бренд].",
+      "nameKk": "Тауардың қысқаша атауы (рус)",
+      "descriptionKk": "Қысқартылған атауды келесі форматта енгізіңіз:﻿ [Негізгі атау﻿] [Бренд].",
+      "dataType": "string",
+      "isRequired": true,
+      "isUnique": false,
+      "maxLength": 255,
+      "isSingle": false,
+      "value": "Интерактивная игрушка паровоз мультиколор"
+    },
+    {
+      "code": "ntin",
+      "attributeOrder": 1,
+      "attributeType": "standard",
+      "nameRu": "Код NTIN",
+      "descriptionRu": "Идентификационный код",
+      "nameKk": "Код NTIN",
+      "descriptionKk": "Cәйкестендіру коды",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "country",
+      "attributeOrder": 10,
+      "attributeType": "standard",
+      "nameRu": "Страна происхождения",
+      "descriptionRu": "Выберите из справочника страну происхождения товара",
+      "nameKk": "Шығарылған елі",
+      "descriptionKk": "Анықтамалықтан тауардың шыққан елін таңдаңыз",
+      "dataType": "dictionary",
+      "isRequired": true,
+      "isUnique": false,
+      "dictionaryCode": "COUNTRY",
+      "isSingle": false,
+      "value": "CN",
+      "values": {
+        "code": "CN",
+        "nameEn": "China",
+        "nameKk": "Қытай",
+        "nameRu": "КИТАЙ",
+        "ancestors": [
+          {
+            "id": 94,
+            "level": 1,
+            "properties": {
+              "code": "CN",
+              "nameEn": "China",
+              "nameKk": "Қытай",
+              "nameRu": "КИТАЙ"
+            }
+          }
+        ]
+      },
+      "multiValues": [
+        {
+          "code": "CN",
+          "nameEn": "China",
+          "nameKk": "Қытай",
+          "nameRu": "КИТАЙ",
+          "ancestors": [
+            {
+              "id": 94,
+              "level": 1,
+              "properties": {
+                "code": "CN",
+                "nameEn": "China",
+                "nameKk": "Қытай",
+                "nameRu": "КИТАЙ"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "brand",
+      "attributeOrder": 11,
+      "attributeType": "standard",
+      "nameRu": "Товарный знак (бренд, суббренд, торговая марка)",
+      "descriptionRu": "Введите наименование товарного знака (бренда, суббренда, торговой марки), в случае отсутствия укажите СТМ (собственная торговая марка)",
+      "nameKk": "Тауар белгісі (бренд, суббренд, сауда белгісі)",
+      "descriptionKk": "Тауар белгісінің (брендтің, суббрендтің, сауда маркасының) атауын енгізіңіз, егер жоқ болса, СТМ (жеке сауда маркасы) деп көрсетіңіз",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "isSingle": false,
+      "value": "Без бренда"
+    },
+    {
+      "code": "article",
+      "attributeOrder": 12,
+      "attributeType": "standard",
+      "nameRu": "Модель / артикул",
+      "descriptionRu": "Введите модель или артикул товара, в случае если есть и модель и артикул через слэш (модель/артикул)",
+      "nameKk": "Модель / артикул",
+      "descriptionKk": "Тауардың моделін немесе артикулын енгізіңіз, егер екеуі де болса, слэш арқылы жазыңыз (модель/артикул)",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "maxLength": 500,
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "mpn_code",
+      "attributeOrder": 13,
+      "attributeType": "standard",
+      "nameRu": "Заводской номер / mpn",
+      "descriptionRu": "Укажите заводской номер товара (изделия)",
+      "nameKk": "Заводской номер / mpn",
+      "descriptionKk": "Тауардың (бұйымның) зауыттық нөмірін көрсетіңіз",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "measure",
+      "index": 1,
+      "attributeOrder": 14,
+      "attributeType": "compoundStandard",
+      "nameRu": "Единицы измерения",
+      "descriptionRu": "Как заполнять: Категория ед. измерения - \"Экономические единицы\", Единица измерения - \"штуки\", Значение (в [ед. изм.]) - \"1\".",
+      "nameKk": "Өлшем бірліктері",
+      "descriptionKk": "Қалай толтыру керек: Өлшем бірлігі санаты – \"Экономикалық бірліктер\", Өлшем бірлігі – \"дана\", Мәні (өлшем бірлігінде) – \"1\"",
+      "isSingle": false,
+      "attributes": [
+        {
+          "code": "quantity",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Количественное значение (в [ед. изм.])",
+          "descriptionRu": "Укажите только числовое количественное значение единицы измерения указанного на товаре: \"0.5\" литра или \"1\" грамм или \"1\" штука и т.д. Для ввода дробных чисел используйте точку. Пример: 1.5",
+          "nameKk": " Сандық мәні ([өлшем бірлігімен])",
+          "descriptionKk": "Тауарда көрсетілген өлшем бірлігінің тек сандық мөлшерін көрсетіңіз: \"0.5\" литр немесе \"1\" грамм немесе \"1\" дана және т.б. Бөлшекті сандарды енгізу үшін нүктені қолданыңыз. Мысалы: 1.5",
+          "dataType": "number",
+          "isRequired": true,
+          "isUnique": false,
+          "isSingle": false,
+          "value": "1"
+        },
+        {
+          "code": "measure_unit",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Единица измерения",
+          "descriptionRu": "Укажите единицу измерения (штуки, литр, упаковка) в зависимости от выбранной категории единиц измерения",
+          "nameKk": "Өлшем бірліктері",
+          "descriptionKk": "Таңдалған өлшем бірлігі санатына қарай (дана, литр, қаптама) өлшем бірлігін көрсетіңіз",
+          "dataType": "dictionary",
+          "isRequired": true,
+          "isUnique": false,
+          "dictionaryCode": "MEASURE_UNIT",
+          "isSingle": false,
+          "value": "796",
+          "values": {
+            "id": "796",
+            "code": "796",
+            "nameEn": "Штука",
+            "nameKk": "piece",
+            "nameRu": "Штука",
+            "parentId": "economicUnits",
+            "ruSymbol": "шт",
+            "ancestors": [
+              {
+                "id": 261,
+                "level": 1,
+                "properties": {
+                  "id": "economicUnits",
+                  "code": "economicUnits",
+                  "nameEn": "economicUnits",
+                  "nameKk": "Экономикалық бірліктер",
+                  "nameRu": "Экономические единицы"
+                }
+              },
+              {
+                "id": 682,
+                "level": 2,
+                "properties": {
+                  "id": "796",
+                  "code": "796",
+                  "nameKk": "piece",
+                  "nameRu": "Штука",
+                  "parentId": "economicUnits",
+                  "ruSymbol": "шт"
+                }
+              }
+            ]
+          },
+          "multiValues": [
+            {
+              "id": "796",
+              "code": "796",
+              "nameEn": "Штука",
+              "nameKk": "piece",
+              "nameRu": "Штука",
+              "parentId": "economicUnits",
+              "ruSymbol": "шт",
+              "ancestors": [
+                {
+                  "id": 261,
+                  "level": 1,
+                  "properties": {
+                    "id": "economicUnits",
+                    "code": "economicUnits",
+                    "nameEn": "economicUnits",
+                    "nameKk": "Экономикалық бірліктер",
+                    "nameRu": "Экономические единицы"
+                  }
+                },
+                {
+                  "id": 682,
+                  "level": 2,
+                  "properties": {
+                    "id": "796",
+                    "code": "796",
+                    "nameKk": "piece",
+                    "nameRu": "Штука",
+                    "parentId": "economicUnits",
+                    "ruSymbol": "шт"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "131777b5",
+      "index": 1,
+      "attributeOrder": 18,
+      "attributeType": "compoundStandard",
+      "nameRu": "Признаки",
+      "descriptionRu": "",
+      "nameKk": "Белгілері",
+      "descriptionKk": "",
+      "isSingle": true,
+      "attributes": [
+        {
+          "code": "eaes",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Знак ЕАЭС",
+          "descriptionRu": "Укажите если товар официально выпущен в продажу на территории стран ЕАЭС",
+          "nameKk": "ЕАЭО белгісі",
+          "descriptionKk": "Егер тауар ЕАЭО елдерінің аумағында ресми түрде сатылатын болса ескеріңіз",
+          "dataType": "boolean",
+          "isRequired": false,
+          "isUnique": false,
+          "isSingle": false,
+          "value": ""
+        },
+        {
+          "code": "marking_required_status",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Статус обязательной маркировки",
+          "descriptionRu": "Укажите если товар подлежит обязательной маркировке товаров",
+          "nameKk": "Міндетті таңбалау мәртебесі",
+          "descriptionKk": "Егер тауар тауарларды міндетті таңбалауға жататын болса, көрсетіңіз",
+          "dataType": "boolean",
+          "isRequired": false,
+          "isUnique": false,
+          "isSingle": false,
+          "value": ""
+        }
+      ]
+    },
+    {
+      "code": "098223e4",
+      "index": 1,
+      "attributeOrder": 20,
+      "attributeType": "compoundStandard",
+      "nameRu": "Информация о производителе",
+      "descriptionRu": "",
+      "nameKk": "Өндіруші туралы ақпарат",
+      "descriptionKk": "",
+      "isSingle": true,
+      "attributes": [
+        {
+          "code": "producer_identifier",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "ИИН/БИН производителя",
+          "descriptionRu": "Введите ИИН/БИН производителя, для нерезидента РК номер налоговой регистрации в стране инкорпорации нерезидента или его аналог",
+          "nameKk": "Өндірушінің ЖСН/БСН",
+          "descriptionKk": "Өндірушінің ЖСН/БСН-ін енгізіңіз, ал егер өндіруші ҚР резиденті болмаса, резидент еместің инкорпорация еліндегі салық тіркеу нөмірін немесе оның баламасын көрсетіңіз",
+          "dataType": "string",
+          "isRequired": false,
+          "isUnique": false,
+          "isSingle": false,
+          "value": ""
+        },
+        {
+          "code": "producer_country",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Страна производителя",
+          "descriptionRu": "Выберите из справочника страну расположения производителя",
+          "nameKk": "Өндіруші елі",
+          "descriptionKk": "Анықтамалықтан өндіруші орналасқан елді таңдаңыз",
+          "dataType": "dictionary",
+          "isRequired": true,
+          "isUnique": false,
+          "dictionaryCode": "COUNTRY",
+          "isSingle": false,
+          "value": ""
+        },
+        {
+          "code": "a4282e5d",
+          "index": 1,
+          "attributeType": "advanced",
+          "nameRu": "Наименование производителя",
+          "descriptionRu": "",
+          "nameKk": "Өндірушінің атауы",
+          "descriptionKk": "",
+          "dataType": "string",
+          "isRequired": true,
+          "isUnique": false,
+          "isSingle": false,
+          "value": "Без бренда"
+        }
+      ]
+    },
+    {
+      "code": "a0238c5b",
+      "attributeOrder": 21,
+      "attributeType": "standard",
+      "nameRu": "Количество в упаковке",
+      "descriptionRu": "Количество в упаковке допускается только в виде положительного числа, строго больше нуля",
+      "nameKk": "Қаптамадағы саны",
+      "descriptionKk": "Қаптамадағы саны тек нөлден үлкен оң сан ретінде ғана енгізілуі тиіс",
+      "dataType": "number",
+      "isRequired": false,
+      "isUnique": false,
+      "minValue": "1",
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "short_name_kk",
+      "attributeOrder": 8,
+      "attributeType": "standard",
+      "nameRu": "Краткое наименование товара (қаз)",
+      "descriptionRu": "Введите сокращенное наименование в формате: [Основное наименование] [Бренд].",
+      "nameKk": "Тауардың қысқаша атауы (қаз)",
+      "descriptionKk": "Қысқартылған атауды келесі форматта енгізіңіз: [Негізгі атау] [Бренд].",
+      "dataType": "string",
+      "isRequired": false,
+      "isUnique": false,
+      "maxLength": 255,
+      "isSingle": false,
+      "value": "Интерактивная ойыншық паровоз мультиколор"
+    },
+    {
+      "code": "paket",
+      "attributeOrder": 9,
+      "attributeType": "standard",
+      "nameRu": "Пакет ",
+      "descriptionRu": "",
+      "nameKk": "Пакет",
+      "descriptionKk": "",
+      "dataType": "dictionary",
+      "isRequired": false,
+      "isUnique": false,
+      "dictionaryCode": "PACKAGE",
+      "isSingle": false,
+      "value": ""
+    },
+    {
+      "code": "tnved",
+      "attributeOrder": 19,
+      "attributeType": "standard",
+      "nameRu": "ТНВЭД ЕАЭС",
+      "descriptionRu": "Для поиска кода ТН ВЭД ЕАЭС нажмите на значок лупы и введите:\n10-значный код ТН ВЭД ЕАЭС\nили наименование кода ТНВЭД ЕАЭС",
+      "nameKk": "ТНВЭД ЕАЭС",
+      "descriptionKk": "ТН ВЭД кодын іздеу үшін лупа белгішесін басып,\n10-таңбалы ТН ВЭД кодын\nнемесе ТН ВЭД кодының атауын енгізіңіз",
+      "dataType": "multiDictionary",
+      "isRequired": true,
+      "isUnique": false,
+      "dictionaryCode": "TNVED",
+      "isSingle": false,
+      "value": "9503007000",
+      "multiValues": [
+        {
+          "code": "9503007000",
+          "nameEn": "Игрушки в наборах или комплектах прочие",
+          "nameKk": "Игрушки в наборах или комплектах прочие",
+          "nameRu": "Игрушки в наборах или комплектах прочие"
+        }
+      ]
+    }
+  ],
+  "moderatorComment": "Карточка содержит несколько потенциальных несоответствий, в первую очередь — несоответствие категории товара и его описания. Товар описан как интерактивная игрушка паровоз, но находится в категории «Машины, оборудование и их части» → «Машины и агрегаты для бурения» → «Части буровых станков» → «Блоки шламоотбойника для буровых станков». Это логически несовместимо: игрушка не может быть частью бурового станка. Также отсутствует указание на бренд, хотя в названии нет упоминания о собственной торговой марке. Единица измерения «штука» корректна для игрушки, но контекст категории вызывает сомнения в правильности классификации."
+}

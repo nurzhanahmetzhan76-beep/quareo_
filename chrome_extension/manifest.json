@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Quareo Kaspi Connector",
+  "version": "1.0",
+  "description": "Автоматическая привязка NTIN кодов из Quareo прямо в Kaspi Кабинет Продавца.",
+  "permissions": [
+    "cookies",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.kaspi.kz/*",
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*",
+    "https://*.quareo.kz/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:8000/*", "http://127.0.0.1:8000/*", "https://*.quareo.kz/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

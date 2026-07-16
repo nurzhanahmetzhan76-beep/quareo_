@@ -16,15 +16,19 @@ import logging
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, File, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from retailpool.database import async_session_factory, get_db
 from retailpool.services.ntin_service import NtinService
-from retailpool.models.ntin import NtinStatus
+from retailpool.models.ntin import NtinStatus, NtinProduct
+from sqlalchemy import select
 from retailpool.models.user import User
 from retailpool.services.auth_service import get_current_user
+from fastapi.responses import StreamingResponse
+import io
+import openpyxl
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +113,7 @@ class SellerSettingsRequest(BaseModel):
     kaspi_api_key: str | None = None
     kaspi_merchant_id: str | None = None
     kaspi_shop_name: str | None = None
+    kaspi_xml_url: str | None = None
     nkt_api_key: str | None = None
 
 
@@ -116,11 +121,19 @@ class SellerSettingsResponse(BaseModel):
     has_kaspi_key: bool = False
     kaspi_merchant_id: str | None = None
     kaspi_shop_name: str | None = None
+    kaspi_xml_url: str | None = None
     has_nkt_key: bool = False
 
 
 class BulkImportRequest(BaseModel):
     products: list[NtinProductCreate]
+
+
+class NtinTemplatesRequest(BaseModel):
+    tpl_country: str | None = None
+    tpl_brand: str | None = None
+    tpl_unit: str | None = None
+    tpl_qty: int | None = None
 
 
 class NtinStatsResponse(BaseModel):
@@ -279,6 +292,118 @@ async def ai_fill_product(product_id: str, current_user: User = Depends(get_curr
             return _product_to_response(product)
 
 
+from fastapi import BackgroundTasks
+
+async def _bg_mass_ai_fill(user_id: uuid.UUID):
+    """Background task for mass AI fill. Commits each product separately."""
+    async with async_session_factory() as session:
+        stmt = select(NtinProduct).where(
+            NtinProduct.user_id == user_id,
+            NtinProduct.status == NtinStatus.DRAFT
+        )
+        result = await session.execute(stmt)
+        drafts = result.scalars().all()
+        
+    for p in drafts:
+        # Process each product in its own transaction
+        async with async_session_factory() as session:
+            async with session.begin():
+                svc = NtinService(session)
+                try:
+                    await svc.ai_fill_product(p.id, user_id)
+                except Exception as e:
+                    logger.error("Error AI filling product %s: %s", p.id, e)
+
+@router.post("/mass-ai-fill")
+async def mass_ai_fill(
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user)
+):
+    """Start AI fill for all draft products in the background."""
+    background_tasks.add_task(_bg_mass_ai_fill, current_user.id)
+    return {"status": "ok", "message": "started"}
+
+
+async def _bg_mass_submit(user_id: uuid.UUID):
+    """Background task for mass NKT submit."""
+    async with async_session_factory() as session:
+        stmt = select(NtinProduct).where(
+            NtinProduct.user_id == user_id,
+            NtinProduct.status == NtinStatus.AI_FILLED
+        )
+        result = await session.execute(stmt)
+        products = result.scalars().all()
+        
+    for p in products:
+        async with async_session_factory() as session:
+            async with session.begin():
+                svc = NtinService(session)
+                try:
+                    await svc.submit_to_nkt(p.id, user_id)
+                except Exception as e:
+                    logger.error("Error submitting product %s: %s", p.id, e)
+
+@router.post("/mass-submit")
+async def mass_submit(
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user)
+):
+    """Start NKT submission for all AI-filled products in the background."""
+    background_tasks.add_task(_bg_mass_submit, current_user.id)
+    return {"status": "ok", "message": "started"}
+
+@router.get("/export-excel")
+async def export_excel(current_user: User = Depends(get_current_user)):
+    """Export products with NTIN codes to Excel for Kaspi."""
+    async with async_session_factory() as session:
+        stmt = select(NtinProduct).where(
+            NtinProduct.user_id == current_user.id,
+            NtinProduct.ntin_code.isnot(None)
+        )
+        result = await session.execute(stmt)
+        products = result.scalars().all()
+        
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "NTIN Коды"
+    ws.append(["Артикул (SKU)", "Название товара", "Новый Штрихкод (NTIN)"])
+    
+    for p in products:
+        ws.append([
+            p.kaspi_sku or "",
+            p.title_ru or "",
+            p.ntin_code or ""
+        ])
+        
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output, 
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=ntin_for_1c_moysklad.xlsx"}
+    )
+
+@router.get("/export-json")
+async def export_json(current_user: User = Depends(get_current_user)):
+    """Export products with NTIN codes to JSON for Chrome Extension."""
+    async with async_session_factory() as session:
+        stmt = select(NtinProduct).where(
+            NtinProduct.user_id == current_user.id,
+            NtinProduct.ntin_code.isnot(None)
+        )
+        result = await session.execute(stmt)
+        products = result.scalars().all()
+        
+    return {
+        "products": [
+            {"sku": p.kaspi_sku, "barcode": p.ntin_code} 
+            for p in products if p.kaspi_sku and p.ntin_code
+        ]
+    }
+
+
 @router.post("/products/{product_id}/submit", response_model=NtinProductResponse)
 async def submit_product(product_id: str, current_user: User = Depends(get_current_user)):
     """Submit product card to НКТ for NTIN assignment."""
@@ -303,12 +428,70 @@ async def check_product_status(product_id: str, current_user: User = Depends(get
             return _product_to_response(product)
 
 
+async def _bg_sync_requests(user_id: uuid.UUID):
+    """Background task for syncing NKT statuses."""
+    async with async_session_factory() as session:
+        stmt = select(NtinProduct).where(
+            NtinProduct.user_id == user_id,
+            NtinProduct.nkt_request_id.isnot(None),
+            NtinProduct.status.in_([NtinStatus.SUBMITTED, NtinStatus.REVISION]),
+        )
+        result = await session.execute(stmt)
+        products = result.scalars().all()
+        
+    for p in products:
+        async with async_session_factory() as session:
+            async with session.begin():
+                svc = NtinService(session)
+                try:
+                    await svc.check_nkt_status(p.id, user_id)
+                except Exception as e:
+                    logger.error("Error syncing NKT request %s: %s", p.id, e)
+
 @router.post("/requests/sync")
-async def sync_requests(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Sync statuses of all active requests from НКТ."""
-    svc = NtinService(db)
-    result = await svc.sync_nkt_requests(current_user.id)
-    return {"status": "ok", "synced": result}
+async def sync_requests(
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user)
+):
+    """Sync statuses of all active requests from НКТ in the background."""
+    background_tasks.add_task(_bg_sync_requests, current_user.id)
+    return {"status": "ok", "message": "started"}
+
+
+@router.post("/fetch-kaspi")
+async def fetch_kaspi_products(current_user: User = Depends(get_current_user)):
+    """Fetch Kaspi products from the user's XML feed."""
+    async with async_session_factory() as session:
+        async with session.begin():
+            svc = NtinService(session)
+            settings = await svc.get_settings(current_user.id)
+            if not settings or not settings.kaspi_xml_url:
+                raise HTTPException(status_code=400, detail="XML ссылка не указана в настройках")
+            
+            try:
+                imported_count = await svc.fetch_kaspi_xml(current_user.id, settings.kaspi_xml_url)
+                return {"status": "ok", "imported": imported_count}
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Ошибка обработки XML: {str(e)}")
+
+
+@router.post("/upload-kaspi")
+async def upload_kaspi_products(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """Upload Kaspi XML or Excel file."""
+    async with async_session_factory() as session:
+        async with session.begin():
+            svc = NtinService(session)
+            try:
+                content = await file.read()
+                imported_count = await svc.parse_kaspi_file(current_user.id, content, file.filename)
+                return {"status": "ok", "imported": imported_count}
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e))
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Ошибка обработки файла: {str(e)}")
 
 
 @router.get("/oktru/search")
@@ -443,6 +626,7 @@ async def get_settings(current_user: User = Depends(get_current_user)):
             has_kaspi_key=bool(settings.kaspi_api_key),
             kaspi_merchant_id=settings.kaspi_merchant_id,
             kaspi_shop_name=settings.kaspi_shop_name,
+            kaspi_xml_url=settings.kaspi_xml_url,
             has_nkt_key=bool(settings.nkt_api_key),
         )
 
@@ -458,5 +642,36 @@ async def save_settings(data: SellerSettingsRequest, current_user: User = Depend
                 has_kaspi_key=bool(settings.kaspi_api_key),
                 kaspi_merchant_id=settings.kaspi_merchant_id,
                 kaspi_shop_name=settings.kaspi_shop_name,
+                kaspi_xml_url=settings.kaspi_xml_url,
                 has_nkt_key=bool(settings.nkt_api_key),
+            )
+
+@router.get("/templates", response_model=NtinTemplatesRequest)
+async def get_templates(current_user: User = Depends(get_current_user)):
+    async with async_session_factory() as session:
+        svc = NtinService(session)
+        settings = await svc.get_settings(current_user.id)
+        if not settings:
+            return NtinTemplatesRequest()
+        return NtinTemplatesRequest(
+            tpl_country=settings.tpl_country or "КИТАЙ",
+            tpl_brand=settings.tpl_brand or "Отсутствует",
+            tpl_unit=settings.tpl_unit or "шт",
+            tpl_qty=settings.tpl_qty or 1
+        )
+
+@router.post("/templates", response_model=NtinTemplatesRequest)
+async def save_templates(
+    data: NtinTemplatesRequest,
+    current_user: User = Depends(get_current_user)
+):
+    async with async_session_factory() as session:
+        async with session.begin():
+            svc = NtinService(session)
+            settings = await svc.save_settings(current_user.id, data.model_dump(exclude_unset=True))
+            return NtinTemplatesRequest(
+                tpl_country=settings.tpl_country,
+                tpl_brand=settings.tpl_brand,
+                tpl_unit=settings.tpl_unit,
+                tpl_qty=settings.tpl_qty
             )
