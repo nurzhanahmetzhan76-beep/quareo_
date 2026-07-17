@@ -61,25 +61,25 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                     except Exception as e:
                         logger.error("Error linking telegram: %s", e)
 
-                    await update.message.reply_text(
+                    await update.effective_chat.send_message(
                         "✅ <b>Успешная авторизация!</b>\n\n"
                         "Ваш тариф: <b>Безлимит</b>.\n"
                         "Теперь вам доступны все функции бота, а также вы будете автоматически получать сливы горячих ниш с сайта!",
                         parse_mode="HTML"
                     )
                 else:
-                    await update.message.reply_text(
+                    await update.effective_chat.send_message(
                         f"⚠️ Вы вошли как {email}, но ваш тариф: <b>{plan}</b>.\n\n"
                         "Бот доступен только для тарифа <b>Безлимит</b>. Пожалуйста, обновите тариф на платформе.",
                         parse_mode="HTML"
                     )
             else:
-                await update.message.reply_text(
+                await update.effective_chat.send_message(
                     "❌ Неверный email или пароль. Проверьте данные и попробуйте снова."
                 )
     except Exception as e:
         logger.error("Login error: %s", e)
-        await update.message.reply_text("❌ Произошла ошибка при подключении к серверу.")
+        await update.effective_chat.send_message("❌ Произошла ошибка при подключении к серверу.")
 
 
 async def auth_middleware(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
