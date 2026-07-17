@@ -142,7 +142,7 @@
           <h4 style="margin-bottom:6px">100% Безопасное обновление цен</h4>
           <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Чтобы не затронуть ваши остатки и другие товары: <br>1. Скачайте свой текущий прайс в кабинете Kaspi (Управление товарами → Прайс-лист → <b>Скачать в Excel</b>).<br>2. Загрузите его сюда. Мы обновим цены для включенных товаров и отдадим вам файл обратно.<br>3. Загрузите полученный файл обратно в Kaspi (Загрузить файл вручную).</p>
           <div style="display:flex;gap:10px;align-items:center">
-            <input type="file" id="excelUpload" accept=".xlsx" style="font-size:13px">
+            <input type="file" id="excelUpload" accept=".xlsx,.xml" style="font-size:13px">
             <button class="btn-primary" onclick="processExcel()" style="padding:6px 16px;white-space:nowrap">⚙️ Обновить цены в файле</button>
           </div>
         </div>
@@ -190,7 +190,11 @@
       <div class="rp-panel" data-reveal>
         <div class="rp-header">
           <h2 style="font-size:1.3rem">📦 Товары на репрайсинге</h2>
-          <button class="btn-secondary" onclick="syncProducts()" id="syncBtn" style="padding:8px 16px;font-size:13px">🔄 Синхронизировать с Kaspi</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <input type="file" id="importUpload" accept=".xlsx,.xml" style="display:none" onchange="uploadSync(this)">
+            <button class="btn-secondary" onclick="document.getElementById('importUpload').click()" id="importBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📥 Загрузить файл (Excel / XML)</button>
+            <button class="btn-secondary" onclick="syncFromNtin()" id="syncNtinBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📝 Взять из NTIN</button>
+          </div>
         </div>
 
         <div id="rulesContent">
@@ -339,7 +343,13 @@ async function processExcel() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = file.name;
+    let downloadName = file.name;
+    if (downloadName.toLowerCase().endsWith('.xml')) {
+      downloadName = downloadName.slice(0, -4) + '.xlsx';
+    } else if (!downloadName.toLowerCase().endsWith('.xlsx')) {
+      downloadName += '.xlsx';
+    }
+    a.download = downloadName;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
@@ -506,20 +516,58 @@ async function deleteRule(ruleId) {
   }
 }
 
-// ── Sync Products ──
-async function syncProducts() {
-  const btn = document.getElementById('syncBtn');
+
+// ── Import from Excel ──
+async function uploadSync(input) {
+  if(!input.files.length) return;
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const btn = document.getElementById('importBtn');
+  const oldText = btn.innerHTML;
+  btn.innerHTML = '⏳ Импорт...';
   btn.disabled = true;
-  const originalText = btn.innerHTML;
-  btn.innerHTML = '⏳ Синхронизация (может занять время)...';
   
   try {
-    const res = await apiFetch('/sync', { method: 'POST' });
+    const resp = await fetch(API + '/upload_sync', {
+      method: 'POST',
+      headers: rpAuthHeaders(),
+      body: formData
+    });
+    
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    
+    const res = await resp.json();
+    alert(`Успех!\n${res.message}`);
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка импорта: ' + e.message);
+  } finally {
+    btn.innerHTML = oldText;
+    btn.disabled = false;
+    input.value = ''; // reset input
+  }
+}
+
+// ── Import from NTIN ──
+async function syncFromNtin() {
+  const btn = document.getElementById('syncNtinBtn');
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Копируем...';
+  
+  try {
+    const res = await apiFetch('/sync_from_ntin', { method: 'POST' });
     alert(`Успех!\n${res.message}`);
     await loadRules();
     await loadStats();
   } catch (e) {
-    alert('Ошибка синхронизации: ' + e.message);
+    alert('Ошибка: ' + e.message);
   } finally {
     btn.disabled = false;
     btn.innerHTML = originalText;

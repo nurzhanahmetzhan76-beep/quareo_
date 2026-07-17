@@ -161,22 +161,21 @@ class BrowserManager:
             {"name": "kaspi.store.city", "value": "750000000", "domain": ".kaspi.kz", "path": "/"}
         ])
 
-        # Block heavy resources and trackers to save proxy traffic
-        def _route_handler(route):
-            req = route.request
-            url = req.url
-            if req.resource_type in ["image", "media", "font"]:
-                route.abort()
-                return
-            if any(d in url for d in [
-                "googletagmanager.com", "facebook.net", "segmentstream.com", 
-                "google-analytics.com", "mc.yandex.ru", "vk.com"
-            ]):
-                route.abort()
-                return
-            route.continue_()
-
-        ctx.route("**/*", _route_handler)
+        # Block heavy resources and trackers        # Disable blocking resources as Kaspi SPA might be sensitive
+        # def _route_handler(route):
+        #     req = route.request
+        #     url = req.url
+        #     if req.resource_type in ["image", "media", "font"]:
+        #         route.abort()
+        #         return
+        #     if any(d in url for d in [
+        #         "googletagmanager.com", "facebook.net", "segmentstream.com", 
+        #         "google-analytics.com", "mc.yandex.ru", "vk.com"
+        #     ]):
+        #         route.abort()
+        #         return
+        #     route.continue_()
+        # ctx.route("**/*", _route_handler)
 
         return ctx
 

@@ -165,6 +165,16 @@ class KaspiScraper:
                 logger.warning("BLOCKED on search page: %s", search_url)
                 return [], 0
 
+            # Try to dismiss city modal just in case cookies were ignored
+            try:
+                city_el = page.locator("text=Алматы").first
+                if city_el:
+                    city_el.click(timeout=3000)
+                    page.wait_for_timeout(1000)
+            except Exception:
+                pass
+
+
             # Wait for product cards
             try:
                 page.wait_for_selector(
