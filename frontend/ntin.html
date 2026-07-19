@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTIN Маркировка — Quareo</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.jpg">
+  <style>
+    .ntin-hero {
+      padding-top: 108px;
+      padding-bottom: 3rem;
+      text-align: center
+    }
+
+    .ntin-hero .section-tag {
+      justify-content: center
+    }
+
+    .ntin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center
+    }
+
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      font-family: var(--font-display)
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-top: 4px
+    }
+
+    .stepper {
+      display: flex;
+      gap: 0;
+      margin: 2.5rem 0;
+      position: relative
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 .5rem
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 2px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-3);
+      margin-bottom: .75rem;
+      position: relative;
+      z-index: 2
+    }
+
+    .step.active .step-num {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 0 16px rgba(37, 99, 235, .3)
+    }
+
+    .step.done .step-num {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green)
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2)
+    }
+
+    .step.active .step-title {
+      color: var(--brand)
+    }
+
+    .step::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+      z-index: 1
+    }
+
+    .step:last-child::after {
+      display: none
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem
+    }
+
+    .tab {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .15s
+    }
+
+    .tab:hover {
+      color: var(--text)
+    }
+
+    .tab.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
+      font-weight: 600
+    }
+
+    .tab-content {
+      display: none
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: result-fade .3s ease
+    }
+
+    @keyframes result-fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .add-form {
+      max-width: 640px;
+      margin: 0 auto
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--purple-light), var(--brand-light));
+      border: 1px solid var(--brand-mid);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand)
+    }
+
+    .ai-badge::before {
+      content: '✦';
+      font-size: 14px
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px
+    }
+
+    .product-table th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-3);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600
+    }
+
+    .product-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2)
+    }
+
+    .product-table tr:hover td {
+      background: var(--bg-2)
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px
+    }
+
+    .status-draft {
+      background: var(--bg-3);
+      color: var(--text-3)
+    }
+
+    .status-ai_filled {
+      background: var(--purple-light);
+      color: var(--purple)
+    }
+
+    .status-submitted {
+      background: var(--amber-bg);
+      color: #92400E
+    }
+
+    .status-approved {
+      background: var(--green-bg);
+      color: var(--green-text)
+    }
+
+    .status-revision {
+      background: var(--red-bg);
+      color: #991B1B
+    }
+
+    .status-rejected {
+      background: var(--red-bg);
+      color: var(--red)
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-3)
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 1rem;
+      opacity: .5
+    }
+
+    .settings-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 1.5rem
+    }
+
+    .settings-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: .5rem
+    }
+
+    .settings-card p {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 1rem
+    }
+
+    .key-input-row {
+      display: flex;
+      gap: 12px
+    }
+
+    .key-input-row .form-input {
+      flex: 1
+    }
+
+    .info-banner {
+      background: linear-gradient(135deg, var(--brand-light), var(--purple-light));
+      border: 1px solid var(--brand-mid);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin: 2rem 0
+    }
+
+    .info-banner h3 {
+      font-size: 1.2rem;
+      margin-bottom: .5rem
+    }
+
+    .info-banner p {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.7
+    }
+
+    /* New Action Toolbar and Instructions */
+    .actions-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      background: var(--bg-2);
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .desktop-divider {
+      width: 1px; 
+      height: 24px; 
+      background: var(--border); 
+      margin: 0 4px;
+    }
+
+    .instruction-box {
+      background: linear-gradient(to right, var(--bg-2), var(--bg));
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--brand);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+    }
+
+    .instruction-box h4 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .instruction-box ol {
+      margin-left: 1.5rem;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .instruction-box li {
+      margin-bottom: 0.5rem;
+    }
+
+    .instruction-box strong {
+      color: var(--text);
+    }
+
+    @media(max-width:760px) {
+      .field-row {
+        grid-template-columns: 1fr
+      }
+
+      .stepper {
+        flex-direction: column;
+        gap: 1rem
+      }
+
+      .step::after {
+        display: none
+      }
+
+      .actions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .desktop-divider {
+        display: none;
+      }
+      
+      .actions-toolbar button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Quareo</a>
+      <div class="nav-links" id="navLinks">
+
+      <a href="index.html" data-i="nav_home">Главная</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+      <a href="ntin.html" class="active" data-i="nav_ntin">NTIN</a>
+      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
+      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
+      <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
+    </div>
+      <div class="nav-right">
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+          <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+        </div>
+        <a href="auth.html?view=register" class="btn-nav-cta">Начать</a>
+        <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="ntin-hero">
+      <div class="container-narrow">
+        <div class="section-tag">NTIN Маркировка · НКТ</div>
+        <h1>Код товара для Kaspi — <span
+            style="background:linear-gradient(135deg,var(--brand),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent">за
+            секунды, не недели</span></h1>
+        <p style="color:var(--text-2);font-size:1.1rem;line-height:1.7;max-width:560px;margin:1rem auto 0">NTIN —
+          обязательный 13-значный код для ЭСФ и чеков. ИИ подбирает ТН ВЭД, переводит на казахский и подаёт карточку в
+          НКТ.</p>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <!-- Stats -->
+        <div class="ntin-stats" id="ntinStats">
+          <div class="stat-card">
+            <div class="stat-val" id="statTotal">0</div>
+            <div class="stat-label">Всего</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val text-violet" id="statFilled">0</div>
+            <div class="stat-label">Заполнено</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val text-amber" id="statSubmitted">0</div>
+            <div class="stat-label">На модерации</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val text-signal" id="statApproved">0</div>
+            <div class="stat-label">NTIN привязан</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val text-alert" id="statRevision">0</div>
+            <div class="stat-label">На доработку</div>
+          </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper">
+          <div class="step active">
+            <div class="step-num">1</div>
+            <div class="step-title">API-ключ НКТ</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-title">Загрузить товары</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-title">ИИ-заполнение</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-title">Подать в НКТ</div>
+          </div>
+        </div>
+
+        <!-- Full Integration Welcome Screen -->
+        <div id="integrationScreen" style="display: none; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 4rem 2rem; text-align: center; margin-top: 2rem; box-shadow: var(--shadow-lg);">
+          <div style="font-size: 48px; margin-bottom: 1rem;">🔗</div>
+          <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem;">Подключите интеграции</h2>
+          <p style="color: var(--text-2); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6;">Чтобы скачивать товары и автоматически получать штрих-коды, необходимо указать ключи доступа. Это безопасно и нужно сделать только один раз.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; text-align: left;">
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">🇰🇿 API-ключ НКТ</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Национальный каталог товаров. <br>Где взять: <i>nationalcatalog.kz -> Настройки интеграции -> API ключи</i>.</p>
+              <input class="form-input" id="welcomeNktKey" type="password" placeholder="Вставьте API-ключ НКТ" style="margin-bottom: 1rem;">
+            </div>
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">🛒 Ссылка на Kaspi XML</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Прайс-лист для загрузки ваших товаров. <br>Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+              <input class="form-input" id="welcomeKaspiXml" type="url" placeholder="https://ваша-ссылка-на-xml.kz/feed.xml" style="margin-bottom: 1rem;">
+            </div>
+            <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">📁 Загрузка файла (XML/Excel)</h3>
+              <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Скачайте файл прайс-листа из Kaspi.<br>Где взять: <i>Управление товарами -> Действия с файлами -> Загрузить прайс-лист</i>.</p>
+              <input type="file" id="welcomeFileInput" style="display: none" accept=".xml,.xlsx,.xls" onchange="uploadKaspiFile(this)">
+              <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; background: var(--purple);" onclick="document.getElementById('welcomeFileInput').click()">📁 Выбрать файл</button>
+            </div>
+          </div>
+          <div style="margin-top: 2.5rem; display:flex; flex-wrap: wrap; gap:10px; justify-content:center;">
+            <button class="btn-primary" onclick="saveWelcomeKeys()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 200px; max-width: 100%;">Сохранить и продолжить</button>
+            <button class="btn-secondary" onclick="skipWelcomeScreen()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 140px; max-width: 100%;">Пропустить</button>
+          </div>
+          <div id="welcomeKeyStatus" style="margin-top: 1rem; font-weight: 500;"></div>
+        </div>
+
+        <div id="mainNtinApp" style="display: none;">
+          <!-- Tabs -->
+          <div class="tab-bar">
+            <div class="tab" onclick="switchTab('list')">📋 Товары Kaspi (Без NTIN)</div>
+            <div class="tab" onclick="switchTab('add')">➕ Добавить вручную</div>
+            <div class="tab" onclick="switchTab('templates')">📑 Шаблоны (Автозаполнение)</div>
+            <div class="tab" onclick="switchTab('settings')">⚙️ Настройки API</div>
+          </div>
+
+          <!-- TAB: Add product -->
+        <div class="tab-content active" id="tab-add">
+          <div class="add-form">
+            <div class="info-banner" data-reveal>
+              <h3>🤖 ИИ заполнит за вас</h3>
+              <p>Введите название товара — ИИ автоматически подберёт код ТН ВЭД из 10 000 позиций, переведёт на
+                казахский и подготовит карточку для НКТ.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Название товара (RU) *</label>
+              <input class="form-input" id="titleRu" placeholder="Увлажнитель воздуха Xiaomi Smart 2 Lite">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Описание (RU)</label>
+              <textarea class="form-input" id="descRu" rows="3"
+                placeholder="Ультразвуковой увлажнитель воздуха для помещений до 30м²..."></textarea>
+            </div>
+            <div class="field-row">
+              <div class="form-group">
+                <label class="form-label">Штрих-код (EAN-13)</label>
+                <input class="form-input" id="barcode" placeholder="4630098520123">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kaspi SKU</label>
+                <input class="form-input" id="kaspiSku" placeholder="SKU-12345">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="form-group">
+                <label class="form-label">Бренд</label>
+                <input class="form-input" id="brand" placeholder="Xiaomi">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Страна</label>
+                <input class="form-input" id="country" value="Китай">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="form-group">
+                <label class="form-label">Цена (₸)</label>
+                <input class="form-input" id="price" type="number" placeholder="24900">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Вес (кг)</label>
+                <input class="form-input" id="weight" type="number" step="0.1" placeholder="1.2">
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:1rem; position: relative;">
+              <label class="form-label">Код ОКТРУ <span style="color:var(--text-3); font-weight:normal; font-size:12px">(Опционально. ИИ может найти его сам)</span></label>
+              <div style="display: flex; gap: 8px;">
+                <input class="form-input" id="oktruSearch" placeholder="Поиск по названию (напр. копилка)..." style="flex: 1;">
+                <button class="btn-secondary" onclick="searchOktru()" id="btnSearchOktru">Поиск</button>
+              </div>
+              <input class="form-input" id="oktruCode" placeholder="Например: 1074-0004-0003-100085768"
+                style="font-family:var(--font-mono,monospace); margin-top: 8px;">
+              <div id="oktruDropdown" style="display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <!-- Search results will appear here -->
+              </div>
+              <div style="font-size:12px;color:var(--text-3);margin-top:4px">Оставьте пустым, и наш ИИ сам найдет правильный код при заполнении карточки!</div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:1.5rem">
+              <button class="btn-primary" onclick="createAndAiFill()"
+                style="flex:1;justify-content:center;padding:14px">
+                <span class="ai-badge">ИИ</span> Создать и заполнить
+              </button>
+              <button class="btn-secondary" onclick="createDraft()" style="padding:14px 24px">Черновик</button>
+            </div>
+            <div class="form-error" id="addError"></div>
+            <div class="form-success" id="addSuccess"></div>
+          </div>
+        </div>
+
+        <!-- TAB: Product list -->
+        <div class="tab-content" id="tab-list">
+          
+          <div class="instruction-box">
+            <h4>📖 Инструкция по работе с NTIN</h4>
+            <ol>
+              <li><strong>Загрузите товары:</strong> Нажмите «Загрузить прайс» и выберите XML/Excel файл из Kaspi.</li>
+              <li><strong>Заполните ИИ:</strong> Нажмите «🤖 Массово заполнить ИИ». Наш алгоритм подберет коды ТН ВЭД и ОКТРУ для всех товаров.</li>
+              <li><strong>Отправьте в НКТ:</strong> Нажмите «🚀 Массово подать в НКТ». Заявки уйдут на модерацию в Каталог.</li>
+              <li><strong>Проверьте статусы:</strong> Нажимайте «🔄 Обновить статусы», пока товары не получат статус «NTIN привязан».</li>
+            </ol>
+          </div>
+
+          <div class="actions-toolbar">
+            <button class="btn-primary" style="background: #007bff;" onclick="massAiFill()">🤖 Заполнить ИИ</button>
+            <button class="btn-primary" style="background: #eab308; color: #1f2937;" onclick="massSubmit()">🚀 Подать в НКТ</button>
+            <button class="btn-primary" style="background: #8b5cf6;" onclick="bindViaExtension()">🔗 Привязать к Kaspi</button>
+            
+            <div class="desktop-divider"></div>
+            
+            <button class="btn-secondary" onclick="syncAllNkt()">🔄 Статусы</button>
+            <button class="btn-secondary" onclick="exportExcel()">📥 Excel</button>
+            
+            <div class="desktop-divider"></div>
+            
+            <input type="file" id="kaspiFileInput" style="display: none" accept=".xml,.xlsx,.xls" onchange="uploadKaspiFile(this)">
+            <button class="btn-secondary" onclick="document.getElementById('kaspiFileInput').click()">📁 Загрузить файл</button>
+            <button class="btn-secondary" onclick="fetchKaspiXml()" title="Загрузить по ссылке из настроек">⬇️ По ссылке</button>
+          </div>
+          <div id="productListContainer">
+            <div class="empty-state" style="max-width: 600px; margin: 2rem auto; text-align: left; padding: 2rem; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Как добавить товары?</h3>
+              <p style="color: var(--text-2); margin-bottom: 1.5rem; font-size: 14px;">Загрузите ваш прайс-лист из Kaspi или вставьте ссылку на XML-фид (1С, МойСклад).</p>
+
+              <div style="background: var(--bg); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem;">
+                  <h4 style="margin-bottom: 0.5rem; font-size: 15px;">Загрузка файла (XML/Excel)</h4>
+                  <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Скачайте файл прайс-листа (XML или Excel) из Кабинета продавца Kaspi.<br>Где взять: <i>Управление товарами -> Действия с файлами -> Загрузить прайс-лист.</i></p>
+                  <button class="btn-primary" style="padding:10px 20px; background: var(--purple);" onclick="document.getElementById('kaspiFileInput').click()">📁 Загрузить файл</button>
+              </div>
+
+              <div style="background: var(--bg); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                  <h4 style="margin-bottom: 0.5rem; font-size: 15px;">🛒 Ссылка на Kaspi XML</h4>
+                  <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Прайс-лист для загрузки ваших товаров.<br>Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+                  <div style="display:flex; gap: 8px;">
+                      <button class="btn-secondary" onclick="fetchKaspiXml()">⬇️ Загрузить по ссылке</button>
+                      <button class="btn-secondary" onclick="switchTab('settings')" style="border:none;background:transparent;text-decoration:underline">Указать ссылку в настройках</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Templates -->
+        <div class="tab-content" id="tab-templates">
+          <div class="settings-card">
+            <div class="section-tag">Автозаполнение</div>
+            <h3>Шаблоны значений для НКТ</h3>
+            <p>Укажите значения, которые будут автоматически подставляться ко всем товарам при отправке на модерацию. Это сэкономит часы рутинной работы.</p>
+            
+            <div class="field-row" style="margin-top: 1.5rem;">
+              <div class="form-group">
+                <label class="form-label">Страна происхождения (заглавными)</label>
+                <input class="form-input" id="tplCountry" placeholder="Например: КИТАЙ" value="КИТАЙ">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Наименование производителя</label>
+                <input class="form-input" id="tplBrand" placeholder="Например: Отсутствует" value="Отсутствует">
+              </div>
+            </div>
+            
+            <div class="field-row">
+              <div class="form-group">
+                <label class="form-label">Единица измерения</label>
+                <select class="form-input" id="tplUnit">
+                  <option value="шт">Штука (шт)</option>
+                  <option value="кг">Килограмм (кг)</option>
+                  <option value="компл">Комплект (компл)</option>
+                  <option value="упак">Упаковка (упак)</option>
+                  <option value="пара">Пара (пара)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Количественное значение</label>
+                <input class="form-input" type="number" id="tplQty" value="1">
+              </div>
+            </div>
+            
+            <button class="btn-primary" onclick="saveTemplates()" style="margin-top: 1rem;">Сохранить шаблоны</button>
+            <div id="templateStatus" style="margin-top: 8px; font-size: 13px; font-weight: 500;"></div>
+          </div>
+        </div>
+
+        <!-- TAB: Settings -->
+        <div class="tab-content" id="tab-settings">
+          <div class="settings-card">
+            <h3>🔑 API-ключ Национального каталога (НКТ)</h3>
+            <p>Получите бесплатно на <a href="https://nationalcatalog.kz" target="_blank"
+                style="color:var(--brand);font-weight:600">nationalcatalog.kz</a>. Ключ хранится только в вашем
+              аккаунте.</p>
+            <div class="key-input-row">
+              <input class="form-input" id="nktKey" type="password" placeholder="Вставьте API-ключ НКТ">
+              <button class="btn-primary" onclick="saveNktKey()">Сохранить</button>
+            </div>
+            <div id="nktKeyStatus" style="margin-top:8px;font-size:13px"></div>
+          </div>
+          <div class="settings-card">
+            <h3>🏪 Kaspi Seller API</h3>
+            <p>Для автоимпорта товаров и репрайсинга. Каждый пользователь вводит <strong>свой</strong> ключ — он никому
+              не передаётся.</p>
+              не передаётся.</p>
+            <div class="form-group">
+              <label class="form-label">API-ключ Kaspi</label>
+              <div class="key-input-row">
+                <input class="form-input" id="kaspiKey" type="password" placeholder="Ваш Kaspi Seller API ключ">
+                <button class="btn-primary" onclick="saveKaspiKey()">Сохранить</button>
+              </div>
+            </div>
+            <div class="field-row" style="margin-top:1rem">
+              <div class="form-group">
+                <label class="form-label">Merchant ID</label>
+                <input class="form-input" id="merchantId" placeholder="Ваш Merchant ID">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Название магазина</label>
+                <input class="form-input" id="shopName" placeholder="Мой Kaspi Магазин">
+              </div>
+            </div>
+            <div id="kaspiKeyStatus" style="margin-top:8px;font-size:13px"></div>
+          </div>
+          <div class="settings-card">
+            <h3>🛒 Ссылка на Kaspi XML</h3>
+            <p>Прайс-лист для загрузки ваших товаров. Где взять: <i>1С, МойСклад или другой сервис.</i></p>
+            <div class="key-input-row">
+              <input class="form-input" id="kaspiXmlUrl" type="url" placeholder="https://ваша-ссылка-на-xml.kz/feed.xml">
+              <button class="btn-primary" onclick="saveKaspiXmlUrl()">Сохранить</button>
+            </div>
+            <div id="kaspiXmlStatus" style="margin-top:8px;font-size:13px"></div>
+          </div>
+        </div>
+        
+        <!-- End of mainNtinApp -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Quareo</div>
+        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и оптимизируем ваши продажи через глубокую аналитику.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_product">Продукт</div>
+        <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+        <a href="wb_scanner.html" data-i="footer_l_wb">Сканер WB</a>
+        <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
+        <a href="ntin.html" data-i="footer_l_ntin">NTIN</a>
+        <a href="waybills.html" data-i="footer_l_waybills">Накладные</a>
+        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_company">Компания</div>
+        <a href="about.html" data-i="footer_l_about">О проекте</a>
+        <a href="https://t.me/Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
+        <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_legal">Документы</div>
+        <a href="privacy.html" data-i="footer_l_privacy">Политика конфиденциальности</a>
+        <a href="terms.html" data-i="footer_l_terms">Условия использования</a>
+        <a href="terms.html" data-i="footer_l_offer">Публичная оферта</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Quareo. Все права защищены.</span>
+      <span class="mono">Алматы · Казахстан</span>
+    </div>
+  </footer>
+
+  <script src="assets/common.js"></script>
+  <script>
+    const API = window.location.origin;
+    const STATUS_LABELS = { draft: 'Черновик', ai_filled: 'ИИ заполнен', ready: 'Готов', submitted: 'На модерации', revision: 'На доработку', approved: 'NTIN привязан', rejected: 'Отклонено', revoked: 'Отозвано' };
+    const STATUS_CLASS = { draft: 'status-draft', ai_filled: 'status-ai_filled', ready: 'status-ai_filled', submitted: 'status-submitted', revision: 'status-revision', approved: 'status-approved', rejected: 'status-rejected' };
+
+    function stopPolling() {
+      if (window.aiFillInterval) {
+        clearInterval(window.aiFillInterval);
+        window.aiFillInterval = null;
+      }
+    }
+
+    function switchTab(t) {
+      document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', ['list', 'add', 'templates', 'settings'].includes(t) && el.getAttribute('onclick').includes(t)));
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + t).classList.add('active');
+      
+      stopPolling();
+      
+      if (t === 'list') loadProducts();
+      if (t === 'settings') loadSettings();
+      if (t === 'templates') loadTemplates();
+    }
+
+    function skipWelcomeScreen() {
+      document.getElementById('integrationScreen').style.display = 'none';
+      document.getElementById('mainNtinApp').style.display = 'block';
+      loadProducts(); loadStats();
+    }
+
+    // Check integration status on load
+    async function checkIntegrationStatus() {
+      try {
+        const r = await fetch(API + '/api/ntin/settings', { headers: rpAuthHeaders() });
+        if (r.ok) {
+          const d = await r.json();
+          if (d.has_nkt_key && d.kaspi_xml_url) {
+            document.getElementById('integrationScreen').style.display = 'none';
+            document.getElementById('mainNtinApp').style.display = 'block';
+            switchTab('list');
+            loadStats();
+          } else {
+            document.getElementById('integrationScreen').style.display = 'block';
+            document.getElementById('mainNtinApp').style.display = 'none';
+          }
+        }
+      } catch (e) { console.error('Settings check error', e); }
+    }
+    
+    // Call on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (rpGetToken()) checkIntegrationStatus();
+    });
+
+    async function saveWelcomeKeys() {
+      const nkt = document.getElementById('welcomeNktKey').value.trim();
+      const xml_url = document.getElementById('welcomeKaspiXml').value.trim();
+      const stat = document.getElementById('welcomeKeyStatus');
+      
+      if (!nkt || !xml_url) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = 'Пожалуйста, заполните оба поля.';
+        return;
+      }
+      
+      stat.style.color = 'var(--text-3)';
+      stat.innerText = 'Проверка и сохранение...';
+      
+      try {
+        const r = await fetch(API + '/api/ntin/settings', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, 
+          body: JSON.stringify({ nkt_api_key: nkt, kaspi_xml_url: xml_url }) 
+        });
+        if (!r.ok) throw new Error('Ошибка сохранения');
+        stat.style.color = 'var(--green)';
+        stat.innerText = 'Успешно подключено!';
+        setTimeout(() => checkIntegrationStatus(), 1000);
+      } catch (e) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = e.message;
+      }
+    }
+
+    async function loadTemplates() {
+      try {
+        const r = await fetch(API + '/api/ntin/templates', { headers: rpAuthHeaders() });
+        if (r.ok) {
+          const d = await r.json();
+          if (d.tpl_country) document.getElementById('tplCountry').value = d.tpl_country;
+          if (d.tpl_brand) document.getElementById('tplBrand').value = d.tpl_brand;
+          if (d.tpl_unit) document.getElementById('tplUnit').value = d.tpl_unit;
+          if (d.tpl_qty) document.getElementById('tplQty').value = d.tpl_qty;
+        }
+      } catch (e) { console.error('Templates load error', e); }
+    }
+
+    async function saveTemplates() {
+      const stat = document.getElementById('templateStatus');
+      const data = {
+        tpl_country: document.getElementById('tplCountry').value.trim(),
+        tpl_brand: document.getElementById('tplBrand').value.trim(),
+        tpl_unit: document.getElementById('tplUnit').value,
+        tpl_qty: parseInt(document.getElementById('tplQty').value) || 1
+      };
+      
+      stat.style.color = 'var(--text-3)';
+      stat.innerText = 'Сохранение...';
+      try {
+        const r = await fetch(API + '/api/ntin/templates', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, 
+          body: JSON.stringify(data) 
+        });
+        if (!r.ok) throw new Error('Ошибка сохранения');
+        stat.style.color = 'var(--green)';
+        stat.innerText = '✓ Шаблоны сохранены. Они будут применяться ко всем новым товарам.';
+        setTimeout(() => { stat.innerText = ''; }, 3000);
+      } catch (e) {
+        stat.style.color = 'var(--red)';
+        stat.innerText = e.message;
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const r = await fetch(API + '/api/ntin/stats', { headers: rpAuthHeaders() });
+        const d = await r.json();
+        document.getElementById('statTotal').textContent = d.total || 0;
+        document.getElementById('statFilled').textContent = (d.ai_filled || 0) + (d.ready || 0);
+        document.getElementById('statSubmitted').textContent = d.submitted || 0;
+        document.getElementById('statApproved').textContent = d.approved || 0;
+        document.getElementById('statRevision').textContent = (d.revision || 0) + (d.rejected || 0);
+      } catch (e) { console.error('Stats error', e) }
+    }
+
+    function getFormData() {
+      return {
+        title_ru: document.getElementById('titleRu').value.trim(),
+        description_ru: document.getElementById('descRu').value.trim() || null,
+        barcode: document.getElementById('barcode').value.trim() || null,
+        kaspi_sku: document.getElementById('kaspiSku').value.trim() || null,
+        brand: document.getElementById('brand').value.trim() || null,
+        country_of_origin: document.getElementById('country').value.trim() || 'Китай',
+        oktru_code: document.getElementById('oktruCode').value.trim() || null,
+        price: parseFloat(document.getElementById('price').value) || null,
+        weight_kg: parseFloat(document.getElementById('weight').value) || null,
+      };
+    }
+
+    function showMsg(id, txt, isErr = false) {
+      const e = document.getElementById(id);
+      e.style.display = 'block'; e.style.color = isErr ? 'var(--red)' : 'var(--green)';
+      e.innerText = txt;
+      setTimeout(() => e.style.display = 'none', 4000);
+    }
+
+    async function searchOktru() {
+      const q = document.getElementById('oktruSearch').value.trim();
+      if (!q || q.length < 2) {
+        alert('Введите хотя бы 2 символа для поиска');
+        return;
+      }
+      const btn = document.getElementById('btnSearchOktru');
+      btn.disabled = true;
+      btn.innerText = '...';
+      const dropdown = document.getElementById('oktruDropdown');
+      dropdown.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-3)">Загрузка...</div>';
+      dropdown.style.display = 'block';
+      
+      try {
+        const r = await fetch(API + '/api/ntin/oktru/search?q=' + encodeURIComponent(q), { headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'HTTP ' + r.status);
+        }
+        const data = await r.json();
+        const results = data.results || [];
+        
+        if (results.length === 0) {
+          dropdown.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-3)">Ничего не найдено</div>';
+          setTimeout(() => dropdown.style.display = 'none', 3000);
+        } else {
+          let html = '';
+          results.forEach(item => {
+            html += `<div style="padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;" onmouseover="this.style.background='var(--bg-2)'" onmouseout="this.style.background=''" onclick="selectOktru('${item.code}')">
+              <strong style="color:var(--text)">${item.code}</strong><br>
+              <span style="font-size:12px;color:var(--text-3)">${item.name}</span>
+            </div>`;
+          });
+          dropdown.innerHTML = html;
+        }
+      } catch (e) {
+        dropdown.innerHTML = `<div style="padding:12px;color:var(--red)">${e.message}</div>`;
+        setTimeout(() => dropdown.style.display = 'none', 5000);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Поиск';
+      }
+    }
+
+    function selectOktru(code) {
+      document.getElementById('oktruCode').value = code;
+      document.getElementById('oktruDropdown').style.display = 'none';
+    }
+
+    async function createDraft() {
+      const data = getFormData();
+      if (!data.title_ru) { showMsg('addError', 'Введите название товара', true); return }
+      try {
+        const r = await fetch(API + '/api/ntin/products', { method: 'POST', headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, body: JSON.stringify(data) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        showMsg('addSuccess', '✓ Товар добавлен как черновик');
+        document.getElementById('titleRu').value = '';
+        loadStats();
+      } catch (e) { showMsg('addError', 'Ошибка: ' + e.message, true) }
+    }
+
+    async function createAndAiFill() {
+      const data = getFormData();
+      if (!data.title_ru) { showMsg('addError', 'Введите название товара', true); return }
+      try {
+        const r = await fetch(API + '/api/ntin/products', { method: 'POST', headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, body: JSON.stringify(data) });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const prod = await r.json();
+        const r2 = await fetch(API + '/api/ntin/products/' + prod.id + '/ai-fill', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r2.ok) throw new Error('AI fill failed');
+        const filled = await r2.json();
+        showMsg('addSuccess', '✓ Товар создан и заполнен ИИ! ТН ВЭД: ' + (filled.tn_ved_code || '—'));
+        document.getElementById('titleRu').value = '';
+        document.getElementById('descRu').value = '';
+        loadStats();
+      } catch (e) { showMsg('addError', 'Ошибка: ' + e.message, true) }
+    }
+
+    async function loadProducts() {
+      const c = document.getElementById('productListContainer');
+      try {
+        const r = await fetch(API + '/api/ntin/products', { headers: rpAuthHeaders() });
+        const products = await r.json();
+        if (!products.length) { 
+          c.innerHTML = `<div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <p>Товаров пока нет. Загрузите свой XML прайс-лист в разделе "Настройки" или добавьте товары вручную.<br>
+            <br>
+            <small style="color:var(--text-3)">Чтобы загрузить товары файлом, используйте кнопку в верхней панели.</small></p>
+          </div>`; 
+          return 
+        }
+        let html = '<div style="overflow-x:auto"><table class="product-table"><thead><tr><th>Товар</th><th>ТН ВЭД / ОКТРУ</th><th>NTIN</th><th>Статус</th><th>Действия</th></tr></thead><tbody>';
+        products.forEach(p => {
+          const st = STATUS_LABELS[p.status] || p.status;
+          const sc = STATUS_CLASS[p.status] || 'status-draft';
+          const tooltip = p.revision_comment ? `title="${p.revision_comment.replace(/"/g, '&quot;')}"` : '';
+          html += `<tr ${tooltip}>
+        <td><strong style="color:var(--text)">${p.title_ru}</strong>${p.title_kz ? '<br><span style="font-size:12px;color:var(--text-3)">KZ: ' + p.title_kz + '</span>' : ''}</td>
+        <td style="font-family:var(--font-mono,monospace);font-size:12px">${p.tn_ved_code || '—'}<br><span style="color:var(--text-3)">${p.oktru_code || '—'}</span></td>
+        <td style="font-family:var(--font-mono,monospace);font-weight:700;color:var(--brand)">${p.ntin_code || '—'}<br><span style="color:var(--text-3);font-size:11px;font-weight:normal">ID: ${p.nkt_request_id || '—'}</span></td>
+        <td><span class="status-pill ${sc}">${st}</span></td>
+        <td style="white-space:nowrap">
+          ${p.status === 'draft' ? `<button class="btn-secondary" style="padding:6px 12px;font-size:12px" onclick="aiFill('${p.id}')">🤖 ИИ</button> ` : ''}
+          ${['ai_filled', 'ready', 'revision'].includes(p.status) ? `<button class="btn-primary" style="padding:6px 12px;font-size:12px" onclick="submitNkt('${p.id}')">📤 Подать</button> ` : ''}
+          ${['submitted', 'revision'].includes(p.status) ? `<button class="btn-secondary" style="padding:6px 12px;font-size:12px" onclick="checkNktStatus('${p.id}')">🔄 Статус</button> ` : ''}
+          <button class="btn-secondary" style="padding:6px 12px;font-size:12px;color:var(--red)" onclick="deleteProduct('${p.id}')">✕</button>
+        </td></tr>`;
+        });
+        html += '</tbody></table></div>';
+        c.innerHTML = html;
+      } catch (e) { c.innerHTML = '<div class="empty-state"><p style="color:var(--red)">Ошибка загрузки: ' + e.message + '</p></div>' }
+    }
+
+    async function aiFill(id) {
+      try {
+        await fetch(API + '/api/ntin/products/' + id + '/ai-fill', { method: 'POST', headers: rpAuthHeaders() });
+        loadProducts(); loadStats();
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function submitNkt(id) {
+      if (!confirm('Отправить карточку на модерацию в НКТ?')) return;
+      try {
+        await fetch(API + '/api/ntin/products/' + id + '/submit', { method: 'POST', headers: rpAuthHeaders() });
+        loadProducts(); loadStats();
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function checkNktStatus(id) {
+      try {
+        await fetch(API + '/api/ntin/products/' + id + '/check-status', { method: 'POST', headers: rpAuthHeaders() });
+        loadProducts(); loadStats();
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function syncAllNkt() {
+      const btn = document.querySelector('button[onclick="syncAllNkt()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Синхронизация...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/requests/sync', { method: 'POST', headers: rpAuthHeaders() });
+        if (r.ok) {
+          alert('Синхронизация с НКТ запущена в фоновом режиме! Подождите пару минут и просто обновите страницу.');
+          
+          if (!window.aiFillInterval) {
+            let retries = 0;
+            window.aiFillInterval = setInterval(() => {
+              loadProducts();
+              loadStats();
+              retries++;
+              if (retries > 12) stopPolling(); // stop after 1 minute
+            }, 5000);
+          }
+        } else {
+          alert('Ошибка синхронизации');
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Удалить товар?')) return;
+      try {
+        await fetch(API + '/api/ntin/products/' + id, { method: 'DELETE', headers: rpAuthHeaders() });
+        loadProducts(); loadStats();
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function massAiFill() {
+      if (!confirm('Запустить массовое ИИ-заполнение для всех товаров со статусом "Черновик"? Процесс пройдет в фоновом режиме.')) return;
+      const btn = document.querySelector('button[onclick="massAiFill()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Запущено...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/mass-ai-fill', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка заполнения');
+        }
+        alert('Массовое заполнение запущено в фоновом режиме! Вы можете продолжать работу или даже закрыть вкладку. Товары будут обновляться по мере готовности.');
+        // Poll every 5 seconds to show progress
+        if (!window.aiFillInterval) {
+          let retries = 0;
+          window.aiFillInterval = setInterval(() => {
+            loadProducts();
+            loadStats();
+            retries++;
+            if (retries > 12) stopPolling(); // stop after 1 minute
+          }, 5000);
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    async function massSubmit() {
+      if (!confirm('Отправить все товары со статусом "ИИ заполнен" в НКТ? Процесс пройдет в фоновом режиме.')) return;
+      const btn = document.querySelector('button[onclick="massSubmit()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Запущено...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/mass-submit', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка запуска подачи');
+        }
+        alert('Массовая подача в НКТ запущена в фоновом режиме!');
+        
+        if (!window.aiFillInterval) {
+          let retries = 0;
+          window.aiFillInterval = setInterval(() => {
+            loadProducts();
+            loadStats();
+            retries++;
+            if (retries > 12) stopPolling(); // stop after 1 minute
+          }, 5000);
+        }
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    function exportExcel() {
+      // Create a temporary link to download the file, sending the auth token in the URL or using fetch
+      // Since it's a GET request and we use Bearer token, we can use fetch and then blob
+      fetch(API + '/api/ntin/export-excel', {
+        headers: rpAuthHeaders()
+      })
+      .then(r => {
+        if(!r.ok) throw new Error('Ошибка экспорта');
+        return r.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'kaspi_ntin_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(e => alert(e.message));
+    }
+
+    async function bindViaExtension() {
+      if (!confirm('Расширение сейчас безопасно (точечно) привяжет готовые NTIN-коды ко всем вашим товарам в Kaspi. Продолжить?')) return;
+      try {
+        const r = await fetch(API + '/api/ntin/export-json', { headers: rpAuthHeaders() });
+        const data = await r.json();
+        
+        if (!data.products || data.products.length === 0) {
+            alert("Нет товаров с готовым NTIN кодом для привязки.");
+            return;
+        }
+        
+        console.log("Отправляем команду расширению, товаров:", data.products.length);
+        window.postMessage({
+          type: "QUAREO_BIND_NTIN",
+          payload: { products: data.products }
+        }, "*");
+        
+        window.extensionTimeout = setTimeout(() => {
+          alert("Расширение Quareo Connector не найдено! Обновите страницу или установите его в Chrome.");
+        }, 2000);
+        
+      } catch(e) {
+        alert("Ошибка: " + e.message);
+      }
+    }
+
+    window.addEventListener("message", function(event) {
+      if (event.source !== window) return;
+      if (event.data.type === "QUAREO_BIND_RESULT") {
+        clearTimeout(window.extensionTimeout);
+        const res = event.data.result;
+        if (res && res.success) {
+          let logStr = "";
+          if (res.details && res.details.logs && res.details.logs.length > 0) {
+              logStr = "\n\nПодробности:\n" + res.details.logs.join("\n");
+          }
+          alert(`Расширение ответило: ${res.message} (Обработано: ${res.details ? res.details.processed : 0})` + logStr);
+        } else {
+          alert("Ошибка расширения: " + (res ? res.message : "Неизвестная ошибка"));
+        }
+      }
+    });
+
+    async function fetchKaspiXml() {
+      const btn = document.querySelector('button[onclick="fetchKaspiXml()"]');
+      const oldText = btn.innerText;
+      btn.innerText = '⏳ Загрузка XML...';
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/ntin/fetch-kaspi', { method: 'POST', headers: rpAuthHeaders() });
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка загрузки XML');
+        }
+        const res = await r.json();
+        alert(`Успешно загружено ${res.imported} новых товаров без штрих-кода!`);
+        loadProducts(); loadStats();
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+      }
+    }
+
+    async function uploadKaspiFile(input) {
+      if (!input.files || input.files.length === 0) return;
+      
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Attempt to find the specific button that was clicked to update its text
+      let btn = input.nextElementSibling;
+      if (!btn || btn.tagName !== 'BUTTON') {
+         btn = document.querySelector('button[onclick*="kaspiFileInput"]');
+      }
+      
+      let oldText = 'Загрузить файл';
+      if (btn) {
+          oldText = btn.innerText;
+          btn.innerText = '⏳ Обработка...';
+          btn.disabled = true;
+      }
+      
+      try {
+        const r = await fetch(API + '/api/ntin/upload-kaspi', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + rpGetToken()
+          },
+          body: formData
+        });
+        
+        if (!r.ok) {
+          const err = await r.json();
+          throw new Error(err.detail || 'Ошибка загрузки файла');
+        }
+        
+        const res = await r.json();
+        alert(`Успешно загружено ${res.imported} новых товаров!`);
+        
+        // Hide welcome screen if we are there
+        document.getElementById('integrationScreen').style.display = 'none';
+        document.getElementById('mainNtinApp').style.display = 'block';
+        
+        switchTab('list');
+        loadProducts(); 
+        loadStats();
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        if (btn) {
+            btn.innerText = oldText;
+            btn.disabled = false;
+        }
+        input.value = ''; // Reset input so same file can be selected again
+      }
+    }
+
+    async function loadSettings() {
+      try {
+        const r = await fetch(API + '/api/ntin/settings', { headers: rpAuthHeaders() });
+        const d = await r.json();
+        document.getElementById('nktKeyStatus').innerHTML = d.has_nkt_key ? '<span style="color:var(--green)">✓ Ключ НКТ подключён</span>' : '<span style="color:var(--text-3)">Ключ не задан</span>';
+        document.getElementById('kaspiKeyStatus').innerHTML = d.has_kaspi_key ? '<span style="color:var(--green)">✓ Kaspi API подключён</span>' : '<span style="color:var(--text-3)">Ключ не задан</span>';
+        if (d.kaspi_merchant_id) document.getElementById('merchantId').value = d.kaspi_merchant_id;
+        if (d.kaspi_shop_name) document.getElementById('shopName').value = d.kaspi_shop_name;
+      } catch (e) { }
+    }
+
+    async function saveNktKey() {
+      const key = document.getElementById('nktKey').value.trim();
+      if (!key) { alert('Введите ключ'); return }
+      try {
+        await fetch(API + '/api/ntin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, body: JSON.stringify({ nkt_api_key: key }) });
+        document.getElementById('nktKeyStatus').innerHTML = '<span style="color:var(--green)">✓ Ключ НКТ сохранён</span>';
+        document.getElementById('nktKey').value = '';
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    async function saveKaspiKey() {
+      const key = document.getElementById('kaspiKey').value.trim();
+      const mid = document.getElementById('merchantId').value.trim();
+      const shop = document.getElementById('shopName').value.trim();
+      try {
+        await fetch(API + '/api/ntin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() }, body: JSON.stringify({ kaspi_api_key: key || undefined, kaspi_merchant_id: mid || undefined, kaspi_shop_name: shop || undefined }) });
+        document.getElementById('kaspiKeyStatus').innerHTML = '<span style="color:var(--green)">✓ Настройки Kaspi сохранены</span>';
+        document.getElementById('kaspiKey').value = '';
+      } catch (e) { alert('Ошибка: ' + e.message) }
+    }
+
+    loadStats();
+  </script>
+</body>
+
+</html>
