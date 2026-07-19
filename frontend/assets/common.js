@@ -289,3 +289,113 @@ document.addEventListener('DOMContentLoaded', () => {
   rpAnimateCounters();
   rpInitScrollNav();
 });
+
+/* ── Toast Notifications (replaces native alert()) ──────────── */
+(function () {
+  const STYLE_ID = 'rp-toast-style';
+  if (!document.getElementById(STYLE_ID)) {
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = `
+      #rp-toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+        max-width: 380px;
+      }
+      .rp-toast {
+        pointer-events: auto;
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-left: 3px solid rgba(37, 99, 235, 0.75);
+        border-radius: var(--radius-lg, 16px);
+        box-shadow:
+          0 8px 32px rgba(31, 41, 55, 0.14),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        padding: 14px 16px;
+        font-family: var(--font-display, inherit);
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text, #111827);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        animation: rpToastIn .3s cubic-bezier(.22,1,.36,1);
+        white-space: pre-line;
+      }
+      .rp-toast.rp-toast-error { border-left-color: rgba(220, 38, 38, 0.75); }
+      .rp-toast.rp-toast-success { border-left-color: rgba(22, 163, 74, 0.75); }
+      .rp-toast-icon { flex-shrink: 0; font-size: 18px; line-height: 1; margin-top: 1px; }
+      .rp-toast-text { flex: 1; word-break: break-word; }
+      .rp-toast-close {
+        flex-shrink: 0;
+        cursor: pointer;
+        color: var(--text-3, #9ca3af);
+        font-size: 16px;
+        line-height: 1;
+        background: none;
+        border: none;
+        padding: 0 0 0 6px;
+      }
+      .rp-toast.rp-toast-out { animation: rpToastOut .2s ease-in forwards; }
+      @keyframes rpToastIn {
+        from { opacity: 0; transform: translateX(24px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes rpToastOut {
+        from { opacity: 1; transform: translateX(0); }
+        to   { opacity: 0; transform: translateX(24px); }
+      }
+      @media (max-width: 480px) {
+        #rp-toast-container { left: 12px; right: 12px; top: 12px; max-width: none; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function getContainer() {
+    let c = document.getElementById('rp-toast-container');
+    if (!c) {
+      c = document.createElement('div');
+      c.id = 'rp-toast-container';
+      document.body.appendChild(c);
+    }
+    return c;
+  }
+
+  window.showToast = function (message, type = 'info', duration = 4500) {
+    const container = getContainer();
+    const el = document.createElement('div');
+    const icon = type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️';
+    el.className = `rp-toast rp-toast-${type}`;
+    el.innerHTML = `
+      <span class="rp-toast-icon">${icon}</span>
+      <span class="rp-toast-text"></span>
+      <button class="rp-toast-close" aria-label="Закрыть">✕</button>
+    `;
+    el.querySelector('.rp-toast-text').textContent = message;
+    container.appendChild(el);
+
+    const remove = () => {
+      el.classList.add('rp-toast-out');
+      setTimeout(() => el.remove(), 200);
+    };
+    el.querySelector('.rp-toast-close').addEventListener('click', remove);
+    if (duration > 0) setTimeout(remove, duration);
+  };
+
+  window.alert = function (message) {
+    const text = String(message);
+    let type = 'info';
+    if (/ошибка|error|не удал|неверн/i.test(text)) type = 'error';
+    else if (/успех|готово|успешн/i.test(text)) type = 'success';
+    window.showToast(text, type);
+  };
+})();
