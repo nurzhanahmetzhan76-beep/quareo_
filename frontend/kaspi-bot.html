@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaspi-бот · Репрайсинг — Quareo</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.jpg">
+<style>
+.tool-hero{padding-top:108px;padding-bottom:2rem;text-align:center}
+.tool-hero .section-tag{justify-content:center}
+
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;transition:all .2s}
+.stat-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.stat-val{font-size:2.2rem;font-weight:800;font-family:var(--font-display);color:var(--brand)}
+.stat-label{font-size:13px;color:var(--text-3);margin-top:4px;font-weight:600}
+
+/* Product table */
+.rp-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:2rem}
+.rp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.rp-table{width:100%;border-collapse:collapse}
+.rp-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);padding:10px 12px;border-bottom:1px solid var(--border);font-family:var(--font-mono)}
+.rp-table td{padding:14px 12px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-2)}
+.rp-table tr:last-child td{border-bottom:none}
+.rp-table tr:hover{background:var(--bg-2)}
+
+/* Toggle switch */
+.toggle{position:relative;width:44px;height:24px;display:inline-block}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:24px;cursor:pointer;transition:all .25s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;left:3px;top:3px;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked+.toggle-slider{background:var(--brand)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+
+/* Price cells */
+.price-my{font-weight:700;color:var(--text);font-family:var(--font-mono)}
+.price-min{color:var(--text-3);font-family:var(--font-mono);font-size:13px}
+.price-comp{font-family:var(--font-mono);font-size:13px}
+.price-comp.winning{color:var(--green)}
+.price-comp.losing{color:#ef4444}
+
+/* Status badge */
+.badge{display:inline-flex;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.badge-on{background:rgba(34,197,94,.12);color:#16a34a}
+.badge-off{background:var(--bg-2);color:var(--text-3)}
+.badge-win{background:rgba(34,197,94,.12);color:#16a34a}
+.badge-lose{background:rgba(239,68,68,.1);color:#ef4444}
+
+/* Add product form */
+.add-form{display:none;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:2rem;animation:fadeIn .3s}
+.add-form.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem}
+
+/* Logs */
+.log-list{max-height:400px;overflow-y:auto}
+.log-item{display:flex;gap:1rem;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.log-item:last-child{border-bottom:none}
+.log-time{color:var(--text-3);font-family:var(--font-mono);min-width:130px}
+.log-arrow{color:var(--brand);font-weight:700}
+.log-prices{font-family:var(--font-mono);font-weight:600}
+.log-action{font-size:11px;padding:2px 8px;border-radius:100px;font-weight:600}
+.log-action.undercut{background:rgba(34,197,94,.12);color:#16a34a}
+.log-action.floor_hit{background:rgba(239,68,68,.1);color:#ef4444}
+.log-action.raise_back{background:rgba(59,130,246,.1);color:#3b82f6}
+
+/* Empty state */
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .icon{font-size:48px;margin-bottom:1rem}
+.empty-state h3{margin-bottom:.5rem}
+.empty-state p{color:var(--text-2);max-width:400px;margin:0 auto 1.5rem;line-height:1.6}
+
+@media(max-width:768px){
+  .stats-bar{grid-template-columns:1fr}
+  .rp-table{font-size:12px}
+  .rp-table th,.rp-table td{padding:8px 6px}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Quareo</a>
+    <div class="nav-links" id="navLinks">
+
+      <a href="index.html" data-i="nav_home">Главная</a>
+      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+      <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
+      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+      <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
+        <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+      </div>
+      <a href="auth.html?view=register" class="btn-nav-cta">Начать</a>
+      <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="tool-hero">
+    <div class="container-narrow">
+      <div class="section-tag">Kaspi-бот · Репрайсинг</div>
+      <h1>Автоматический демпинг <span style="color:var(--brand)">на 5 ₸</span></h1>
+      <p style="color:var(--text-2);font-size:1.05rem;line-height:1.7;max-width:560px;margin:1rem auto 0">
+        Бот следит за ценами конкурентов 24/7 и ставит вашу цену <strong>ровно на 5 тенге дешевле</strong>. Вы всегда в корзине, не теряя маржу.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="container">
+
+      <!-- Stats -->
+      <div class="stats-bar" data-reveal>
+        <div class="stat-card">
+          <div class="stat-val" id="statTotal">0</div>
+          <div class="stat-label">Товаров на мониторинге</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statActive">0</div>
+          <div class="stat-label">Бот включен</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statChanges">0</div>
+          <div class="stat-label">Изменений цены</div>
+        </div>
+      </div>
+
+      <!-- Error banner for Kaspi limitation -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;display:flex;gap:1rem;align-items:flex-start">
+        <div style="font-size:24px;margin-top:2px">🛡️</div>
+        <div style="width:100%">
+          <h4 style="margin-bottom:6px">100% Безопасное обновление цен</h4>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Чтобы не затронуть ваши остатки и другие товары: <br>1. Скачайте свой текущий прайс в кабинете Kaspi (Управление товарами → Прайс-лист → <b>Скачать в Excel</b>).<br>2. Загрузите его сюда. Мы обновим цены для включенных товаров и отдадим вам файл обратно.<br>3. Загрузите полученный файл обратно в Kaspi (Загрузить файл вручную).</p>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="file" id="excelUpload" accept=".xlsx,.xml" style="font-size:13px">
+            <button class="btn-primary" onclick="processExcel()" style="padding:6px 16px;white-space:nowrap">⚙️ Обновить цены в файле</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add product form -->
+      <div class="add-form visible" id="addForm">
+        <h3 style="margin-bottom:1.5rem">➕ Добавить товар</h3>
+        <div class="form-row">
+          <div class="form-group" style="flex:2">
+            <label class="form-label">Ссылка на товар (Kaspi) <span style="color:var(--brand)">*Обязательно</span></label>
+            <input class="form-input" type="url" id="fUrl" placeholder="Вставьте ссылку, и мы всё заполним..." oninput="autoFillSkuFromUrl(this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ваш магазин на Kaspi</label>
+            <input class="form-input" type="text" id="fMerchant" placeholder="TechStore.kz">
+          </div>
+        </div>
+
+        <!-- Hidden but required by API -->
+        <div style="display:none">
+          <input type="text" id="fName">
+          <input type="text" id="fSku">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Текущая цена (₸)</label>
+            <input class="form-input" type="number" id="fPrice" placeholder="45000" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Минимальная цена (₸)</label>
+            <input class="form-input" type="number" id="fMinPrice" placeholder="40000" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Шаг демпинга (макс. 5 ₸)</label>
+            <input class="form-input" type="number" id="fStep" value="5" min="1" max="5">
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:1rem">
+          <button class="btn-primary" onclick="submitNewRule()" style="padding:12px 28px">Добавить</button>
+        </div>
+      </div>
+
+      <!-- Products panel -->
+      <div class="rp-panel" data-reveal>
+        <div class="rp-header">
+          <h2 style="font-size:1.3rem">📦 Товары на репрайсинге</h2>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <input type="file" id="importUpload" accept=".xlsx,.xml" style="display:none" onchange="uploadSync(this)">
+            <button class="btn-secondary" onclick="document.getElementById('importUpload').click()" id="importBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📥 Загрузить файл (Excel / XML)</button>
+            <button class="btn-secondary" onclick="syncFromNtin()" id="syncNtinBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📝 Взять из NTIN</button>
+          </div>
+        </div>
+
+        <div id="rulesContent">
+          <div class="empty-state" id="emptyState">
+            <div class="icon">🤖</div>
+            <h3>Нет товаров на мониторинге</h3>
+            <p>Добавьте товар с вашим SKU выше, укажите минимальную цену и включите бота — он начнет следить за конкурентами 24/7.</p>
+          </div>
+
+          <div style="overflow-x:auto;">
+          <table class="rp-table" id="rulesTable" style="display:none; min-width: 640px;">
+            <thead>
+              <tr>
+                <th>Товар</th>
+                <th>Моя цена</th>
+                <th>Мин. цена</th>
+                <th>Конкурент</th>
+                <th>Статус</th>
+                <th>Бот</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="rulesBody"></tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs panel -->
+      <div class="rp-panel" data-reveal id="logsPanel" style="display:none">
+        <div class="rp-header">
+          <h2 style="font-size:1.3rem">📊 История изменений цен</h2>
+          <button class="btn-secondary" onclick="closeLogsPanel()" style="padding:8px 16px;font-size:13px">✕ Закрыть</button>
+        </div>
+        <div class="log-list" id="logsList"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Quareo</div>
+        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и оптимизируем ваши продажи через глубокую аналитику.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_product">Продукт</div>
+        <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
+        <a href="wb_scanner.html" data-i="footer_l_wb">Сканер WB</a>
+        <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
+        <a href="ntin.html" data-i="footer_l_ntin">NTIN</a>
+        <a href="waybills.html" data-i="footer_l_waybills">Накладные</a>
+        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_company">Компания</div>
+        <a href="about.html" data-i="footer_l_about">О проекте</a>
+        <a href="https://t.me/Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
+        <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title" data-i="footer_legal">Документы</div>
+        <a href="privacy.html" data-i="footer_l_privacy">Политика конфиденциальности</a>
+        <a href="terms.html" data-i="footer_l_terms">Условия использования</a>
+        <a href="terms.html" data-i="footer_l_offer">Публичная оферта</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Quareo.</span><span class="mono">Алматы · Казахстан</span></div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script>
+// ── State ──
+let rules = [];
+
+function autoFillSkuFromUrl(url) {
+  if (!url) return;
+  const match = url.match(/kaspi\.kz\/shop\/p\/([^/]+?)-(\d+)(?:\/|\?|$)/i);
+  if (match && match[1] && match[2]) {
+    const slug = match[1];
+    const sku = match[2];
+    
+    // Format slug into a readable name (e.g., "iphone-14-pro" -> "Iphone 14 pro")
+    let readableName = decodeURIComponent(slug).replace(/-/g, ' ');
+    readableName = readableName.charAt(0).toUpperCase() + readableName.slice(1);
+    
+    const skuInput = document.getElementById('fSku');
+    const nameInput = document.getElementById('fName');
+    
+    if (!skuInput.value) skuInput.value = sku;
+    if (!nameInput.value) nameInput.value = readableName;
+  }
+}
+
+// ── API helpers ──
+const API = RP_API_BASE + '/api/repricing';
+
+async function apiFetch(path, opts = {}) {
+  const resp = await fetch(API + path, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...rpAuthHeaders(),
+      ...(opts.headers || {}),
+    },
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.detail || `HTTP ${resp.status}`);
+  }
+  if (resp.status === 204) return null;
+  return resp.json();
+}
+
+// ── Load data ──
+async function processExcel() {
+  const fileInput = document.getElementById('excelUpload');
+  if(!fileInput.files.length) {
+    alert('Пожалуйста, выберите Excel-файл от Kaspi');
+    return;
+  }
+  
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const btn = event.target;
+  const oldText = btn.textContent;
+  btn.textContent = 'Обработка...';
+  btn.disabled = true;
+  
+  try {
+    const resp = await fetch(API + '/process_excel', {
+      method: 'POST',
+      headers: rpAuthHeaders(),
+      body: formData
+    });
+    
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    
+    // Download the modified file
+    const blob = await resp.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    let downloadName = file.name;
+    if (downloadName.toLowerCase().endsWith('.xml')) {
+      downloadName = downloadName.slice(0, -4) + '.xlsx';
+    } else if (!downloadName.toLowerCase().endsWith('.xlsx')) {
+      downloadName += '.xlsx';
+    }
+    a.download = downloadName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    
+    alert('Готово! Файл с обновленными ценами скачан. Теперь загрузите его в Kaspi.');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.textContent = oldText;
+    btn.disabled = false;
+  }
+}
+
+async function loadStats() {
+  try {
+    const s = await apiFetch('/stats');
+    document.getElementById('statTotal').textContent = s.total_products;
+    document.getElementById('statActive').textContent = s.active_bots;
+    document.getElementById('statChanges').textContent = s.total_price_changes;
+  } catch(e) {}
+}
+
+async function loadRules() {
+  try {
+    rules = await apiFetch('/rules');
+    renderRules();
+  } catch(e) {}
+}
+
+function renderRules() {
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('rulesTable');
+  const body = document.getElementById('rulesBody');
+
+  if (rules.length === 0) {
+    empty.style.display = 'block';
+    table.style.display = 'none';
+    return;
+  }
+
+  empty.style.display = 'none';
+  table.style.display = 'table';
+  body.innerHTML = '';
+
+  rules.forEach(r => {
+    const isWinning = r.last_competitor_price && r.my_current_price < r.last_competitor_price;
+    const compPriceStr = r.last_competitor_price
+      ? `${Number(r.last_competitor_price).toLocaleString('ru-RU')} ₸`
+      : '—';
+    const compClass = r.last_competitor_price
+      ? (isWinning ? 'winning' : 'losing')
+      : '';
+    const statusBadge = r.last_competitor_price
+      ? (isWinning ? '<span class="badge badge-win">#1</span>' : '<span class="badge badge-lose">Проигрыш</span>')
+      : '<span class="badge badge-off">—</span>';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div style="font-weight:600;color:var(--text)">${escHtml(r.product_name)}</div>
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono)">${escHtml(r.kaspi_sku)}</div>
+      </td>
+      <td class="price-my">${Number(r.my_current_price).toLocaleString('ru-RU')} ₸</td>
+      <td class="price-min">${Number(r.min_price).toLocaleString('ru-RU')} ₸</td>
+      <td class="price-comp ${compClass}">${compPriceStr}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${r.is_active ? 'checked' : ''} onchange="toggleBot('${r.id}', this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <button onclick="showLogs('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="История">📊</button>
+        <button onclick="deleteRule('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="Удалить">🗑️</button>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ── Toggle bot ON/OFF ──
+async function toggleBot(ruleId, isActive) {
+  try {
+    await apiFetch(`/rules/${ruleId}/toggle`, {
+      method: 'POST',
+      body: JSON.stringify({ is_active: isActive }),
+    });
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+    await loadRules(); // revert UI
+  }
+}
+
+// ── Add product ──
+async function submitNewRule() {
+  const name = document.getElementById('fName').value.trim();
+  const sku = document.getElementById('fSku').value.trim();
+  const url = document.getElementById('fUrl').value.trim();
+  const merchant = document.getElementById('fMerchant').value.trim();
+  const price = parseFloat(document.getElementById('fPrice').value);
+  const minPrice = parseFloat(document.getElementById('fMinPrice').value);
+  const step = parseInt(document.getElementById('fStep').value) || 5;
+
+  if (!name || !sku || !price || !minPrice) {
+    alert('Заполните все обязательные поля');
+    return;
+  }
+  if (minPrice >= price) {
+    alert('Минимальная цена должна быть ниже текущей');
+    return;
+  }
+  if (step > 5) {
+    alert('Шаг демпинга не может превышать 5 тенге!');
+    return;
+  }
+
+  try {
+    await apiFetch('/rules', {
+      method: 'POST',
+      body: JSON.stringify({
+        product_name: name,
+        kaspi_sku: sku,
+        product_url: url || null,
+        my_merchant_name: merchant || null,
+        my_current_price: price,
+        min_price: minPrice,
+        step_kzt: Math.min(step, 5),
+        is_active: false,
+      }),
+    });
+
+    // Reset form
+    ['fName','fSku','fUrl','fMerchant','fPrice','fMinPrice'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('fStep').value = '5';
+
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+// ── Delete rule ──
+async function deleteRule(ruleId) {
+  if (!confirm('Удалить товар из репрайсинга?')) return;
+  try {
+    await apiFetch(`/rules/${ruleId}`, { method: 'DELETE' });
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+
+// ── Import from Excel ──
+async function uploadSync(input) {
+  if(!input.files.length) return;
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const btn = document.getElementById('importBtn');
+  const oldText = btn.innerHTML;
+  btn.innerHTML = '⏳ Импорт...';
+  btn.disabled = true;
+  
+  try {
+    const resp = await fetch(API + '/upload_sync', {
+      method: 'POST',
+      headers: rpAuthHeaders(),
+      body: formData
+    });
+    
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    
+    const res = await resp.json();
+    alert(`Успех!\n${res.message}`);
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка импорта: ' + e.message);
+  } finally {
+    btn.innerHTML = oldText;
+    btn.disabled = false;
+    input.value = ''; // reset input
+  }
+}
+
+// ── Import from NTIN ──
+async function syncFromNtin() {
+  const btn = document.getElementById('syncNtinBtn');
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Копируем...';
+  
+  try {
+    const res = await apiFetch('/sync_from_ntin', { method: 'POST' });
+    alert(`Успех!\n${res.message}`);
+    await loadRules();
+    await loadStats();
+  } catch (e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
+
+// ── Logs ──
+async function showLogs(ruleId) {
+  const panel = document.getElementById('logsPanel');
+  const list = document.getElementById('logsList');
+  panel.style.display = 'block';
+  list.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:2rem">Загрузка...</p>';
+
+  try {
+    const logs = await apiFetch(`/rules/${ruleId}/logs?limit=50`);
+    if (logs.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:2rem">Пока нет изменений</p>';
+      return;
+    }
+    list.innerHTML = logs.map(l => {
+      const dt = new Date(l.created_at).toLocaleString('ru-KZ', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      const actionClass = l.action === 'undercut' ? 'undercut' : l.action === 'floor_hit' ? 'floor_hit' : 'raise_back';
+      const actionLabel = l.action === 'undercut' ? 'Демпинг' : l.action === 'floor_hit' ? 'Дно' : l.action === 'raise_back' ? 'Возврат ↑' : l.action;
+      return `
+        <div class="log-item">
+          <span class="log-time">${dt}</span>
+          <span class="log-prices">${Number(l.old_price).toLocaleString('ru-RU')} ₸</span>
+          <span class="log-arrow">→</span>
+          <span class="log-prices">${Number(l.new_price).toLocaleString('ru-RU')} ₸</span>
+          <span style="color:var(--text-3);font-size:12px;font-family:var(--font-mono)">конк. ${Number(l.competitor_price).toLocaleString('ru-RU')} ₸</span>
+          <span class="log-action ${actionClass}">${actionLabel}</span>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = `<p style="text-align:center;color:var(--text-3);padding:2rem">Ошибка: ${e.message}</p>`;
+  }
+
+  panel.scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeLogsPanel() {
+  document.getElementById('logsPanel').style.display = 'none';
+}
+
+// ── Init ──
+loadStats();
+loadRules();
+</script>
+</body>
+</html>
