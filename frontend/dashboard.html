@@ -15,6 +15,7 @@
   <div class="sb-plan"><span class="sb-plan-badge" id="sidebarPlanBadge" style="text-transform: capitalize;">Free</span> Панель продавца</div>
   <div class="sb-nav">
     <a class="sb-link active" data-page="connect" onclick="showPage('connect')">👤 Мой профиль</a>
+    <a class="sb-link" data-page="autoreply" onclick="showPage('autoreply')">🤖 Автоответчик</a>
     <a class="sb-link" data-page="scanner" onclick="showPage('scanner')">🔍 Сканер Kaspi</a>
     <a class="sb-link" data-page="analytics" onclick="showPage('analytics')">📊 Аналитика</a>
     <a class="sb-link" data-page="calculator" onclick="showPage('calculator')">🧮 Калькулятор Kaspi</a>
@@ -60,9 +61,18 @@
           </p>
         </div>
         
-        <button class="btn-primary" style="width:100%;padding:14px;margin-top:1rem" onclick="connectStore()">Сохранить настройки</button>
+        <div class="form-group" style="margin-top: 20px;">
+          <label class="form-label" style="color: #10B981; font-weight: bold;">Токен авторизации (для расширения Quareo)</label>
+          <div style="display: flex; gap: 8px;">
+            <input class="form-input" id="extTokenInputProfile" type="text" readonly style="background: #F8FAFC; color: #64748B; border-color: #10B981;">
+            <button class="btn-action" onclick="copyExtToken('extTokenInputProfile')" style="white-space: nowrap; border-color: #10B981; color: #10B981;">Копировать</button>
+          </div>
+        </div>
+        
+        <button class="btn-primary" style="width:100%;padding:14px;margin-top:1.5rem" onclick="connectStore()">Сохранить настройки</button>
         <div id="connectStatus" style="margin-top:12px;font-size:13px"></div>
       </div>
+
 
       <!-- Tariff Card -->
       <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; background: #F8FAFC; border: 1px solid #E2E8F0; box-shadow: none;">
@@ -75,6 +85,37 @@
           <li>Базовый доступ</li>
         </ul>
         <button class="btn-action" style="margin-top: 20px; width: 100%; justify-content: center;" onclick="window.location.href='pricing.html'">Улучшить тариф</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ PAGE: Auto-Reply (Автоответчик) ═══════ -->
+  <section class="page" id="page-autoreply" style="background:#fff; padding: 2rem 3rem;">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: #333;">ИИ-Автоответчик (Chrome Расширение)</h2>
+    
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid #E2E8F0; box-shadow: none;">
+        <h3 style="margin-bottom: 16px; font-size: 18px;">Установка Автоответчика</h3>
+        <p style="font-size: 13px; color: #475569; margin-bottom: 16px;">Легкая программа, которая сама настроит расширение для работы с Kaspi (Отзывы и Чаты).</p>
+        
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="font-size: 14px; color: #1E3A8A; margin-bottom: 8px;">Как это работает:</h4>
+          <ol style="font-size: 13px; color: #1E40AF; padding-left: 20px; margin: 0; line-height: 1.6;">
+            <li>Нажмите <b>Скачать инсталлятор</b> и запустите скачанный файл.</li>
+            <li>Он автоматически распакует нужные файлы и откроет страницу браузера.</li>
+            <li>Следуйте подсказкам программы (путь к папке скопируется сам).</li>
+          </ol>
+        </div>
+
+        <button class="btn-primary" style="width:100%;padding:14px;margin-bottom:1rem;background:#10B981" onclick="window.location.href='/dist/quareo_installer.exe'">📦 Скачать инсталлятор (.exe)</button>
+        
+        <div class="form-group">
+          <label class="form-label">Ваш токен авторизации (вставите после установки)</label>
+          <div style="display: flex; gap: 8px;">
+            <input class="form-input" id="extTokenInput" type="text" readonly style="background: #F8FAFC; color: #64748B;">
+            <button class="btn-action" onclick="copyExtToken('extTokenInput')" style="white-space: nowrap;">Копировать</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>

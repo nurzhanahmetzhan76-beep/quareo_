@@ -91,6 +91,10 @@ class Settings(BaseSettings):
         default="",
         description="Google OAuth Client ID for Sign in with Google.",
     )
+    GROQ_API_KEY: str = Field(
+        default="",
+        description="Groq API key for Llama-3 AI auto-reply and other AI features.",
+    )
 
     # ── Proxy Provider ────────────────────────────────────────────────────
     PROXY_PROVIDER_API_URL: str = Field(

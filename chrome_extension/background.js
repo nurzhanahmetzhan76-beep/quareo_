@@ -1,35 +1,32 @@
 /*
-  background.js
-  Выполняется в фоне браузера. Имеет доступ к кукам Kaspi.
+  background.js — Service Worker
+  Выполняется в фоне браузера. Координирует работу расширения.
 */
+
+// ── NTIN привязка (существующая логика) ─────────────────────────────
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "BIND_IN_KASPI") {
     const products = request.payload.products;
-    
     console.log("Начинаю привязку NTIN в Kaspi. Товаров:", products.length);
 
-    // Запускаем асинхронную функцию привязки
     bindProductsInKaspi(products)
       .then(res => sendResponse({ success: true, message: "Успешно привязано", details: res }))
       .catch(err => sendResponse({ success: false, message: err.message }));
-      
-    // Возвращаем true, чтобы указать, что ответ будет отправлен асинхронно
-    return true; 
+    return true;
   }
 });
 
+
 async function bindProductsInKaspi(products) {
-  // Ищем открытую вкладку Kaspi
   const tabs = await chrome.tabs.query({ url: "*://*.kaspi.kz/*" });
   if (tabs.length === 0) {
     throw new Error("Не найдена открытая вкладка Kaspi. Пожалуйста, откройте https://kaspi.kz/mc в соседней вкладке.");
   }
   
   const kaspiTabId = tabs[0].id;
-  const merchantUid = "17768037"; // Ваш merchant ID
+  const merchantUid = "17768037";
 
-  // Выполняем весь код прямо внутри вкладки Kaspi, чтобы браузер подставил правильный Origin и Referer
   const results = await chrome.scripting.executeScript({
     target: { tabId: kaspiTabId },
     func: async (productsToProcess, mUid) => {
@@ -39,7 +36,6 @@ async function bindProductsInKaspi(products) {
       for (const product of productsToProcess) {
         if (!product.sku || !product.barcode) continue;
         
-        // 1. Ищем товар
         const searchUrl = `https://mc.shop.kaspi.kz/bff/offer-view/list?m=${mUid}&p=0&l=10&a=true&t=${encodeURIComponent(product.sku)}`;
         try {
           const searchRes = await fetch(searchUrl, {
@@ -74,7 +70,6 @@ async function bindProductsInKaspi(products) {
             continue;
           }
           
-          // 2. Сохраняем штрихкод
           const saveUrl = "https://mc.shop.kaspi.kz/merchant-nct/mc/nct/batch/force-save/by-master-sku";
           const savePayload = {
             merchantUid: mUid,

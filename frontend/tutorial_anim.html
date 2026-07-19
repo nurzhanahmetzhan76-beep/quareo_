@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutorial</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: sans-serif; background: #e2e8f0; height: 100vh; display: flex; flex-direction: column; }
+    /* Fake Browser Chrome */
+    .browser-top { background: #cbd5e1; padding: 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #94a3b8; }
+    .url-bar { background: #fff; border-radius: 20px; padding: 6px 16px; flex: 1; margin: 0 16px; font-size: 13px; color: #475569; }
+    .extensions-btn { cursor: pointer; padding: 6px; border-radius: 50%; font-size: 20px; user-select: none; transition: background 0.2s; position: relative; }
+    .extensions-btn:hover, .extensions-btn.active { background: #cbd5e1; }
+    
+    /* Dropdown */
+    .ext-dropdown { display: none; position: absolute; top: 40px; right: 10px; background: #fff; width: 300px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 8px 0; z-index: 100; border: 1px solid #e2e8f0; }
+    .ext-dropdown.visible { display: block; }
+    .ext-item { padding: 10px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; }
+    .ext-item:hover { background: #f1f5f9; }
+    .ext-icon { width: 24px; height: 24px; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 12px; }
+    
+    /* Mock Popup */
+    .mock-popup { display: none; position: absolute; top: 40px; right: 10px; width: 340px; background: #0f172a; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 200; overflow: hidden; border: 1px solid #334155; }
+    .mock-popup.visible { display: block; }
+    .pop-header { background: #1e293b; padding: 16px; color: white; font-weight: bold; border-bottom: 1px solid #334155; display: flex; justify-content: space-between;}
+    .pop-body { padding: 16px; }
+    .pop-auth { background: #1e293b; padding: 16px; border-radius: 8px; border: 1px solid #334155; }
+    .pop-input { width: 100%; padding: 10px; margin-top: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 6px; box-sizing: border-box; }
+    .pop-btn { width: 100%; padding: 10px; margin-top: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    
+    /* NTIN Dashboard Area */
+    .dash { flex: 1; padding: 40px; background: #fff; }
+    .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .table th, .table td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    .btn-ai { background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-submit { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    
+    .cursor { position: absolute; width: 20px; height: 20px; background: url('https://cdn-icons-png.flaticon.com/512/804/804225.png') no-repeat center/contain; z-index: 1000; pointer-events: none; transition: top 0.5s, left 0.5s; top: 50%; left: 50%; }
+    
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+
+  <div class="browser-top">
+    <div style="display:flex; gap: 8px; padding-left: 10px;">
+      <div style="width:12px; height:12px; border-radius:50%; background:#ef4444;"></div>
+      <div style="width:12px; height:12px; border-radius:50%; background:#f59e0b;"></div>
+      <div style="width:12px; height:12px; border-radius:50%; background:#10b981;"></div>
+    </div>
+    <div class="url-bar">https://kaspi.kz/merchant/</div>
+    <div class="extensions-btn" id="puzzleBtn">🧩
+      
+      <!-- Dropdown -->
+      <div class="ext-dropdown" id="dropdown">
+        <div style="padding: 10px 16px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Расширения</div>
+        <div class="ext-item" id="extItem">
+          <div class="ext-icon">Q</div>
+          <div>Quareo — Kaspi Автоответчик & NTIN</div>
+        </div>
+      </div>
+      
+      <!-- Mock Popup -->
+      <div class="mock-popup" id="mockPopup">
+        <div class="pop-header">Quareo AI <span style="font-size:12px;background:#0f172a;padding:2px 6px;border-radius:4px;">v2.0</span></div>
+        <div class="pop-body">
+          <div class="pop-auth">
+            <div style="color: #94a3b8; font-size: 13px; font-weight: bold;">🔑 АВТОРИЗАЦИЯ QUAREO</div>
+            <input type="text" class="pop-input" id="popToken" placeholder="Вставьте ваш JWT токен">
+            <button class="pop-btn" id="popSave">Сохранить токен</button>
+            <div id="popStatus" style="color: #22c55e; font-size: 12px; margin-top: 8px; display: none;">✓ Токен сохранён</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="dash">
+    <h2>NTIN Маркировка (Панель Quareo)</h2>
+    <p>Выберите товары и сгенерируйте данные с помощью ИИ, затем отправьте в НКТ.</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Наименование</th>
+          <th>ТН ВЭД / NTIN</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Xiaomi Smart Humidifier 2</td>
+          <td id="tdNtin" style="color:#94a3b8">—</td>
+          <td><span id="tdStatus" style="background:#e2e8f0; padding:4px 8px; border-radius:100px; font-size:12px;">Черновик</span></td>
+          <td id="tdAction">
+            <button class="btn-ai" id="btnAiFill">🤖 ИИ-заполнить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const puzzleBtn = document.getElementById('puzzleBtn');
+    const dropdown = document.getElementById('dropdown');
+    const extItem = document.getElementById('extItem');
+    const mockPopup = document.getElementById('mockPopup');
+    const popToken = document.getElementById('popToken');
+    const popSave = document.getElementById('popSave');
+    
+    function moveCursor(x, y) {
+      cursor.style.left = x + 'px';
+      cursor.style.top = y + 'px';
+    }
+
+    async function runAnim() {
+      // Step 1: click puzzle
+      await new Promise(r => setTimeout(r, 1000));
+      const rect = puzzleBtn.getBoundingClientRect();
+      moveCursor(rect.left + 15, rect.top + 15);
+      
+      await new Promise(r => setTimeout(r, 600));
+      puzzleBtn.style.background = '#cbd5e1';
+      dropdown.classList.add('visible');
+      
+      // Step 2: click extension
+      await new Promise(r => setTimeout(r, 1000));
+      const rect2 = extItem.getBoundingClientRect();
+      moveCursor(rect2.left + 50, rect2.top + 20);
+      
+      await new Promise(r => setTimeout(r, 600));
+      dropdown.classList.remove('visible');
+      mockPopup.classList.add('visible');
+      
+      // Step 3: paste token
+      await new Promise(r => setTimeout(r, 1000));
+      const rect3 = popToken.getBoundingClientRect();
+      moveCursor(rect3.left + 50, rect3.top + 15);
+      
+      await new Promise(r => setTimeout(r, 600));
+      popToken.value = "eyJhbGciOiJIUzI1Ni... (токен)";
+      popToken.style.borderColor = "#3b82f6";
+      
+      // Step 4: save
+      await new Promise(r => setTimeout(r, 1000));
+      const rect4 = popSave.getBoundingClientRect();
+      moveCursor(rect4.left + 50, rect4.top + 15);
+      
+      await new Promise(r => setTimeout(r, 600));
+      popSave.style.background = '#2563eb';
+      document.getElementById('popStatus').style.display = 'block';
+      
+      // Step 5: move to NTIN
+      await new Promise(r => setTimeout(r, 1500));
+      mockPopup.classList.remove('visible');
+      puzzleBtn.style.background = 'transparent';
+      
+      const rectAi = document.getElementById('btnAiFill').getBoundingClientRect();
+      moveCursor(rectAi.left + 30, rectAi.top + 15);
+      
+      await new Promise(r => setTimeout(r, 600));
+      document.getElementById('btnAiFill').innerText = "⏳ Заполняю...";
+      
+      await new Promise(r => setTimeout(r, 1000));
+      document.getElementById('tdNtin').innerText = "8509800000";
+      document.getElementById('tdNtin').style.color = "#000";
+      document.getElementById('tdStatus').innerText = "ИИ заполнен";
+      document.getElementById('tdStatus').style.background = "#dbeafe";
+      document.getElementById('tdStatus').style.color = "#1e40af";
+      document.getElementById('tdAction').innerHTML = `<button class="btn-submit" id="btnSubmit">📤 Подать в НКТ</button>`;
+      
+      // Step 6: submit
+      await new Promise(r => setTimeout(r, 1000));
+      const rectSub = document.getElementById('btnSubmit').getBoundingClientRect();
+      moveCursor(rectSub.left + 30, rectSub.top + 15);
+      
+      await new Promise(r => setTimeout(r, 600));
+      document.getElementById('btnSubmit').innerText = "✓ На модерации";
+      document.getElementById('tdStatus').innerText = "На модерации";
+      document.getElementById('tdStatus').style.background = "#fef08a";
+      document.getElementById('tdStatus').style.color = "#854d0e";
+      
+    }
+    
+    // Auto-run after load
+    window.onload = runAnim;
+  </script>
+</body>
+</html>

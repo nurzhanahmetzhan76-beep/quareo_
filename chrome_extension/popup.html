@@ -2,16 +2,205 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Quareo Connector</title>
+  <title>Quareo — Автоответчик</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 15px; width: 250px; text-align: center; }
-    .status { margin-top: 10px; font-size: 14px; padding: 10px; border-radius: 6px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-    h3 { margin-top: 0; color: #4338ca; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 380px; background: #0f172a; color: #e2e8f0;
+    }
+
+    /* Header */
+    .header {
+      padding: 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .logo { font-size: 18px; font-weight: 800; color: #fff; }
+    .logo span { color: #3b82f6; }
+    .version { font-size: 10px; color: #64748b; background: #1e293b; padding: 2px 8px; border-radius: 4px; border: 1px solid #334155; }
+
+    /* Status */
+    .status-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+    }
+    .status-bar.on { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; }
+    .status-bar.off { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .status-bar.on .status-dot { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
+    .status-bar.off .status-dot { background: #ef4444; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    /* Content */
+    .content { padding: 16px 20px; }
+
+    /* Stats grid */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      padding: 14px; text-align: center;
+    }
+    .stat-val { font-size: 24px; font-weight: 800; color: #3b82f6; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Toggle */
+    .setting-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid #1e293b;
+    }
+    .setting-label { font-size: 14px; font-weight: 500; }
+    .setting-desc { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .toggle {
+      width: 44px; height: 24px; border-radius: 12px;
+      background: #334155; cursor: pointer; position: relative;
+      transition: background 0.2s;
+    }
+    .toggle.on { background: #3b82f6; }
+    .toggle::after {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; top: 3px; left: 3px;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    /* Inputs */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-input, .form-select {
+      width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid #334155;
+      border-radius: 8px; color: #e2e8f0; font-size: 13px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus { border-color: #3b82f6; }
+    .form-textarea { min-height: 60px; resize: vertical; }
+    .form-select { cursor: pointer; }
+    .form-select option { background: #1e293b; }
+
+    /* Auth section */
+    .auth-section {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      padding: 16px; margin-bottom: 16px;
+    }
+    .auth-title { font-size: 13px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .auth-status { font-size: 12px; margin-top: 8px; }
+    .auth-status.ok { color: #22c55e; }
+    .auth-status.no { color: #ef4444; }
+
+    /* Buttons */
+    .btn {
+      width: 100%; padding: 12px; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: transform 0.1s, opacity 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: #3b82f6; color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-outline {
+      background: transparent; color: #94a3b8; border: 1px solid #334155;
+      margin-top: 8px;
+    }
+    .btn-outline:hover { border-color: #64748b; color: #e2e8f0; }
+
+    /* Footer warning */
+    .footer-note {
+      padding: 14px 20px; background: #1e293b;
+      border-top: 1px solid #334155;
+      font-size: 11px; color: #64748b; line-height: 1.5;
+    }
+    .footer-note strong { color: #f59e0b; }
   </style>
 </head>
 <body>
-  <h3>Quareo Connector</h3>
-  <p style="font-size: 13px; color: #666;">Это расширение автоматически связывает NTIN коды из дашборда Quareo с вашим кабинетом Kaspi.</p>
-  <div class="status">Расширение активно!</div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">Quareo <span>AI</span></div>
+      <div class="version">v2.0</div>
+    </div>
+    <div class="status-bar off" id="statusBar">
+      <span class="status-dot"></span>
+      <span id="statusText">Загрузка...</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-val" id="answeredCount">0</div>
+        <div class="stat-label">Ответов</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="kaspiStatus">—</div>
+        <div class="stat-label">Kaspi вкладка</div>
+      </div>
+    </div>
+
+    <!-- Auth -->
+    <div class="auth-section">
+      <div class="auth-title">🔑 Авторизация Quareo</div>
+      <div class="form-group" style="margin-bottom: 10px;">
+        <input class="form-input" type="password" id="tokenInput" placeholder="Вставьте ваш JWT токен из Quareo">
+      </div>
+      <button class="btn btn-primary" id="saveTokenBtn" style="font-size: 13px; padding: 10px;">Сохранить токен</button>
+      <div class="auth-status" id="authStatus"></div>
+    </div>
+
+    <!-- Settings -->
+    <div class="setting-row" style="cursor: pointer;" id="rowEnabled">
+      <div>
+        <div class="setting-label">Автоответчик</div>
+        <div class="setting-desc">Сканировать вопросы и генерировать ответы</div>
+      </div>
+      <div class="toggle" id="toggleEnabled"></div>
+    </div>
+
+    <div class="setting-row" style="cursor: pointer;" id="rowAutoSend">
+      <div>
+        <div class="setting-label">Автоотправка</div>
+        <div class="setting-desc">Отправлять ответы без подтверждения</div>
+      </div>
+      <div class="toggle" id="toggleAutoSend"></div>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <div class="form-group">
+        <label class="form-label">Тон ответов</label>
+        <select class="form-select" id="toneSelect">
+          <option value="friendly">😊 Дружелюбный</option>
+          <option value="formal">👔 Деловой</option>
+          <option value="casual">🤙 Разговорный</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Описание магазина (для AI)</label>
+        <textarea class="form-input form-textarea" id="storeDesc" placeholder="Например: Магазин электроники, продаём наушники, зарядки, кабели..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Доп. инструкции для AI</label>
+        <textarea class="form-input form-textarea" id="customInstr" placeholder="Например: Всегда предлагай гарантию 12 мес. Доставка 1-2 дня."></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="saveBtn">💾 Сохранить настройки</button>
+    <button class="btn btn-outline" id="scanBtn">🔍 Сканировать сейчас</button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    <strong>⚠️ Важно:</strong> Автоответчик работает только когда вкладка Kaspi кабинета <strong>открыта</strong> в браузере. Если вкладка закрыта — сканирование приостанавливается.
+  </div>
+
+<script src="popup.js"></script>
 </body>
 </html>

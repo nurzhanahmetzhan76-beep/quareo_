@@ -41,6 +41,9 @@ from retailpool.routers.analytics import router as analytics_router
 from retailpool.routers.reviews import router as reviews_router
 from retailpool.routers.waybills import router as waybills_router
 from retailpool.routers.store_scanner import router as store_scanner_router
+from retailpool.routers.admin import router as admin_router
+from retailpool.routers.autoreply import router as autoreply_router
+from retailpool.routers.extension import router as extension_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -50,6 +53,7 @@ logger = logging.getLogger(__name__)
 
 # Path to frontend directory
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+DIST_DIR = Path(__file__).resolve().parent.parent / "dist"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -144,12 +148,18 @@ app.include_router(reviews_router)
 app.include_router(waybills_router)
 app.include_router(store_scanner_router)
 app.include_router(repricing_router)
+app.include_router(admin_router)
+app.include_router(autoreply_router)
+app.include_router(extension_router)
 
 # ── Static assets (CSS, JS) ─────────────────────────────────────────────
 if FRONTEND_DIR.exists():
     assets_dir = FRONTEND_DIR / "assets"
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+if DIST_DIR.exists():
+    app.mount("/dist", StaticFiles(directory=str(DIST_DIR)), name="dist")
 
 
 # ── Health check (no auth required) ──────────────────────────────────
@@ -215,6 +225,7 @@ _PAGE_ROUTES = [
     ("/privacy",     "privacy.html"),
     ("/terms",       "terms.html"),
     ("/about",       "about.html"),
+    ("/admin",       "admin.html"),
 ]
 
 for _path, _filename in _PAGE_ROUTES:

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quareo — Панель Администратора</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.jpg">
+<style>
+  body { background: var(--bg-2); }
+  .admin-wrap {
+    padding: 108px 2rem 5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .admin-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 2rem;
+  }
+  .admin-title { font-size: 2rem; }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem; margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .stat-val { font-size: 2rem; font-family: var(--font-mono); font-weight: 700; color: var(--brand); }
+  .stat-label { font-size: 13px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  
+  .users-table-wrap {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; padding: 1rem; border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-3);
+    text-transform: uppercase; background: var(--bg-2);
+  }
+  td {
+    padding: 1rem; border-bottom: 1px solid var(--border);
+    color: var(--text); vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg-2); }
+  
+  select.plan-select {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font-size: 13px;
+    font-weight: 600; cursor: pointer; outline: none;
+  }
+  select.plan-select:focus { border-color: var(--brand); }
+  
+  .badge {
+    padding: 4px 8px; border-radius: 4px; font-size: 11px; font-family: var(--font-mono);
+    font-weight: 600; background: var(--bg-2); color: var(--text-2);
+  }
+  .badge-free { background: #f1f5f9; color: #475569; }
+  .badge-start { background: #e0f2fe; color: #0284c7; }
+  .badge-business { background: #dbeafe; color: #2563eb; }
+  .badge-unlimited { background: #f3e8ff; color: #9333ea; }
+  .badge-waybills { background: #fce7f3; color: #db2777; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      Quareo <span style="font-size: 12px; color: var(--red); margin-left: 10px;">ADMIN</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html">В кабинет</a>
+    </div>
+    <div class="nav-right">
+      <button class="auth-nav-btn" onclick="rpLogout()" style="background:none;border:1px solid var(--border-2);color:var(--text-2);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;">Выйти</button>
+    </div>
+  </div>
+</nav>
+
+<main class="admin-wrap">
+  <div class="admin-header">
+    <h1 class="admin-title">Управление пользователями</h1>
+  </div>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-val" id="stTotal">0</div>
+      <div class="stat-label">Всего юзеров</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stPaid">0</div>
+      <div class="stat-label">Платные тарифы</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stFree">0</div>
+      <div class="stat-label">Бесплатные</div>
+    </div>
+  </div>
+
+  <div class="admin-header" style="margin-top: 3rem;">
+    <h2 style="font-size: 1.5rem;">Заявки на оплату (Счета)</h2>
+  </div>
+
+  <div class="users-table-wrap" style="margin-bottom: 4rem;">
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Имя</th>
+          <th>Тариф</th>
+          <th>Сумма</th>
+          <th>Метод</th>
+          <th>Статус</th>
+          <th>Дата заявки</th>
+        </tr>
+      </thead>
+      <tbody id="subsBody">
+        <tr><td colspan="7" style="text-align: center; padding: 2rem;">Загрузка...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-header">
+    <h2 style="font-size: 1.5rem;">Зарегистрированные аккаунты</h2>
+  </div>
+
+  <div class="users-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Имя</th>
+          <th>Тариф</th>
+          <th>Регистрация</th>
+          <th>Использование</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody">
+        <tr><td colspan="5" style="text-align: center; padding: 2rem;">Загрузка...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script src="assets/common.js"></script>
+<script>
+const ADMIN_EMAIL = "disairon.agent@bk.ru";
+
+// Check admin right away
+const user = rpGetUser();
+if (!user || user.email !== ADMIN_EMAIL) {
+  alert("Доступ запрещен. Эта страница только для администратора.");
+  window.location.href = "index.html";
+}
+
+const PLAN_CLASSES = {
+  'free': 'badge-free',
+  'start': 'badge-start',
+  'business': 'badge-business',
+  'unlimited': 'badge-unlimited',
+  'waybills': 'badge-waybills'
+};
+
+async function loadUsers() {
+  try {
+    const res = await fetch(RP_API_BASE + '/api/admin/users', {
+      headers: rpAuthHeaders()
+    });
+    if (!res.ok) throw new Error('Failed to load users');
+    const users = await res.json();
+    
+    // Stats
+    document.getElementById('stTotal').textContent = users.length;
+    document.getElementById('stPaid').textContent = users.filter(u => u.plan !== 'free').length;
+    document.getElementById('stFree').textContent = users.filter(u => u.plan === 'free').length;
+    
+    // Table
+    const tbody = document.getElementById('usersBody');
+    tbody.innerHTML = users.map(u => {
+      const d = new Date(u.created_at);
+      const dateStr = isNaN(d) ? '—' : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      
+      return `
+        <tr>
+          <td><strong style="font-family: var(--font-mono); font-size: 13px;">${esc(u.email)}</strong></td>
+          <td>${esc(u.full_name)}</td>
+          <td>
+            <select class="plan-select ${PLAN_CLASSES[u.plan] || ''}" onchange="changePlan('${u.id}', this.value, this)">
+              <option value="free" ${u.plan === 'free' ? 'selected' : ''}>Free</option>
+              <option value="waybills" ${u.plan === 'waybills' ? 'selected' : ''}>Накладные</option>
+              <option value="start" ${u.plan === 'start' ? 'selected' : ''}>Старт</option>
+              <option value="business" ${u.plan === 'business' ? 'selected' : ''}>Бизнес</option>
+              <option value="unlimited" ${u.plan === 'unlimited' ? 'selected' : ''}>Безлимит</option>
+            </select>
+          </td>
+          <td style="color: var(--text-2); font-size: 13px;">${dateStr}</td>
+          <td>
+            <div style="font-size: 12px; color: var(--text-2);">
+              Скан: <span style="color:var(--text)">${u.scans_used}</span> | 
+              WB: <span style="color:var(--text)">${u.wb_scans_used}</span><br>
+              Накл: <span style="color:var(--text)">${u.waybills_used}</span> | 
+              Аналитика: <span style="color:var(--text)">${u.analytics_used}</span>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+    
+  } catch(e) {
+    console.error(e);
+    document.getElementById('usersBody').innerHTML = `<tr><td colspan="5" style="color: red; text-align: center;">Ошибка загрузки пользователей.</td></tr>`;
+  }
+}
+
+async function changePlan(userId, newPlan, selectEl) {
+  selectEl.disabled = true;
+  const originalBg = selectEl.className;
+  try {
+    const res = await fetch(RP_API_BASE + `/api/admin/users/${userId}/plan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...rpAuthHeaders()
+      },
+      body: JSON.stringify({ plan: newPlan })
+    });
+    
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Ошибка при смене тарифа');
+    }
+    
+    // Update class for colors
+    selectEl.className = `plan-select ${PLAN_CLASSES[newPlan]}`;
+    // Update stats by reloading
+    loadUsers();
+    
+  } catch(e) {
+    alert(e.message);
+    // Reset to previous option on error
+    loadUsers();
+  } finally {
+    selectEl.disabled = false;
+  }
+}
+
+// Load on start
+loadUsers();
+loadSubscriptions();
+
+async function loadSubscriptions() {
+  try {
+    const res = await fetch(RP_API_BASE + '/api/subscriptions', {
+      headers: rpAuthHeaders()
+    });
+    if (!res.ok) throw new Error('Failed to load subscriptions');
+    const subs = await res.json();
+    
+    const tbody = document.getElementById('subsBody');
+    if (subs.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-3);">Нет заявок на оплату.</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = subs.map(s => {
+      const d = new Date(s.created_at);
+      const dateStr = isNaN(d) ? '—' : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      
+      return `
+        <tr>
+          <td><strong style="font-family: var(--font-mono); font-size: 13px;">${esc(s.contact_email)}</strong></td>
+          <td>${esc(s.contact_name)}<br><span style="font-size: 11px; color: var(--text-2);">${esc(s.contact_phone || '')}</span></td>
+          <td><span class="badge badge-business">${esc(s.plan_name)}</span></td>
+          <td style="font-family: var(--font-mono); font-weight: 600;">${s.plan_price} ₸</td>
+          <td style="font-size: 13px;">${s.payment_method === 'kaspi_transfer' ? 'Kaspi' : 'Карта'}</td>
+          <td><span class="badge ${s.status === 'confirmed' ? 'badge-start' : 'badge-free'}">${s.status}</span></td>
+          <td style="color: var(--text-2); font-size: 13px;">${dateStr}</td>
+        </tr>
+      `;
+    }).join('');
+    
+  } catch(e) {
+    console.error(e);
+    document.getElementById('subsBody').innerHTML = `<tr><td colspan="7" style="color: red; text-align: center;">Ошибка загрузки заявок.</td></tr>`;
+  }
+}
+</script>
+</body>
+</html>

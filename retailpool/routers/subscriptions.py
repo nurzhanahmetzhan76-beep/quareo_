@@ -79,7 +79,7 @@ async def list_subscriptions(
     db: AsyncSession = Depends(get_db),
 ) -> list[SubscriptionOut]:
     """List all subscription requests (admin only — checks email whitelist)."""
-    if current_user.email != "karimbai.ali10@mail.ru":
+    if current_user.email not in ("karimbai.ali10@mail.ru", "disairon.agent@bk.ru"):
         raise HTTPException(status_code=403, detail="Admin access required")
     stmt = select(Subscription).order_by(Subscription.created_at.desc()).limit(100)
     result = await db.execute(stmt)

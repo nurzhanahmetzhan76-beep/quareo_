@@ -55,7 +55,7 @@ function esc(s) {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Kaspi-бот", nav_pricing: "Тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "🤖 Автоответчик", nav_pricing: "Тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",

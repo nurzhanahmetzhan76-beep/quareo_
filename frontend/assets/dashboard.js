@@ -97,7 +97,15 @@ function updateShopBadge() {
 /* ── Stats ─────────────────────────────────────────────────── */
 async function loadUserProfile() {
   try {
-    const r = await fetch(API + '/api/auth/me');
+    const r = await fetch(API + '/auth/me');
+    
+    // Set token from localStorage if available
+    const extTokenInput = document.getElementById('extTokenInput');
+    const extTokenInputProfile = document.getElementById('extTokenInputProfile');
+    const realToken = localStorage.getItem('rp_token');
+    if (extTokenInput) extTokenInput.value = realToken || 'Пожалуйста, авторизуйтесь для получения токена';
+    if (extTokenInputProfile) extTokenInputProfile.value = realToken || 'Пожалуйста, авторизуйтесь для получения токена';
+
     if (r.ok) {
       const user = await r.json();
       const plan = user.plan || 'free';
@@ -136,6 +144,22 @@ async function loadUserProfile() {
       }
     }
   } catch(e) { console.error('Profile error', e); }
+}
+
+function copyExtToken(inputId) {
+  const tokenInput = document.getElementById(inputId || 'extTokenInput');
+  if (!tokenInput || !tokenInput.value) return;
+  tokenInput.select();
+  document.execCommand('copy');
+  
+  const btn = event.target;
+  const oldText = btn.textContent;
+  btn.textContent = 'Скопировано ✓';
+  btn.style.color = '#10B981';
+  setTimeout(() => {
+    btn.textContent = oldText;
+    btn.style.color = '';
+  }, 2000);
 }
 
 async function loadScanHistory() {
