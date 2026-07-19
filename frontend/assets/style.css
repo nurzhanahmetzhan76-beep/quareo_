@@ -93,15 +93,17 @@ nav.scrolled {
   letter-spacing: -0.02em;
   text-decoration: none;
 }
-.nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
+.nav-links { display: flex; align-items: center; gap: 2px; flex: 1; position: relative; }
 .nav-links a {
   padding: 6px 13px; border-radius: var(--radius-sm);
   font-size: 14px; font-weight: 500; color: var(--text-2);
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.15s;
   white-space: nowrap;
+  position: relative;
+  z-index: 2;
 }
-.nav-links a:hover { background: var(--bg-3); color: var(--text); }
-.nav-links a.active { background: var(--brand-light); color: var(--brand); font-weight: 600; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--brand); font-weight: 600; }
 .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .lang-switch {
   display: flex; border: 1px solid var(--border);
@@ -132,6 +134,7 @@ nav.scrolled {
   .nav-links a { padding: 0.75rem 0; width: 100%; border-bottom: 1px solid var(--border); border-radius: 0; }
   .nav-links a:last-child { border-bottom: none; }
   .nav-burger { display: block; }
+  #rp-nav-pill { display: none !important; }
 }
 @media (max-width: 480px) {
   .nav-inner { padding: 0 1rem; gap: 0.5rem; justify-content: space-between; }
