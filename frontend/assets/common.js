@@ -289,3 +289,167 @@ document.addEventListener('DOMContentLoaded', () => {
   rpAnimateCounters();
   rpInitScrollNav();
 });
+
+
+/* ── Centered Glass Modal (replaces native alert()) ──────────── */
+(function () {
+  const STYLE_ID = 'rp-modal-style';
+  if (!document.getElementById(STYLE_ID)) {
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = `
+      #rp-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: rgba(15, 23, 42, 0.35);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity .25s ease;
+        padding: 20px;
+      }
+      #rp-modal-overlay.rp-modal-show { opacity: 1; }
+      .rp-modal {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(219,234,254,0.7));
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        box-shadow:
+          0 8px 16px rgba(37, 99, 235, 0.08),
+          0 24px 60px rgba(15, 23, 42, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(28px) saturate(200%);
+        -webkit-backdrop-filter: blur(28px) saturate(200%);
+        padding: 32px 28px 24px;
+        text-align: center;
+        transform: scale(.92) translateY(8px);
+        transition: transform .3s cubic-bezier(.22,1,.36,1);
+      }
+      #rp-modal-overlay.rp-modal-show .rp-modal { transform: scale(1) translateY(0); }
+      .rp-modal.rp-modal-error {
+        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(254,226,226,0.75));
+      }
+      .rp-modal.rp-modal-success {
+        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(220,252,231,0.75));
+      }
+      .rp-modal-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+        background: rgba(37, 99, 235, 0.14);
+        color: var(--brand, #2563eb);
+      }
+      .rp-modal-error .rp-modal-icon { background: rgba(220, 38, 38, 0.14); color: #dc2626; }
+      .rp-modal-success .rp-modal-icon { background: rgba(22, 163, 74, 0.14); color: #16a34a; }
+      .rp-modal-text {
+        font-family: var(--font-display, inherit);
+        font-size: 15.5px;
+        line-height: 1.6;
+        color: var(--text, #111827);
+        white-space: pre-line;
+        margin-bottom: 22px;
+      }
+      .rp-modal-btn {
+        display: inline-block;
+        min-width: 110px;
+        padding: 11px 28px;
+        border: none;
+        border-radius: 12px;
+        background: var(--brand, #2563eb);
+        color: #fff;
+        font-family: var(--font-display, inherit);
+        font-size: 14.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform .15s ease, box-shadow .15s ease;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+      }
+      .rp-modal-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.38); }
+      .rp-modal-btn:active { transform: translateY(0); }
+      .rp-modal-error .rp-modal-btn { background: #dc2626; box-shadow: 0 6px 16px rgba(220,38,38,.3); }
+      .rp-modal-success .rp-modal-btn { background: #16a34a; box-shadow: 0 6px 16px rgba(22,163,74,.3); }
+      @media (max-width: 480px) {
+        .rp-modal { padding: 26px 20px 20px; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const queue = [];
+  let showing = false;
+
+  function renderNext() {
+    if (showing || queue.length === 0) return;
+    showing = true;
+    const { message, type } = queue.shift();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'rp-modal-overlay';
+
+    const icon = type === 'error' ? '✕' : type === 'success' ? '✓' : 'i';
+    overlay.innerHTML = `
+      <div class="rp-modal rp-modal-${type}">
+        <div class="rp-modal-icon">${icon}</div>
+        <div class="rp-modal-text"></div>
+        <button class="rp-modal-btn">OK</button>
+      </div>
+    `;
+    overlay.querySelector('.rp-modal-text').textContent = message;
+    document.body.appendChild(overlay);
+
+    // trigger enter animation
+    requestAnimationFrame(() => overlay.classList.add('rp-modal-show'));
+
+    const close = () => {
+      overlay.classList.remove('rp-modal-show');
+      setTimeout(() => {
+        overlay.remove();
+        showing = false;
+        renderNext();
+      }, 200);
+    };
+
+    overlay.querySelector('.rp-modal-btn').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+    });
+  }
+
+  /**
+   * Shows a centered glass modal instead of the native alert().
+   * @param {string} message
+   * @param {'info'|'success'|'error'} type
+   */
+  window.showToast = function (message, type = 'info') {
+    // Avoid queuing an identical message twice in a row
+    const last = queue[queue.length - 1];
+    if (last && last.message === message && last.type === type) return;
+    queue.push({ message, type });
+    renderNext();
+  };
+
+  /**
+   * Drop-in replacement for window.alert() with a centered glass modal.
+   * Auto-detects error/success tone from the message text.
+   */
+  window.alert = function (message) {
+    const text = String(message);
+    let type = 'info';
+    if (/ошибка|error|не удал|неверн/i.test(text)) type = 'error';
+    else if (/успех|готово|успешн/i.test(text)) type = 'success';
+    window.showToast(text, type);
+  };
+})();
