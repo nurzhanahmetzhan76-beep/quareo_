@@ -15,6 +15,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .catch(err => sendResponse({ success: false, message: err.message }));
     return true;
   }
+
+  // ── Проксирование API-запросов для content scripts ─────────────────
+  if (request.type === "QUAREO_API_PROXY") {
+    const { url, method, headers, body } = request;
+    console.log("[Quareo BG] Проксирую запрос:", url);
+    
+    fetch(url, {
+      method: method || 'POST',
+      headers: headers || {},
+      body: body ? JSON.stringify(body) : undefined,
+    })
+    .then(async resp => {
+      const text = await resp.text();
+      sendResponse({ ok: resp.ok, status: resp.status, body: text });
+    })
+    .catch(err => {
+      console.error("[Quareo BG] Ошибка:", err);
+      sendResponse({ ok: false, status: 0, body: err.message });
+    });
+    return true; // async sendResponse
+  }
 });
 
 

@@ -14,11 +14,12 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from retailpool.database import get_db
 from retailpool.models.user import User
+from retailpool.models.autoreply import AutoReplySettings, AutoReplyHistory
 from retailpool.services.auth_service import get_current_user
 
 logger = logging.getLogger(__name__)
@@ -63,35 +64,119 @@ class SettingsOut(SettingsIn):
     pass
 
 
-# ── In-memory store (MVP — production would use DB table) ────────────────
+class ManualQAIn(BaseModel):
+    """Schema for manually adding a Q&A pair to history."""
+    question: str
+    answer: str
+    product_name: str | None = None
 
-# Per-user settings and history
-_user_settings: dict[str, dict] = {}
-_user_history: dict[str, list[dict]] = {}
 
+# ── DB helpers ────────────────────────────────────────────────────────────
 
-def _get_settings(user_id: str) -> dict:
-    return _user_settings.get(user_id, {
+async def _get_settings(user_id: uuid.UUID, db: AsyncSession) -> dict:
+    """Load settings from DB, return defaults if not yet saved."""
+    result = await db.execute(
+        select(AutoReplySettings).where(AutoReplySettings.user_id == user_id)
+    )
+    row = result.scalars().first()
+    if row:
+        return {
+            "tone": row.tone,
+            "auto_send": row.auto_send,
+            "language": row.language,
+            "store_description": row.store_description,
+            "custom_instructions": row.custom_instructions,
+        }
+    return {
         "tone": "friendly",
         "auto_send": False,
         "language": "ru",
         "store_description": "",
         "custom_instructions": "",
-    })
+    }
 
 
-def _save_qa(user_id: str, question: str, answer: str, product_name: str | None):
-    if user_id not in _user_history:
-        _user_history[user_id] = []
-    _user_history[user_id].append({
-        "question": question,
-        "answer": answer,
-        "product_name": product_name,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-    })
-    # Keep last 200 entries max
-    if len(_user_history[user_id]) > 200:
-        _user_history[user_id] = _user_history[user_id][-200:]
+async def _save_settings(user_id: uuid.UUID, data: dict, db: AsyncSession):
+    """Upsert settings for a user."""
+    result = await db.execute(
+        select(AutoReplySettings).where(AutoReplySettings.user_id == user_id)
+    )
+    row = result.scalars().first()
+    if row:
+        row.tone = data.get("tone", row.tone)
+        row.auto_send = data.get("auto_send", row.auto_send)
+        row.language = data.get("language", row.language)
+        row.store_description = data.get("store_description", row.store_description)
+        row.custom_instructions = data.get("custom_instructions", row.custom_instructions)
+    else:
+        row = AutoReplySettings(
+            user_id=user_id,
+            tone=data.get("tone", "friendly"),
+            auto_send=data.get("auto_send", False),
+            language=data.get("language", "ru"),
+            store_description=data.get("store_description", ""),
+            custom_instructions=data.get("custom_instructions", ""),
+        )
+        db.add(row)
+
+
+async def _save_qa(user_id: uuid.UUID, question: str, answer: str,
+                   product_name: str | None, question_id: str | None,
+                   db: AsyncSession):
+    """Store a Q&A pair in the database."""
+    entry = AutoReplyHistory(
+        user_id=user_id,
+        question=question,
+        answer=answer,
+        product_name=product_name,
+        question_id=question_id,
+    )
+    db.add(entry)
+
+    # Keep last 200 entries per user — prune old ones
+    count_result = await db.execute(
+        select(func.count(AutoReplyHistory.id)).where(
+            AutoReplyHistory.user_id == user_id
+        )
+    )
+    total = count_result.scalar() or 0
+    if total > 200:
+        # Find IDs to delete (oldest entries beyond 200)
+        oldest = await db.execute(
+            select(AutoReplyHistory.id)
+            .where(AutoReplyHistory.user_id == user_id)
+            .order_by(AutoReplyHistory.created_at.asc())
+            .limit(total - 200)
+        )
+        old_ids = [row[0] for row in oldest.all()]
+        if old_ids:
+            from sqlalchemy import delete
+            await db.execute(
+                delete(AutoReplyHistory).where(AutoReplyHistory.id.in_(old_ids))
+            )
+
+
+async def _get_history(user_id: uuid.UUID, db: AsyncSession,
+                       limit: int = 50) -> list[dict]:
+    """Get recent Q&A history for a user."""
+    result = await db.execute(
+        select(AutoReplyHistory)
+        .where(AutoReplyHistory.user_id == user_id)
+        .order_by(AutoReplyHistory.created_at.desc())
+        .limit(limit)
+    )
+    rows = result.scalars().all()
+    # Return in chronological order (oldest first) for prompt building
+    rows.reverse()
+    return [
+        {
+            "question": r.question,
+            "answer": r.answer,
+            "product_name": r.product_name,
+            "created_at": r.created_at.isoformat() if r.created_at else "",
+        }
+        for r in rows
+    ]
 
 
 # ── AI reply generation ──────────────────────────────────────────────────
@@ -208,11 +293,12 @@ def _generate_fallback_reply() -> str:
 async def generate_reply(
     data: QuestionIn,
     user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     """Generate an AI reply for a customer question."""
-    user_id = str(user.id)
-    settings = _get_settings(user_id)
-    history = _user_history.get(user_id, [])
+    user_id = user.id
+    settings = await _get_settings(user_id, db)
+    history = await _get_history(user_id, db, limit=15)
 
     prompt = _build_prompt(
         question=data.question,
@@ -224,8 +310,9 @@ async def generate_reply(
 
     reply_text = await _generate_reply_ai(prompt)
 
-    # Save to history
-    _save_qa(user_id, data.question, reply_text, data.product_name)
+    # Save to history in DB
+    await _save_qa(user_id, data.question, reply_text,
+                   data.product_name, data.question_id, db)
 
     return ReplyOut(
         reply=reply_text,
@@ -234,34 +321,48 @@ async def generate_reply(
 
 
 @router.get("/settings", response_model=SettingsOut)
-async def get_settings(user: User = Depends(get_current_user)):
+async def get_settings(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     """Get auto-reply settings."""
-    return SettingsOut(**_get_settings(str(user.id)))
+    return SettingsOut(**await _get_settings(user.id, db))
 
 
 @router.post("/settings", response_model=SettingsOut)
 async def save_settings(
     data: SettingsIn,
     user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     """Save auto-reply settings."""
-    _user_settings[str(user.id)] = data.model_dump()
-    return SettingsOut(**_user_settings[str(user.id)])
+    await _save_settings(user.id, data.model_dump(), db)
+    return SettingsOut(**data.model_dump())
 
 
 @router.get("/history", response_model=list[QAHistoryItem])
-async def get_history(user: User = Depends(get_current_user)):
+async def get_history(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     """Get Q&A history for this seller."""
-    items = _user_history.get(str(user.id), [])
-    return [QAHistoryItem(**item) for item in items[-50:]]
+    items = await _get_history(user.id, db, limit=50)
+    return [QAHistoryItem(**item) for item in items]
 
 
 @router.post("/history/add")
 async def add_manual_qa(
-    data: QuestionIn,
+    data: ManualQAIn,
     user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
-    """Manually add a Q&A pair (for importing past answers)."""
-    # Re-using QuestionIn: question = customer question, product_name used for answer
-    # This is a workaround — ideally a separate schema
-    return {"status": "ok", "message": "Use POST /generate instead"}
+    """Manually add a Q&A pair (for importing past answers to train AI style)."""
+    await _save_qa(
+        user_id=user.id,
+        question=data.question,
+        answer=data.answer,
+        product_name=data.product_name,
+        question_id=None,
+        db=db,
+    )
+    return {"status": "ok", "message": "Q&A pair saved successfully"}

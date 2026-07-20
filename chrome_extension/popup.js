@@ -153,6 +153,10 @@
         return;
       }
       chrome.tabs.sendMessage(tabs[0].id, { type: 'QUAREO_SCAN_NOW' }, (resp) => {
+        if (chrome.runtime.lastError) {
+          alert('Связь с Kaspi не установлена!\n\nПожалуйста, ОБНОВИТЕ ВКЛАДКУ Kaspi (F5), чтобы загрузилась новая версия расширения.');
+          return;
+        }
         if (resp && resp.ok) {
           document.getElementById('answeredCount').textContent = resp.answered;
           const btn = document.getElementById('scanBtn');
@@ -166,7 +170,11 @@
   function notifyContentScript() {
     chrome.tabs.query({ url: "*://*.kaspi.kz/*" }, (tabs) => {
       tabs.forEach(tab => {
-        chrome.tabs.sendMessage(tab.id, { type: 'QUAREO_UPDATE_SETTINGS' }).catch(() => {});
+        chrome.tabs.sendMessage(tab.id, { type: 'QUAREO_UPDATE_SETTINGS' }, (resp) => {
+           if (chrome.runtime.lastError) {
+             // Игнорируем ошибку при фоновом обновлении
+           }
+        });
       });
     });
   }

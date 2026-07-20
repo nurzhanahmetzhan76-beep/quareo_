@@ -32,67 +32,67 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════════════════════════
 
 TN_VED_DATABASE: list[dict[str, str]] = [
-    {"code": "8471.30.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Портативные компьютеры, ноутбуки, планшеты"},
-    {"code": "8517.12.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Телефоны мобильные и смартфоны"},
-    {"code": "8518.30.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Наушники и гарнитуры"},
-    {"code": "8516.79.70.00", "oktru_code": "1106-0001-0001-100011943", "name": "Увлажнители воздуха электрические"},
-    {"code": "9503.00.70.00", "oktru_code": "1106-0001-0001-100011943", "name": "Игрушки детские, наборы конструкторов"},
-    {"code": "9503.00.49.00", "oktru_code": "1106-0001-0001-100011943", "name": "Игрушки мягкие, куклы"},
-    {"code": "6403.99.96.00", "oktru_code": "1106-0001-0001-100011943", "name": "Обувь кожаная, кроссовки"},
-    {"code": "6110.20.99.00", "oktru_code": "1106-0001-0001-100011943", "name": "Одежда трикотажная"},
-    {"code": "3304.99.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Косметика, средства по уходу за кожей"},
-    {"code": "3305.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Шампуни и средства для волос"},
-    {"code": "2106.90.98.00", "oktru_code": "1106-0001-0001-100011943", "name": "БАДы, витамины, пищевые добавки"},
-    {"code": "8528.72.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Телевизоры, мониторы"},
-    {"code": "8443.32.10.00", "oktru_code": "1106-0001-0001-100011943", "name": "Принтеры, МФУ"},
-    {"code": "8414.51.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Вентиляторы настольные, напольные"},
-    {"code": "8509.40.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Блендеры, кухонные комбайны"},
-    {"code": "8516.60.10.00", "oktru_code": "1106-0001-0001-100011943", "name": "Плиты электрические, духовки"},
-    {"code": "8508.11.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Пылесосы бытовые"},
-    {"code": "8510.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Электробритвы, триммеры"},
-    {"code": "8519.81.95.00", "oktru_code": "1106-0001-0001-100011943", "name": "Портативные колонки, аудиосистемы"},
-    {"code": "9405.42.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Светильники, лампы LED"},
-    {"code": "9404.21.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Матрасы, подушки ортопедические"},
-    {"code": "9401.61.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Мебель мягкая, диваны"},
-    {"code": "7013.49.99.00", "oktru_code": "1106-0001-0001-100011943", "name": "Посуда стеклянная, стаканы"},
-    {"code": "7323.93.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Посуда из нержавеющей стали"},
-    {"code": "4202.92.98.00", "oktru_code": "1106-0001-0001-100011943", "name": "Сумки, рюкзаки, чемоданы"},
-    {"code": "4202.31.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Кошельки, портмоне кожаные"},
-    {"code": "3924.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Контейнеры пластиковые для хранения"},
-    {"code": "3926.90.97.00", "oktru_code": "1106-0001-0001-100011943", "name": "Чехлы для телефонов пластиковые"},
-    {"code": "8507.60.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Повербанки, аккумуляторы литиевые"},
-    {"code": "8544.42.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Кабели, зарядные устройства USB"},
-    {"code": "8504.40.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Зарядные устройства, адаптеры питания"},
-    {"code": "8523.51.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "USB-накопители, флешки"},
-    {"code": "8471.60.70.00", "oktru_code": "1106-0001-0001-100011943", "name": "Клавиатуры, мыши компьютерные"},
-    {"code": "9506.91.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Тренажёры, спортивное оборудование"},
-    {"code": "9506.62.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Мячи надувные, футбольные"},
-    {"code": "9504.50.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Игровые приставки, геймпады"},
-    {"code": "8415.10.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Кондиционеры бытовые"},
-    {"code": "8418.10.20.00", "oktru_code": "1106-0001-0001-100011943", "name": "Холодильники бытовые"},
-    {"code": "8450.11.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Стиральные машины бытовые"},
-    {"code": "8422.11.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Посудомоечные машины бытовые"},
-    {"code": "8516.31.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Фены для волос"},
-    {"code": "8516.40.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Утюги электрические"},
-    {"code": "8516.71.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Кофемашины, кофеварки электрические"},
-    {"code": "8516.10.80.00", "oktru_code": "1106-0001-0001-100011943", "name": "Чайники электрические"},
-    {"code": "3401.11.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Мыло туалетное"},
-    {"code": "3402.20.90.00", "oktru_code": "1106-0001-0001-100011943", "name": "Средства моющие, стиральные порошки"},
-    {"code": "3307.49.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Освежители воздуха, ароматизаторы"},
-    {"code": "6302.60.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Полотенца махровые"},
-    {"code": "6302.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Постельное бельё"},
-    {"code": "4818.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Бумага туалетная, салфетки"},
-    {"code": "9608.10.10.00", "oktru_code": "1106-0001-0001-100011943", "name": "Ручки шариковые, канцтовары"},
-    {"code": "4820.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Тетради, блокноты"},
-    {"code": "8539.50.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Лампочки LED, светодиодные"},
-    {"code": "8512.20.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Осветительное оборудование для авто"},
-    {"code": "4011.10.00.00", "oktru_code": "1106-0001-0001-100011943", "name": "Шины автомобильные"},
-    {"code": "8708.99.97.00", "oktru_code": "1106-0001-0001-100011943", "name": "Запчасти для автомобилей"},
-    {"code": "8711.60.10.00", "oktru_code": "1106-0001-0001-100011943", "name": "Электросамокаты, электровелосипеды"},
-    {"code": "9021.10.10.00", "oktru_code": "1106-0001-0001-100011943", "name": "Ортопедические изделия, корсеты"},
-    {"code": "9018.90.84.00", "oktru_code": "1106-0001-0001-100011943", "name": "Медицинские приборы, тонометры"},
-    {"code": "3006.10.30.00", "oktru_code": "1106-0001-0001-100011943", "name": "Пластыри, бинты, перевязочные материалы"},
-    {"code": "3926.40.00.00", "oktru_code": "1074-0004-0003-100085768", "name": "Статуэтки, декоративные изделия, копилки"},
+    {"code": "8471.30.00.00", "name": "Портативные компьютеры, ноутбуки, планшеты"},
+    {"code": "8517.12.00.00", "name": "Телефоны мобильные и смартфоны"},
+    {"code": "8518.30.00.00", "name": "Наушники и гарнитуры"},
+    {"code": "8516.79.70.00", "name": "Увлажнители воздуха электрические"},
+    {"code": "9503.00.70.00", "name": "Игрушки детские, наборы конструкторов"},
+    {"code": "9503.00.49.00", "name": "Игрушки мягкие, куклы"},
+    {"code": "6403.99.96.00", "name": "Обувь кожаная, кроссовки"},
+    {"code": "6110.20.99.00", "name": "Одежда трикотажная"},
+    {"code": "3304.99.00.00", "name": "Косметика, средства по уходу за кожей"},
+    {"code": "3305.10.00.00", "name": "Шампуни и средства для волос"},
+    {"code": "2106.90.98.00", "name": "БАДы, витамины, пищевые добавки"},
+    {"code": "8528.72.00.00", "name": "Телевизоры, мониторы"},
+    {"code": "8443.32.10.00", "name": "Принтеры, МФУ"},
+    {"code": "8414.51.00.00", "name": "Вентиляторы настольные, напольные"},
+    {"code": "8509.40.00.00", "name": "Блендеры, кухонные комбайны"},
+    {"code": "8516.60.10.00", "name": "Плиты электрические, духовки"},
+    {"code": "8508.11.00.00", "name": "Пылесосы бытовые"},
+    {"code": "8510.10.00.00", "name": "Электробритвы, триммеры"},
+    {"code": "8519.81.95.00", "name": "Портативные колонки, аудиосистемы"},
+    {"code": "9405.42.00.00", "name": "Светильники, лампы LED"},
+    {"code": "9404.21.00.00", "name": "Матрасы, подушки ортопедические"},
+    {"code": "9401.61.00.00", "name": "Мебель мягкая, диваны"},
+    {"code": "7013.49.99.00", "name": "Посуда стеклянная, стаканы"},
+    {"code": "7323.93.90.00", "name": "Посуда из нержавеющей стали"},
+    {"code": "4202.92.98.00", "name": "Сумки, рюкзаки, чемоданы"},
+    {"code": "4202.31.00.00", "name": "Кошельки, портмоне кожаные"},
+    {"code": "3924.10.00.00", "name": "Контейнеры пластиковые для хранения"},
+    {"code": "3926.90.97.00", "name": "Чехлы для телефонов пластиковые"},
+    {"code": "8507.60.00.00", "name": "Повербанки, аккумуляторы литиевые"},
+    {"code": "8544.42.90.00", "name": "Кабели, зарядные устройства USB"},
+    {"code": "8504.40.90.00", "name": "Зарядные устройства, адаптеры питания"},
+    {"code": "8523.51.00.00", "name": "USB-накопители, флешки"},
+    {"code": "8471.60.70.00", "name": "Клавиатуры, мыши компьютерные"},
+    {"code": "9506.91.00.00", "name": "Тренажёры, спортивное оборудование"},
+    {"code": "9506.62.00.00", "name": "Мячи надувные, футбольные"},
+    {"code": "9504.50.00.00", "name": "Игровые приставки, геймпады"},
+    {"code": "8415.10.90.00", "name": "Кондиционеры бытовые"},
+    {"code": "8418.10.20.00", "name": "Холодильники бытовые"},
+    {"code": "8450.11.90.00", "name": "Стиральные машины бытовые"},
+    {"code": "8422.11.00.00", "name": "Посудомоечные машины бытовые"},
+    {"code": "8516.31.00.00", "name": "Фены для волос"},
+    {"code": "8516.40.00.00", "name": "Утюги электрические"},
+    {"code": "8516.71.00.00", "name": "Кофемашины, кофеварки электрические"},
+    {"code": "8516.10.80.00", "name": "Чайники электрические"},
+    {"code": "3401.11.00.00", "name": "Мыло туалетное"},
+    {"code": "3402.20.90.00", "name": "Средства моющие, стиральные порошки"},
+    {"code": "3307.49.00.00", "name": "Освежители воздуха, ароматизаторы"},
+    {"code": "6302.60.00.00", "name": "Полотенца махровые"},
+    {"code": "6302.10.00.00", "name": "Постельное бельё"},
+    {"code": "4818.10.00.00", "name": "Бумага туалетная, салфетки"},
+    {"code": "9608.10.10.00", "name": "Ручки шариковые, канцтовары"},
+    {"code": "4820.10.00.00", "name": "Тетради, блокноты"},
+    {"code": "8539.50.00.00", "name": "Лампочки LED, светодиодные"},
+    {"code": "8512.20.00.00", "name": "Осветительное оборудование для авто"},
+    {"code": "4011.10.00.00", "name": "Шины автомобильные"},
+    {"code": "8708.99.97.00", "name": "Запчасти для автомобилей"},
+    {"code": "8711.60.10.00", "name": "Электросамокаты, электровелосипеды"},
+    {"code": "9021.10.10.00", "name": "Ортопедические изделия, корсеты"},
+    {"code": "9018.90.84.00", "name": "Медицинские приборы, тонометры"},
+    {"code": "3006.10.30.00", "name": "Пластыри, бинты, перевязочные материалы"},
+    {"code": "3926.40.00.00", "name": "Статуэтки, декоративные изделия, копилки"},
 ]
 
 
@@ -189,6 +189,48 @@ def _translate_to_kazakh(text: str) -> str:
             flags=re.IGNORECASE
         )
     return result
+
+
+async def _llm_pick_oktru(product_title: str, candidates: list[dict]) -> str | None:
+    """Use Groq Llama to pick the best OKTRU code from a list."""
+    if not candidates: 
+        return None
+        
+    import httpx
+    from retailpool.config import settings
+    
+    api_key = settings.GROQ_API_KEY
+    if not api_key: 
+        return candidates[0]["code"]
+
+    prompt = f"Помоги выбрать наиболее подходящую категорию ОКТРУ для товара: '{product_title}'.\n\nДоступные категории:\n"
+    for i, c in enumerate(candidates[:20]): # Limit to 20 to avoid huge prompts
+        prompt += f"{i+1}. {c['code']} - {c['nameRu']}\n"
+    prompt += "\nОтветь ТОЛЬКО кодом (в формате XXXX-XXXX-XXXX-XXXXXXXXX) самой подходящей категории. Больше ничего не пиши."
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={
+                    "model": "llama3-70b-8192",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.1,
+                    "max_tokens": 50
+                },
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                answer = data["choices"][0]["message"]["content"].strip()
+                import re
+                match = re.search(r'\d{4}-\d{4}-\d{4}-\d{9}', answer)
+                if match:
+                    return match.group(0)
+    except Exception as e:
+        logger.warning(f"LLM pick error: {e}")
+    
+    return candidates[0]["code"]
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -296,51 +338,49 @@ class NtinService:
 
         # 1.5 Dynamic Auto-fill OKTRU code using NKT API if missing or if default
         if not product.oktru_code or product.oktru_code == "1106-0001-0001-100011943":
-            # First, check our local downloaded dictionary
-            from retailpool.models.ntin import OktruDictionary
-            root_word = product.title_ru.lower()[:5] if len(product.title_ru) > 5 else product.title_ru.lower()
-            local_res = await self.session.execute(select(OktruDictionary).where(OktruDictionary.name_ru.ilike(f"%{root_word}%")).limit(1))
-            local_match = local_res.scalars().first()
+            api_key = await self._get_nkt_api_key(user_id)
+            candidates = []
             
-            if local_match:
-                product.oktru_code = local_match.code
-                logger.info(f"AI auto-found OKTRU from LOCAL DB {product.oktru_code} for {product.title_ru}")
-            else:
-                api_key = await self._get_nkt_api_key(user_id)
-                if api_key and api_key != "test_api_key_12345":
-                    url = f"https://nationalcatalog.kz/gwp/portal/api/v1/dictionaries/OKTRU/items?page=1&size=100&search={urllib.parse.quote(product.title_ru)}"
-                    headers = {"X-API-KEY": api_key, "Accept": "application/json"}
-                    try:
-                        async with httpx.AsyncClient(timeout=10.0) as client:
-                            resp = await client.get(url, headers=headers)
-                            if resp.status_code == 200:
-                                data = resp.json()
-                                items = data.get("content", [])
-                                # Find the best 4th level code by checking if the name matches
-                                best_code = None
-                                first_valid = None
-                                
-                                for item in items:
-                                    code = str(item.get("code", ""))
-                                    name_ru = str(item.get("nameRu", "")).lower()
-                                    
-                                    if code.count("-") == 3:
-                                        if not first_valid:
-                                            first_valid = code
-                                        
-                                        # Very simple root matching
-                                        if root_word in name_ru:
-                                            best_code = code
-                                            break
-                                
-                                # Use best match, or fallback to first valid, or dummy
-                                product.oktru_code = best_code or first_valid
-                                if product.oktru_code:
-                                    logger.info(f"AI auto-found OKTRU code {product.oktru_code} for {product.title_ru}")
-                    except Exception as e:
-                        logger.warning(f"Failed to auto-fetch OKTRU code: {e}")
+            # 1. Try NKT API first
+            if api_key and api_key != "test_api_key_12345":
+                url = f"https://nationalcatalog.kz/gwp/portal/api/v1/dictionaries/OKTRU/items?page=1&size=50&search={urllib.parse.quote(product.title_ru)}"
+                headers = {"X-API-KEY": api_key, "Accept": "application/json"}
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        resp = await client.get(url, headers=headers)
+                        if resp.status_code == 200:
+                            data = resp.json()
+                            items = data.get("content", [])
+                            for item in items:
+                                code = str(item.get("code", ""))
+                                name_ru = str(item.get("nameRu", ""))
+                                if code.count("-") == 3:
+                                    candidates.append({"code": code, "nameRu": name_ru})
+                except Exception as e:
+                    logger.warning(f"Failed to auto-fetch OKTRU code from NKT API: {e}")
             
-            # Fallback if dynamic search fails or no key
+            # 2. Try Local DB if API failed or returned nothing
+            if not candidates:
+                from retailpool.models.ntin import OktruDictionary
+                root_word = product.title_ru.lower()[:5] if len(product.title_ru) > 5 else product.title_ru.lower()
+                safe_root = root_word.replace("%", "\\%").replace("_", "\\_")
+                local_res = await self.session.execute(
+                    select(OktruDictionary)
+                    .where(OktruDictionary.search_vector.like(f"%{safe_root}%"))
+                    .limit(20)
+                )
+                local_matches = local_res.scalars().all()
+                for m in local_matches:
+                    candidates.append({"code": m.code, "nameRu": m.name_ru})
+
+            # 3. Use LLM to pick the best code
+            if candidates:
+                best_code = await _llm_pick_oktru(product.title_ru, candidates)
+                if best_code:
+                    product.oktru_code = best_code
+                    logger.info(f"AI auto-found OKTRU code {product.oktru_code} for {product.title_ru}")
+
+            # 4. Fallback if everything fails
             if not product.oktru_code or product.oktru_code == "1106-0001-0001-100011943":
                 product.oktru_code = "3203-0001-0001-100017260"
 
