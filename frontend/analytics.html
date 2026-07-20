@@ -14,8 +14,32 @@
 
 /* Форма сканирования */
 .scan-bar-wrapper { max-width: 600px; margin: 2rem auto; background: var(--bg); padding: 8px; border-radius: 99px; border: 1px solid var(--border); display: flex; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-.scan-bar-wrapper input { flex: 1; background: transparent; border: none; padding: 0 1.5rem; font-family: var(--font-body); font-size: 1rem; color: var(--text-1); outline: none; }
-.scan-bar-wrapper .btn-primary { border-radius: 99px; padding: 12px 32px; font-weight: 600; }
+.scan-bar-wrapper input { flex: 1; min-width: 0; background: transparent; border: none; padding: 0 1.5rem; font-family: var(--font-body); font-size: 1rem; color: var(--text-1); outline: none; }
+.scan-bar-wrapper .btn-primary { border-radius: 99px; padding: 12px 32px; font-weight: 600; white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .scan-bar-wrapper {
+    flex-direction: column;
+    border-radius: var(--radius-lg, 16px);
+    padding: 10px;
+    gap: 8px;
+  }
+  .scan-bar-wrapper select {
+    width: 100%;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 4px !important;
+  }
+  .scan-bar-wrapper input {
+    width: 100%;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .scan-bar-wrapper .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 /* Дашборд (скрыт по умолчанию) */
 #dashboardResults { display: none; margin-top: 3rem; }

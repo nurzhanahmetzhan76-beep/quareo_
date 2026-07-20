@@ -120,16 +120,14 @@ function rpUpdateAuthNav() {
     // Logged in — show dashboard link + logout
     const badge = document.createElement('div');
     badge.className = 'auth-user-badge';
-    badge.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:13px;';
 
     const dashLink = document.createElement('a');
     dashLink.href = 'dashboard.html';
-    dashLink.style.cssText = 'color:var(--brand);font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-sm);background:rgba(37, 99, 235, 0.08);';
-    dashLink.innerHTML = `👤 Личный кабинет`;
+    dashLink.className = 'auth-dash-link';
+    dashLink.innerHTML = `<span class="auth-dash-icon">👤</span><span class="auth-dash-text">Личный кабинет</span>`;
 
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'auth-nav-btn';
-    logoutBtn.style.cssText = 'background:none;border:1px solid var(--border-2);color:var(--text-2);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--font-display);font-weight:500;transition:all 0.15s;';
     logoutBtn.textContent = t.nav_logout;
     logoutBtn.onclick = rpLogout;
 

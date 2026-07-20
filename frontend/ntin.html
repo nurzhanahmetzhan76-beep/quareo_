@@ -512,9 +512,9 @@
               <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; background: var(--purple);" onclick="document.getElementById('welcomeFileInput').click()">📁 Выбрать файл</button>
             </div>
           </div>
-          <div style="margin-top: 2.5rem; display:flex; gap:10px; justify-content:center;">
-            <button class="btn-primary" onclick="saveWelcomeKeys()" style="padding: 14px 32px; font-size: 16px;">Сохранить и продолжить</button>
-            <button class="btn-secondary" onclick="skipWelcomeScreen()" style="padding: 14px 32px; font-size: 16px;">Пропустить</button>
+          <div style="margin-top: 2.5rem; display:flex; flex-wrap: wrap; gap:10px; justify-content:center;">
+            <button class="btn-primary" onclick="saveWelcomeKeys()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 200px; max-width: 100%;">Сохранить и продолжить</button>
+            <button class="btn-secondary" onclick="skipWelcomeScreen()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 140px; max-width: 100%;">Пропустить</button>
           </div>
           <div id="welcomeKeyStatus" style="margin-top: 1rem; font-weight: 500;"></div>
         </div>
@@ -606,11 +606,10 @@
           <div class="instruction-box">
             <h4>📖 Инструкция по работе с NTIN</h4>
             <ol>
-              <li><strong>Скачайте расширение:</strong> <a href="/dist/quareo_v2.exe" style="color:var(--brand);font-weight:600;text-decoration:underline;">Скачать установщик Quareo (.exe)</a>. Без него привязка в Kaspi не сработает!</li>
               <li><strong>Загрузите товары:</strong> Нажмите «Загрузить прайс» и выберите XML/Excel файл из Kaspi.</li>
               <li><strong>Заполните ИИ:</strong> Нажмите «🤖 Массово заполнить ИИ». Наш алгоритм подберет коды ТН ВЭД и ОКТРУ для всех товаров.</li>
               <li><strong>Отправьте в НКТ:</strong> Нажмите «🚀 Массово подать в НКТ». Заявки уйдут на модерацию в Каталог.</li>
-              <li><strong>Привяжите к Kaspi:</strong> Дождитесь статуса «NTIN привязан» и нажмите фиолетовую кнопку «🔗 Привязать к Kaspi».</li>
+              <li><strong>Проверьте статусы:</strong> Нажимайте «🔄 Обновить статусы», пока товары не получат статус «NTIN привязан».</li>
             </ol>
           </div>
 
@@ -807,6 +806,7 @@
     }
 
     function skipWelcomeScreen() {
+      localStorage.setItem('ntin_welcome_skipped', '1');
       document.getElementById('integrationScreen').style.display = 'none';
       document.getElementById('mainNtinApp').style.display = 'block';
       loadProducts(); loadStats();
@@ -814,6 +814,14 @@
 
     // Check integration status on load
     async function checkIntegrationStatus() {
+      // If the user already dismissed the welcome screen before, don't nag them again.
+      if (localStorage.getItem('ntin_welcome_skipped') === '1') {
+        document.getElementById('integrationScreen').style.display = 'none';
+        document.getElementById('mainNtinApp').style.display = 'block';
+        switchTab('list');
+        loadStats();
+        return;
+      }
       try {
         const r = await fetch(API + '/api/ntin/settings', { headers: rpAuthHeaders() });
         if (r.ok) {
