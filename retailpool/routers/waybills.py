@@ -24,19 +24,28 @@ router = APIRouter(prefix="/api/waybills", tags=["Waybills"])
 A4_WIDTH = 595.276
 A4_HEIGHT = 842.0
 
-MONTHS = {"янв.":1, "фев.":2, "мар.":3, "апр.":4, "мая":5, "июн.":6, 
-          "июл.":7, "авг.":8, "сен.":9, "окт.":10, "ноя.":11, "дек.":12,
-          "янв":1, "фев":2, "мар":3, "апр":4, "июн":6, "июл":7, "авг":8, "сен":9, "окт":10, "ноя":11, "дек":12}
+def get_month_num(month_str):
+    if not month_str:
+        return 99
+    s = month_str.lower().strip(' .')
+    if s.startswith("янв"): return 1
+    if s.startswith("фев"): return 2
+    if s.startswith("мар"): return 3
+    if s.startswith("апр"): return 4
+    if s.startswith("ма"): return 5
+    if s.startswith("июн"): return 6
+    if s.startswith("июл"): return 7
+    if s.startswith("авг"): return 8
+    if s.startswith("сен"): return 9
+    if s.startswith("окт"): return 10
+    if s.startswith("ноя"): return 11
+    if s.startswith("дек"): return 12
+    return 99
 
-def parse_date(date_str):
-    if not date_str: return (99, 99)
-    parts = date_str.lower().strip().split()
-    if len(parts) >= 2:
-        day = int(parts[0]) if parts[0].isdigit() else 99
-        month_str = parts[1]
-        month = MONTHS.get(month_str, 99)
-        return (month, day)
-    return (99, 99)
+def parse_date(day_str, month_str):
+    day = int(day_str) if day_str.isdigit() else 99
+    month = get_month_num(month_str)
+    return (month, day)
 
 @router.post("/process")
 async def process_waybills(
@@ -110,21 +119,18 @@ async def process_waybills(
                         text = reader.pages[0].extract_text() or ""
                         
                         if sort in ["date", "product", "quantity"]:
-                            date_match = re.search(r"(?:дата доставки|доставки):?\s*(\d{1,2}\s+[а-яА-ЯёЁ.]+)", text, re.IGNORECASE)
+                            # Normalize whitespace to make regex matching more predictable
+                            text_clean = re.sub(r'\s+', ' ', text)
+                            
+                            date_match = re.search(r"(?:дата доставки|доставки)[\s:]*(\d{1,2})\s*([а-яА-ЯёЁa-zA-Z]+)", text_clean, re.IGNORECASE)
                             if date_match:
-                                sort_date = parse_date(date_match.group(1))
+                                sort_date = parse_date(date_match.group(1), date_match.group(2))
                                 
-                            prod_match = re.search(r"1\.\s+(.*?)(?:\.{3,}|…|\s{3,})\s*\d+\s*шт", text, re.IGNORECASE)
+                            prod_match = re.search(r"1\s*\.\s*(.*?)(?=\s+\d+\s*шт|\s+Итого|$)", text_clean, re.IGNORECASE)
                             if prod_match:
                                 product_val = prod_match.group(1).strip()
-                            elif "1." in text:
-                                lines = text.split('\n')
-                                for line in lines:
-                                    if line.strip().startswith("1."):
-                                        product_val = line.split("1.", 1)[1].split(".")[0].strip()
-                                        break
                                         
-                            qty_matches = re.findall(r"(\d+)\s*шт", text, re.IGNORECASE)
+                            qty_matches = re.findall(r"(\d+)\s*шт", text_clean, re.IGNORECASE)
                             if qty_matches:
                                 quantity_val = sum(int(q) for q in qty_matches)
                     except Exception as e:
