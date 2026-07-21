@@ -175,81 +175,89 @@ class KaspiScraper:
                 pass
 
 
-            # Wait for product cards
+            # Wait for product links instead of specific card classes
             try:
-                page.wait_for_selector(
-                    ".item-card, .product-card, [data-product-id]", timeout=15000
-                )
+                page.wait_for_selector('a[href*="/shop/p/"]', timeout=20000)
             except Exception:
-                logger.warning("Primary selectors not found, trying alternatives...")
-                try:
-                    page.wait_for_selector(
-                        ".catalog-list .catalog-item, .search-results-list .item",
-                        timeout=10000,
-                    )
-                except Exception:
-                    logger.warning("No product cards found on search page")
-                    content = page.content()
-                    if is_blocked(content, 200):
-                        logger.error("Search page appears to be blocked")
-                    else:
-                        logger.info(
-                            "Page loaded but no products found. Content length: %d",
-                            len(content),
-                        )
-                    return [], 0
+                logger.warning("No product links found on search page")
+                content = page.content()
+                if is_blocked(content, 200):
+                    logger.error("Search page appears to be blocked")
+                else:
+                    logger.info("Page loaded but no products found. Content length: %d", len(content))
+                return [], 0
 
             result_data = page.evaluate("""() => {
-                let cards = document.querySelectorAll('[data-product-id]');
-                if (cards.length === 0)
-                    cards = document.querySelectorAll('.item-card');
-                if (cards.length === 0)
-                    cards = document.querySelectorAll(
-                        '.catalog-item, .product-card, .search-results-list .item'
-                    );
+                // Find all links to products
+                const links = Array.from(document.querySelectorAll('a[href*="/shop/p/"]'));
+                
+                // Group by actual product href to avoid duplicates (image link vs title link)
+                const uniqueLinks = [];
+                const seenHrefs = new Set();
+                for (const link of links) {
+                    const href = link.getAttribute('href');
+                    if (!seenHrefs.has(href)) {
+                        seenHrefs.add(href);
+                        uniqueLinks.push(link);
+                    }
+                }
 
-                const items = Array.from(cards).map(card => {
-                    const link = card.querySelector('a[href*="/p/"], a[href*="/shop/p/"]')
-                        || card.querySelector('a');
+                const items = uniqueLinks.map(link => {
+                    // Go up a few levels to find the product container
+                    let card = link.parentElement;
+                    for(let i=0; i<4; i++) {
+                        if (card && card.parentElement && card.parentElement.tagName !== 'BODY') {
+                            card = card.parentElement;
+                        }
+                    }
+                    
                     const titleEl = card.querySelector(
-                        '.item-card__name, .product-card__title, '
-                        + '[data-product-name], .item-card__name-link'
+                        '.item-card__name, .product-card__title, [data-product-name], .item-card__name-link'
                     ) || link;
-                    const priceEl = card.querySelector(
-                        '.item-card__prices-price, .product-card__price, .item-card__price'
-                    );
-                    const ratingEl = card.querySelector(
-                        '.rating, [data-rating], .item-card__rating'
-                    );
-                    const reviewEl = card.querySelector(
-                        '.item-card__reviews, .product-card__reviews-count, '
-                        + '.item-card__reviews-count'
-                    );
-                    const href = link ? link.getAttribute('href') : '';
+                    
+                    // Try to find price
+                    const priceEls = Array.from(card.querySelectorAll('*')).filter(el => {
+                        const txt = el.textContent.replace(/\\s/g, '');
+                        return txt.includes('₸') && /\\d+₸/.test(txt);
+                    });
+                    const priceEl = priceEls.length > 0 ? priceEls[0] : null;
+                    
+                    // Try to find rating/reviews
+                    const reviewEls = Array.from(card.querySelectorAll('*')).filter(el => {
+                        return el.textContent.includes('отзыв') || el.classList.contains('reviews') || el.classList.contains('rating');
+                    });
+                    const reviewEl = reviewEls.length > 0 ? reviewEls[0] : null;
+
+                    const href = link.getAttribute('href');
                     const productId = card.getAttribute('data-product-id')
                         || (href && href.match(/\\/p\\/([^/?]+)/)
                             ? href.match(/\\/p\\/([^/?]+)/)[1] : '') || '';
+                            
                     const text = priceEl ? priceEl.textContent : '0';
                     const match = text.replace(/\\s+/g, '').match(/\\d+/);
                     const priceText = match ? match[0] : '0';
+                    
                     const title = titleEl ? titleEl.textContent.trim() : '';
                     if (!title || title.length < 3) return null;
+                    
                     let fullUrl = '';
-                    if (href)
+                    if (href) {
                         fullUrl = href.startsWith('http') ? href : 'https://kaspi.kz' + href;
+                    }
+                        
+                    let reviewCount = 0;
+                    if (reviewEl) {
+                        const revMatch = reviewEl.textContent.replace(/\\s/g, '').match(/\\(([^)]+)\\)|(\\d+)отз/);
+                        if (revMatch) reviewCount = parseInt(revMatch[1] || revMatch[2]) || 0;
+                    }
+
                     return {
-                        kaspi_id: productId
-                            || ('search-' + Math.random().toString(36).substr(2, 9)),
+                        kaspi_id: productId || ('search-' + Math.random().toString(36).substr(2, 9)),
                         title: title.substring(0, 200),
                         url: fullUrl,
                         price: parseInt(priceText) || 0,
-                        rating: ratingEl
-                            ? parseFloat(ratingEl.getAttribute('data-rating')
-                              || ratingEl.textContent) || null
-                            : null,
-                        review_count: reviewEl
-                            ? parseInt(reviewEl.textContent.replace(/[^\\d]/g, '')) || 0
-                            : 0,
+                        rating: null,
+                        review_count: reviewCount,
                     };
                 }).filter(item => item !== null);
 
