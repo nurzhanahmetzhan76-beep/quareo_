@@ -399,6 +399,23 @@
         width: 100%;
         justify-content: center;
       }
+      
+      .integration-screen {
+        padding: 2rem 1rem !important;
+      }
+      
+      .integration-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+      }
+      
+      .integration-buttons {
+        flex-direction: column !important;
+      }
+      
+      .integration-buttons button {
+        width: 100% !important;
+      }
     }
   </style>
 </head>
@@ -489,12 +506,12 @@
         </div>
 
         <!-- Full Integration Welcome Screen -->
-        <div id="integrationScreen" style="display: none; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 4rem 2rem; text-align: center; margin-top: 2rem; box-shadow: var(--shadow-lg);">
+        <div id="integrationScreen" class="integration-screen" style="display: none; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 4rem 2rem; text-align: center; margin-top: 2rem; box-shadow: var(--shadow-lg);">
           <div style="font-size: 48px; margin-bottom: 1rem;">🔗</div>
           <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem;">Подключите интеграции</h2>
           <p style="color: var(--text-2); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.6;">Чтобы скачивать товары и автоматически получать штрих-коды, необходимо указать ключи доступа. Это безопасно и нужно сделать только один раз.</p>
           
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; text-align: left;">
+          <div class="integration-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; text-align: left;">
             <div style="background: var(--bg-2); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
               <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">🇰🇿 API-ключ НКТ</h3>
               <p style="font-size: 13px; color: var(--text-2); margin-bottom: 1rem;">Национальный каталог товаров. <br>Где взять: <i>nationalcatalog.kz -> Настройки интеграции -> API ключи</i>.</p>
@@ -512,7 +529,7 @@
               <button class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; background: var(--purple);" onclick="document.getElementById('welcomeFileInput').click()">📁 Выбрать файл</button>
             </div>
           </div>
-          <div style="margin-top: 2.5rem; display:flex; flex-wrap: wrap; gap:10px; justify-content:center;">
+          <div class="integration-buttons" style="margin-top: 2.5rem; display:flex; flex-wrap: wrap; gap:10px; justify-content:center;">
             <button class="btn-primary" onclick="saveWelcomeKeys()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 200px; max-width: 100%;">Сохранить и продолжить</button>
             <button class="btn-secondary" onclick="skipWelcomeScreen()" style="padding: 14px 24px; font-size: 16px; flex: 1 1 auto; min-width: 140px; max-width: 100%;">Пропустить</button>
           </div>

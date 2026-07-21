@@ -20,9 +20,33 @@ from retailpool.bot.keyboards import (
 
 logger = logging.getLogger(__name__)
 
+import os
+
 # In-memory alert storage (will be moved to DB via models.py + Alembic)
 # Structure: {user_id: [{"id": str, "query": str, "type": str, "active": bool, ...}]}
 _alert_store: dict[int, list[dict]] = {}
+ALERTS_FILE = "retailpool_alerts.json"
+
+def _load_alerts():
+    global _alert_store
+    if os.path.exists(ALERTS_FILE):
+        try:
+            with open(ALERTS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                _alert_store.clear()
+                for k, v in data.items():
+                    _alert_store[int(k)] = v
+        except Exception as e:
+            logger.error("Failed to load alerts: %s", e)
+
+def _save_alerts():
+    try:
+        with open(ALERTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(_alert_store, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.error("Failed to save alerts: %s", e)
+
+_load_alerts()
 
 
 def _get_user_alerts(user_id: int) -> list[dict]:
@@ -44,6 +68,7 @@ def _add_alert(user_id: int, query: str, alert_type: str) -> dict:
     if user_id not in _alert_store:
         _alert_store[user_id] = []
     _alert_store[user_id].append(alert)
+    _save_alerts()
     logger.info("Alert created for user %d: %s (%s)", user_id, query, alert_type)
     return alert
 
@@ -53,6 +78,7 @@ def _remove_alert(user_id: int, alert_id: str) -> bool:
     for alert in _alert_store.get(user_id, []):
         if alert["id"] == alert_id:
             alert["active"] = False
+            _save_alerts()
             return True
     return False
 
@@ -282,4 +308,5 @@ def update_alert_snapshot(user_id: int, alert_id: str, snapshot: dict) -> None:
         if alert["id"] == alert_id:
             alert["last_snapshot"] = snapshot
             alert["last_checked_at"] = datetime.now(timezone.utc).isoformat()
+            _save_alerts()
             break

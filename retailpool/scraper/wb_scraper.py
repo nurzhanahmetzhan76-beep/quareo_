@@ -1,104 +1,126 @@
 import logging
 import urllib.parse
-import httpx
-
 from retailpool.scraper.antifraud import BaseProxyProvider
 from retailpool.schemas.product import WBProductCard
+from retailpool.scraper.browser import BrowserManager, _run_in_pw_thread_async
 
 logger = logging.getLogger(__name__)
 
 class WBScraper:
     """
-    HTTPX-based scraper for Wildberries using their internal JSON API.
-    Bypasses Cloudflare blockades and eliminates Playwright timeout issues.
+    Playwright-based scraper for Wildberries.
+    Bypasses Cloudflare blockades by simulating a real browser.
     """
 
     def __init__(self, proxy_provider: BaseProxyProvider | None = None) -> None:
         self.proxy_provider = proxy_provider
 
     async def search(self, query: str, max_items: int = 10) -> list[WBProductCard]:
-        """Search for products on Wildberries using JSON API."""
-        proxy_url = None
-        if self.proxy_provider:
-            proxy_url = await self.proxy_provider.get_proxy()
-
-        url = (
-            f"https://search.wb.ru/exactmatch/ru/common/v5/search?"
-            f"ab_testing=false&appType=128&curr=rub&dest=-1257786&"
-            f"query={urllib.parse.quote(query)}&resultset=catalog&"
-            f"sort=popular&spp=30&suppressSpellcheck=false"
-        )
-        
-        headers = {
-            "Accept": "*/*",
-            "Accept-Language": "ru-RU,ru;q=0.9",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Origin": "https://www.wildberries.ru",
-            "Referer": "https://www.wildberries.ru/"
-        }
-        
-        client_kwargs = {"headers": headers, "timeout": 20.0}
-        if proxy_url:
-            client_kwargs["proxy"] = proxy_url
-
-        results = []
+        """Search for products on Wildberries using Playwright browser."""
         try:
-            async with httpx.AsyncClient(**client_kwargs) as client:
-                resp = await client.get(url)
+            async with BrowserManager(proxy_provider=self.proxy_provider) as browser:
+                ctx = await browser.new_context()
+                raw_products = await _run_in_pw_thread_async(
+                    lambda: self._scrape_search_sync(ctx, query, max_items)
+                )
                 
-                # If proxy is blocked or rate-limited, fallback to direct connection
-                if resp.status_code == 429 and proxy_url:
-                    logger.warning("WB API returned 429 with proxy, retrying without proxy...")
-                    client_kwargs.pop("proxy", None)
-                    async with httpx.AsyncClient(**client_kwargs) as direct_client:
-                        resp = await direct_client.get(url)
-
-                if resp.status_code != 200:
-                    logger.error("WB API returned %d: %s", resp.status_code, resp.text)
-                    return []
-                    
-                data = resp.json()
-                # WB API sometimes returns 'data' wrapper, sometimes root wrapper
-                products = data.get("data", data).get("products", [])
-
-                for item in products[:max_items]:
-                    wb_id = str(item.get("id", ""))
-                    title = item.get("name", "")
-                    brand = item.get("brand", "")
-                    
-                    price_kopecks = 0
-                    if "sizes" in item and item["sizes"] and "price" in item["sizes"][0]:
-                        price_obj = item["sizes"][0]["price"]
-                        # 'product' is the discounted price, 'basic' is the original price
-                        price_kopecks = price_obj.get("product", price_obj.get("basic", 0))
-                    else:
-                        price_kopecks = item.get("salePriceU", item.get("priceU", 0))
-                        
-                    price_rub = price_kopecks / 100.0 if price_kopecks else 0.0
-                    
-                    if not price_rub:
-                        continue
-                        
-                    price_kzt = price_rub * 5.0
-                    rating_val = float(item.get("reviewRating", item.get("rating", 0.0)))
-                    feedbacks = item.get("feedbacks", 0)
-                    
-                    product_url = f"https://www.wildberries.ru/catalog/{wb_id}/detail.aspx"
-
-                    results.append(WBProductCard(
-                        wb_id=wb_id,
-                        title=title.strip(),
-                        brand=brand.strip(),
-                        price_rub=price_rub,
-                        price_kzt=price_kzt,
-                        rating=rating_val,
-                        review_count=feedbacks,
-                        url=product_url
-                    ))
-
-                logger.info("WB Scraped %d products for query '%s' via API", len(results), query)
+                results = []
+                for p in raw_products:
+                    try:
+                        results.append(WBProductCard(**p))
+                    except Exception as e:
+                        logger.warning(f"Failed to parse WBProductCard: {e}")
+                
+                logger.info("WB Scraped %d products for query '%s' via Playwright", len(results), query)
                 return results
-
+                
         except Exception as e:
-            logger.error("Error scraping WB for '%s': %s", query, e)
+            logger.error("Error scraping WB for '%s' using Playwright: %s", query, e)
             return []
+
+    @staticmethod
+    def _scrape_search_sync(ctx, query: str, max_items: int) -> list[dict]:
+        """Scrape search results page. MUST run in PW thread."""
+        page = ctx.new_page()
+        raw_products = []
+        
+        try:
+            search_url = f"https://www.wildberries.ru/catalog/0/search.aspx?search={urllib.parse.quote(query)}"
+            logger.info("Navigating to WB search: %s", search_url)
+            
+            resp = page.goto(search_url, wait_until="domcontentloaded", timeout=45000)
+            
+            # Wait for product cards
+            try:
+                page.wait_for_selector(
+                    "article.product-card", timeout=15000
+                )
+            except Exception:
+                logger.warning("WB Product cards not found. Checking if blocked or empty...")
+                if "cloudflare" in page.content().lower() or "докажите, что вы человек" in page.content().lower():
+                    logger.warning("WB BLOCKED by Cloudflare CAPTCHA!")
+                return []
+                
+            # Scroll down to load images and trigger lazy loading
+            page.evaluate("window.scrollBy(0, 500)")
+            page.wait_for_timeout(1000)
+
+            result_data = page.evaluate("""() => {
+                const cards = document.querySelectorAll('article.product-card');
+                
+                return Array.from(cards).map(card => {
+                    const linkEl = card.querySelector('a.product-card__link, a[class*="product-card"]');
+                    const titleEl = card.querySelector('.product-card__name');
+                    const brandEl = card.querySelector('.product-card__brand');
+                    
+                    // Prices
+                    const priceLowerEl = card.querySelector('.price__lower-price, .price__wrap ins'); 
+                    let priceText = priceLowerEl ? priceLowerEl.textContent : '';
+                    
+                    // Rating and reviews
+                    const ratingEl = card.querySelector('.address-rate-mini, [class*="rating"]'); 
+                    const reviewEl = card.querySelector('.product-card__count, [class*="review"]'); 
+                    
+                    const href = linkEl ? linkEl.getAttribute('href') : '';
+                    
+                    let wb_id = card.getAttribute('data-nm-id') || '';
+                    if (!wb_id && href) {
+                        const match = href.match(/catalog\\/(\\d+)\\/detail/);
+                        if (match) wb_id = match[1];
+                    }
+                    
+                    const title = titleEl ? titleEl.textContent.trim().replace(/^\\/\\s*/, '') : '';
+                    const brand = brandEl ? brandEl.textContent.trim() : '';
+                    
+                    const priceClean = priceText.replace(/[^\\d]/g, '');
+                    const price_rub = priceClean ? parseInt(priceClean) : 0;
+                    
+                    const ratingStr = ratingEl ? ratingEl.textContent.trim() : '';
+                    const rating = ratingStr ? parseFloat(ratingStr) : null;
+                    
+                    const reviewStr = reviewEl ? reviewEl.textContent.replace(/[^\\d]/g, '') : '';
+                    const review_count = reviewStr ? parseInt(reviewStr) : 0;
+                    
+                    return {
+                        wb_id: wb_id,
+                        title: title || 'Без названия',
+                        brand: brand,
+                        url: href ? (href.startsWith('http') ? href : 'https://www.wildberries.ru' + href) : '',
+                        price_rub: price_rub,
+                        rating: rating,
+                        review_count: review_count
+                    };
+                }).filter(item => item.wb_id && item.price_rub > 0);
+            }""")
+            
+            for item in result_data[:max_items]:
+                # Calculate KZT price (~5 KZT per RUB)
+                item['price_kzt'] = item['price_rub'] * 5.0
+                raw_products.append(item)
+                
+        except Exception as exc:
+            logger.error("Error scraping WB search sync '%s': %s", query, exc)
+        finally:
+            page.close()
+            
+        return raw_products

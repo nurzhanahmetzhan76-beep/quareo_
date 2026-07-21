@@ -1,17 +1,17 @@
 /*
-  kaspi_content.js
-  Инжектируется в страницу Kaspi Кабинет Продавца (kaspi.kz/mc).
-  
-  Задачи:
-  1. Сканирует страницу на наличие новых вопросов покупателей
-  2. Отправляет вопросы на сервер Quareo для генерации ИИ-ответа
-  3. Вставляет ответ в поле и (опционально) автоматически отправляет
-  
-  ВАЖНО: Расширение работает ТОЛЬКО когда вкладка Kaspi открыта в браузере.
-  Если вкладка закрыта — сканирование останавливается.
+ kaspi_content.js
+ Инжектируется в страницу Kaspi Кабинет Продавца (kaspi.kz/mc).
+ 
+ Задачи:
+ 1. Сканирует страницу на наличие новых вопросов покупателей
+ 2. Отправляет вопросы на сервер Quareo для генерации ИИ-ответа
+ 3. Вставляет ответ в поле и (опционально) автоматически отправляет
+ 
+ ВАЖНО: Расширение работает ТОЛЬКО когда вкладка Kaspi открыта в браузере.
+ Если вкладка закрыта — сканирование останавливается.
 */
 
-(function() {
+(function () {
   'use strict';
 
   const SCAN_INTERVAL = 10000; // Проверять каждые 10 секунд
@@ -65,56 +65,56 @@
     const allInputs = document.querySelectorAll('textarea, input[type="text"], [contenteditable="true"]');
     allInputs.forEach(input => {
       const placeholder = (input.placeholder || input.getAttribute('data-placeholder') || '').toLowerCase();
-      
+
       // СТРОГАЯ ЗАЩИТА: Это должно быть ИМЕННО поле для сообщения! 
       // Игнорируем любые фильтры, поиск категорий, названия товаров и т.д.
-      const isChatInput = placeholder.includes('сообщен') || 
-                          placeholder.includes('хабарлама') || 
-                          placeholder.includes('message');
-                          
+      const isChatInput = placeholder.includes('сообщен') ||
+        placeholder.includes('хабарлама') ||
+        placeholder.includes('message');
+
       if (!isChatInput) {
         return; // Пропускаем любой инпут, который не похож на чат
       }
 
       // Берем контейнер чата (ищем ближайшее модальное окно или секцию)
       let chatContainer = input.closest('div[class*="dialog"], div[class*="modal"], div[class*="chat"], div[role="dialog"], section');
-      
+
       // Если контейнер не найден, но мы уже точно знаем, что это чат (по плейсхолдеру),
       // разрешаем искать сообщения по всей странице (для полноэкранных версий)
       if (!chatContainer) {
         chatContainer = document.body;
       }
-      
+
       // Ищем абсолютно все мелкие текстовые блоки (span, p, div) внутри ЭТОГО чата
       const allTextNodes = chatContainer.querySelectorAll('div, span, p');
-      
+
       let lastMsgNode = null;
       let questionText = "";
-      
+
       // Идем с конца, чтобы найти ПОСЛЕДНЕЕ сообщение
       for (let i = allTextNodes.length - 1; i >= 0; i--) {
         const node = allTextNodes[i];
         const text = (node.textContent || '').trim();
-        
+
         // Критерии сообщения: есть текст, мало детей, не системное
         if (text.length > 3 && node.children.length < 5 && node.innerHTML.length < 800) {
-          
+
           if (text.includes('Диалог по') || text.includes('Заказ №') || text.includes('Заявка №')) {
             continue;
           }
-          
+
           // Проверяем, не является ли это сообщение нашим собственным (от продавца)
           // У Kaspi сообщения продавца обычно имеют другой цвет или класс, но простейший способ - 
           // проверить, не писали ли мы его только что (защита от зацикливания)
-          
+
           lastMsgNode = node;
           questionText = text;
           break;
         }
       }
-      
+
       if (!questionText || questionText.length < 3) return;
-      
+
       // Имя клиента обычно в заголовке
       let customerName = "Покупатель";
       const header = chatContainer.querySelector('h1, h2, h3, [class*="header"], [class*="title"], [class*="name"]');
@@ -125,7 +125,7 @@
       // Защита от дублей генерации
       const id = hashString('chat_uni_' + questionText.substring(0, 50));
       if (processedIds.includes(id)) return;
-      
+
       // Если поле уже заполнено текстом (больше 5 символов), не перебиваем его
       let currentVal = input.value;
       if (currentVal === undefined) currentVal = input.textContent || '';
@@ -286,7 +286,7 @@
     for (const base of bases) {
       try {
         debugLog('🌐 Запрос через BG к ' + base);
-        
+
         // Проксируем через background.js (content script не может делать cross-origin fetch)
         const resp = await new Promise((resolve, reject) => {
           chrome.runtime.sendMessage({
@@ -362,13 +362,13 @@
     try {
       // 2. Идеальный способ для современных SPA (React, Vue) - симуляция реального ввода
       const success = document.execCommand('insertText', false, text);
-      
+
       // 3. Если execCommand не сработал (в некоторых новых браузерах), используем нативные сеттеры
       if (!success) {
         if (input.tagName === 'TEXTAREA' || input.tagName === 'INPUT') {
           const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
           const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set;
-          
+
           if (input.tagName === 'TEXTAREA' && nativeTextAreaValueSetter) {
             nativeTextAreaValueSetter.call(input, text);
           } else if (input.tagName === 'INPUT' && nativeInputValueSetter) {
@@ -381,8 +381,8 @@
         }
       }
     } catch (e) {
-       console.log('execCommand error fallback', e);
-       input.value = text;
+      console.log('execCommand error fallback', e);
+      input.value = text;
     }
 
     // 4. Диспатчим события для обновления стейта React
@@ -550,7 +550,7 @@
       // Ищем по типичным селекторам Kaspi или по SVG иконкам сообщений
       const chatWidgetBtn = document.querySelector('div[class*="chat-widget"], button[class*="chat-widget"], div[class*="ChatWidget"]');
       const isChatOpen = !!document.querySelector('textarea, input[placeholder*="сообщение" i], input[placeholder*="message" i]');
-      
+
       if (chatWidgetBtn && !isChatOpen) {
         debugLog('🖱️ Открываю виджет чата...');
         chatWidgetBtn.click();
@@ -562,10 +562,10 @@
       const newTab = allElements.find(el => {
         const text = el.textContent.trim().toLowerCase();
         // У Kaspi вкладка обычно называется "Новые" (счетчик может быть внутри)
-        return (text === 'новые' || text.startsWith('новые ')) && 
-               el.children.length < 4 && 
-               el.clientWidth < 300 &&
-               el.clientWidth > 20; // Исключаем скрытые элементы
+        return (text === 'новые' || text.startsWith('новые ')) &&
+          el.children.length < 4 &&
+          el.clientWidth < 300 &&
+          el.clientWidth > 20; // Исключаем скрытые элементы
       });
 
       if (newTab) {
@@ -580,10 +580,10 @@
       // Эвристика: элементы-контейнеры, внутри которых есть время (ЧЧ:ММ)
       const timePattern = /\d{1,2}:\d{2}/;
       const chatCards = allElements.filter(el => {
-         if (el.tagName !== 'DIV' && el.tagName !== 'LI') return false;
-         const style = window.getComputedStyle(el);
-         if (style.cursor !== 'pointer') return false;
-         return timePattern.test(el.textContent) && el.textContent.length < 150;
+        if (el.tagName !== 'DIV' && el.tagName !== 'LI') return false;
+        const style = window.getComputedStyle(el);
+        if (style.cursor !== 'pointer') return false;
+        return timePattern.test(el.textContent) && el.textContent.length < 150;
       });
 
       if (chatCards.length > 0) {
@@ -613,12 +613,12 @@
     await autoNavigate();
 
     const questions = findQuestions();
-    
+
     if (questions.length === 0) {
       // Если вопросов нет, просто ждем следующего цикла
       return;
     }
-    
+
     debugLog('📋 Найдено неотвеченных вопросов: ' + questions.length);
 
     for (const q of questions) {
@@ -630,13 +630,13 @@
         markProcessed(q.id);
         totalAnswered++;
         updateCounter(totalAnswered);
-        
+
         // Автоматическая отправка, если включена
         if (autoSend) {
           debugLog('🚀 Отправляю сообщение (Auto-send)...');
           await sleep(500); // Небольшая пауза перед кликом отправки
           clickSendButton(q.container);
-          
+
           // После отправки нужно вернуться назад к списку "Новые"
           // чтобы на следующем цикле (через 10 сек) скрипт открыл следующий чат
           await sleep(1500);
@@ -646,7 +646,7 @@
             backBtn.click();
           }
         }
-        
+
         await sleep(2000 + Math.random() * 2000);
       } else {
         debugLog('❌ Ошибка генерации ответа');

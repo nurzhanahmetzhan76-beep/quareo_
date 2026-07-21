@@ -162,7 +162,12 @@
 
   @media (max-width: 760px) {
     .result-cols { grid-template-columns: 1fr; }
-    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .metric-cell-label { font-size: 10px; letter-spacing: 0; white-space: normal; }
+    .metric-cell-val { font-size: 1.15rem; }
+    .result-head { flex-direction: column; align-items: flex-start; }
+    .score-ring { width: 48px; height: 48px; font-size: 16px; border-width: 3px; }
+    .result-title { font-size: 1.4rem; }
   }
 </style>
 </head>

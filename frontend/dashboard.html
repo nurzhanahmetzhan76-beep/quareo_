@@ -63,9 +63,9 @@
         
         <div class="form-group" style="margin-top: 20px;">
           <label class="form-label" style="color: #10B981; font-weight: bold;">Токен авторизации (для расширения Quareo)</label>
-          <div style="display: flex; gap: 8px;">
-            <input class="form-input" id="extTokenInputProfile" type="text" readonly style="background: #F8FAFC; color: #64748B; border-color: #10B981;">
-            <button class="btn-action" onclick="copyExtToken('extTokenInputProfile')" style="white-space: nowrap; border-color: #10B981; color: #10B981;">Копировать</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input class="form-input" id="extTokenInputProfile" type="text" readonly style="background: #F8FAFC; color: #64748B; border-color: #10B981; flex: 1; min-width: 0;">
+            <button class="btn-action" onclick="copyExtToken('extTokenInputProfile')" style="white-space: nowrap; border-color: #10B981; color: #10B981; flex-shrink: 0;">Копировать</button>
           </div>
         </div>
         
@@ -111,9 +111,9 @@
         
         <div class="form-group">
           <label class="form-label">Ваш токен авторизации (вставите после установки)</label>
-          <div style="display: flex; gap: 8px;">
-            <input class="form-input" id="extTokenInput" type="text" readonly style="background: #F8FAFC; color: #64748B;">
-            <button class="btn-action" onclick="copyExtToken('extTokenInput')" style="white-space: nowrap;">Копировать</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input class="form-input" id="extTokenInput" type="text" readonly style="background: #F8FAFC; color: #64748B; flex: 1; min-width: 0;">
+            <button class="btn-action" onclick="copyExtToken('extTokenInput')" style="white-space: nowrap; flex-shrink: 0;">Копировать</button>
           </div>
         </div>
       </div>

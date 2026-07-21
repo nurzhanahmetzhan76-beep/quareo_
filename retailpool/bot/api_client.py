@@ -24,8 +24,8 @@ def _get_client() -> httpx.AsyncClient:
     global _client
     if _client is None or _client.is_closed:
         _client = httpx.AsyncClient(
-            base_url=bot_settings.API_BASE_URL,
-            headers={"X-API-Key": bot_settings.API_KEY},
+            base_url=bot_settings.API_BASE_URL.strip(),
+            headers={"X-API-Key": bot_settings.API_KEY.strip()},
             timeout=180.0,
         )
     return _client
