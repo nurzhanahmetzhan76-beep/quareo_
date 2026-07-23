@@ -5,773 +5,830 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quareo — ИИ-радар по нишам Kaspi.kz</title>
-  <link rel="stylesheet" href="assets/style.css">
   <link rel="icon" type="image/png" href="/assets/favicon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ── Hero ─────────────────────────────────────────────────── */
-    .hero {
-      position: relative;
-      padding-top: 11rem;
-      padding-bottom: 7rem;
-      overflow: hidden;
+    /* =========================================
+       PURE MATTE DARK THEME + QUAREO BRAND GRADIENT
+       ========================================= */
+    :root {
+      --bg-main: #040405; /* Ооочень темный, почти черный с капелькой синего */
+      --bg-card: #0d0d12;
+      --bg-card-inner: #111118;
+      --border-color: #262630;
+      --border-light: #333340;
+      
+      --text-main: #ffffff;
+      --text-muted: #8a8a99;
+      --text-faint: #555566;
+      
+      /* Quareo Brand Gradient Variables */
+      --brand-blue: #2563EB;
+      --brand-purple: #7C3AED;
+      --brand-gradient: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+      
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .hero-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 12px;
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* Typography */
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+    
+    .text-gradient {
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .mono { font-family: var(--font-mono); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(4, 4, 5, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+    .nav-logo {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .nav-links { display: flex; gap: 24px; font-size: 14px; font-weight: 500; }
+    .nav-links a { color: var(--text-muted); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+    
+    .lang-switch { display: flex; gap: 8px; font-size: 13px; font-weight: 500;}
+    .lang-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+    .lang-btn.active { color: #fff; }
+
+    .btn-nav-cta {
+      background: #fff;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--brand);
-      margin-bottom: 1.5rem;
+      transition: opacity 0.2s;
+    }
+    .btn-nav-cta:hover { opacity: 0.9; }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--brand-gradient);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      background: var(--brand-light);
-      padding: 6px 16px;
-      border-radius: 100px;
-      border: 1px solid var(--brand-mid);
+      justify-content: center;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary:hover { 
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.4); 
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-secondary:hover { 
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2); 
     }
 
-    .hero-eyebrow-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--brand);
-      box-shadow: 0 0 12px var(--brand);
-      animation: blip-pulse 2s ease-in-out infinite;
+    /* Hero Section */
+    .hero {
+      padding: 200px 0 120px;
+      max-width: 800px;
     }
-
-    @keyframes blip-pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.5;
-        transform: scale(0.8);
-      }
-    }
-
     .hero h1 {
-      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
-      margin-bottom: 1.5rem;
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      font-weight: 600;
       line-height: 1.1;
-      color: var(--text);
+      margin-bottom: 24px;
+      color: #fff;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
     }
 
-    .hero h1 .accent {
-      background: linear-gradient(135deg, var(--brand) 0%, var(--purple) 100%);
+    /* SCROLLSPY FEATURE SECTION */
+    .v-tabs-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border-color);
+      /* Очень легкое радиальное свечение на фоне всей секции */
+      background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.03) 0%, transparent 60%);
+    }
+    
+    .v-tabs-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    
+    /* Left side - Sticky Sidebar */
+    .v-tabs-sidebar {
+      position: sticky;
+      top: 150px;
+      height: max-content;
+    }
+    
+    .v-tabs-nav {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .v-tab {
+      display: block;
+      padding: 16px 0;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      border-left: 2px solid transparent;
+      padding-left: 16px;
+      margin-left: -18px;
+    }
+    .v-tab h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: inherit;
+      transition: color 0.3s;
+    }
+    .v-tab p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-top: 8px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+    }
+    
+    /* Active State for Tabs */
+    .v-tab.active h3 {
+      background: var(--brand-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
-    .hero-sub {
-      font-size: 1.25rem;
-      color: var(--text-2);
-      margin: 0 auto 2.5rem;
-      max-width: 600px;
-      line-height: 1.6;
+    .v-tab.active p {
+      max-height: 100px;
+      opacity: 1;
     }
 
-    .hero-ctas {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 3.5rem;
-    }
-
-    /* ── Readout Stats ────────────────────────────────────────── */
-    .hero-readout {
-      display: flex;
-      gap: 3rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      font-family: var(--font-mono);
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border);
-      padding: 1.5rem 3rem;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .readout-item {
-      text-align: center;
-    }
-
-    .readout-label {
-      font-size: 11px;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-
-    .readout-val {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .readout-val.signal {
-      color: var(--brand);
-    }
-
-    /* ── Marquee ──────────────────────────────────────────────── */
-    .marquee-section {
-      background: var(--bg-2);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.5rem 0;
-      overflow: hidden;
-    }
-
-    .marquee-track {
-      display: flex;
-      gap: 4rem;
-      white-space: nowrap;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-3);
-      animation: marquee-scroll 35s linear infinite;
-    }
-
-    .marquee-track span {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .marquee-track .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--brand);
-    }
-
-    @keyframes marquee-scroll {
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    /* ── Process Visuals ───────────────────────────────────────── */
-    .process-list {
-      margin-top: 4rem;
+    /* Right side - Scrolling Content */
+    .v-tabs-content {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 120px;
+      padding-bottom: 100px;
     }
 
-    .process-row {
-      display: grid;
-      grid-template-columns: auto 1fr 1fr;
-      gap: 3rem;
-      padding: 2.5rem;
-      border: 1px solid var(--border);
+    .mockup-card-wrapper {
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Mockup Card Aesthetics */
+    .mockup-card {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      background: var(--bg);
-      align-items: center;
-      transition: box-shadow 0.3s, border-color 0.3s;
-    }
-
-    .process-row:hover {
-      box-shadow: var(--shadow-lg);
-      border-color: var(--brand-mid);
-    }
-
-    .process-index {
-      font-family: var(--font-mono);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--brand);
-      background: var(--brand-light);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .process-name h3 {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .process-name p {
-      font-size: 15px;
-      color: var(--text-2);
-      max-width: 360px;
-      line-height: 1.6;
-    }
-
-    .process-visual {
-      height: 100px;
-      border-radius: var(--radius);
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      position: relative;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      padding: 0 1.5rem;
-      gap: 1.5rem;
-    }
-
-    .pv-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 48px;
-    }
-
-    .pv-bars span {
-      width: 8px;
-      background: var(--border-2);
-      border-radius: 4px;
-      opacity: 0.5;
-      transition: height 0.3s;
-    }
-
-    .pv-bars span.hi {
-      background: var(--brand);
-      opacity: 1;
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
-    }
-
-    .pv-readout {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-2);
-    }
-
-    .pv-readout strong {
-      color: var(--text);
-      display: block;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .pv-cards {
-      display: flex;
-      gap: 8px;
-    }
-
-    .pv-card {
-      width: 42px;
-      height: 56px;
-      border-radius: 6px;
-      background: var(--bg);
-      border: 2px solid var(--border);
+      min-height: 400px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
       position: relative;
     }
-
-    .pv-card.weak::after {
-      content: '✗';
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      font-size: 12px;
-      color: var(--red);
-      font-weight: bold;
-    }
-
-    .pv-card.weak {
-      border-color: var(--red);
-      background: var(--red-bg);
-    }
-
-    .pv-progress-line {
-      flex: 1;
-      height: 8px;
-      background: var(--border);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
-    .pv-progress-fill {
-      height: 100%;
-      width: 68%;
-      background: linear-gradient(90deg, var(--brand), var(--purple));
-      border-radius: 100px;
-    }
-
-    /* ── Feature Grid ──────────────────────────────────────────── */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 4rem;
-    }
-
-    .feature-cell {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem 2rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .feature-cell:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--brand-mid);
-    }
-
-    .feature-icon-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: var(--brand-light);
-      border: 1px solid var(--brand-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      font-family: var(--font-mono);
-      font-size: 20px;
-      color: var(--brand);
-    }
-
-    .feature-cell h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .feature-cell p {
-      font-size: 14.5px;
-      color: var(--text-2);
-      line-height: 1.6;
-    }
-
-    /* ── CTA banner ───────────────────────────────────────────── */
-    .cta-banner {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--brand-mid);
-      background: linear-gradient(135deg, var(--brand-light) 0%, var(--purple-light) 100%);
-      padding: 4.5rem 3rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-banner::before {
+    
+    /* Тонкая градиентная рамка-свечение сверху */
+    .mockup-card::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-      opacity: 0.05;
-      pointer-events: none;
-      mix-blend-mode: multiply;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.5), transparent);
+      opacity: 0.5;
     }
 
-    .cta-banner h2 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin-bottom: 1.25rem;
-      color: var(--text);
-      position: relative;
-      z-index: 2;
+    .mockup-left {
+      flex: 1;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .mockup-right {
+      flex: 1;
+      background: var(--bg-card-inner);
+      padding: 48px 32px;
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .cta-banner p {
-      color: var(--text-2);
-      margin: 0 auto 2.5rem;
-      max-width: 540px;
-      font-size: 1.15rem;
-      position: relative;
-      z-index: 2;
+    /* Card Background Variations - using brand colors very subtly */
+    /* Scanner: Dark Navy/Blue */
+    #card-scanner .mockup-card { background: #080b14; border-color: rgba(37, 99, 235, 0.1); }
+    #card-scanner .mockup-right { background: #0a0d18; border-left-color: rgba(37, 99, 235, 0.1); }
+
+    /* Audit: Dark Slate/Purple */
+    #card-audit .mockup-card { background: #0b0a14; border-color: rgba(124, 58, 237, 0.1); } 
+    #card-audit .mockup-right { background: #0e0d1a; border-left-color: rgba(124, 58, 237, 0.1); }
+
+    /* Econ: Deep Violet */
+    #card-econ .mockup-card { background: #120b1f; border-color: rgba(124, 58, 237, 0.15); } 
+    #card-econ .mockup-right { background: #150d24; border-left-color: rgba(124, 58, 237, 0.15); }
+
+    /* NTIN: Deepest Purple */
+    #card-ntin .mockup-card { background: #1a0b2e; border-color: rgba(124, 58, 237, 0.2); }
+    #card-ntin .mockup-right { background: #1e0d36; border-left-color: rgba(124, 58, 237, 0.2); }
+
+    /* Diff Stats Styling */
+    .diff-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+    .big-num {
+      font-size: 5rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .big-num.negative {
+      color: #fff;
+    }
+    .mockup-left p {
+      margin-top: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+      max-width: 250px;
     }
 
-    .cta-banner .btn-primary {
-      position: relative;
-      z-index: 2;
-      font-size: 16px;
-      padding: 14px 32px;
-      border-radius: 12px;
+    /* File List Styling */
+    .file-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .file-item::before { 
+      content: ''; 
+      width: 6px; height: 6px; border-radius: 50%; 
+      background: var(--brand-gradient); 
+    }
+    .file-item.disabled::before { background: var(--text-faint); }
+    .file-item.disabled { color: var(--text-faint); background: transparent; border-color: transparent;}
+
+    /* Widget Styling */
+    .widget-box {
+      background: #fff;
+      color: #000;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      margin: 0 auto;
+      width: 100%;
+      max-width: 320px;
+    }
+    .widget-title {
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 24px;
+      color: #000;
+    }
+    .widget-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .widget-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #e4e4e7;
+      border-radius: 100px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+    .widget-bar-fill {
+      height: 100%;
+      background: var(--brand-gradient);
+      border-radius: 100px;
     }
 
-    @media (max-width: 860px) {
-      .process-row {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
+    /* Simple Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 64px 0;
+      margin-top: 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+    }
+    .footer-col h4 {
+      font-size: 13px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
 
-      .process-index {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-      }
+    @media (max-width: 900px) {
+      .v-tabs-container { grid-template-columns: 1fr; gap: 40px; }
+      .v-tabs-sidebar { position: relative; top: 0; }
+      .v-tabs-nav { flex-direction: row; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;}
+      .v-tab { padding: 12px 24px; border-left: none; margin-left: 0; }
+      .v-tab p { display: none !important; }
+      .v-tabs-content { gap: 64px; }
+      .mockup-card-wrapper { min-height: auto; }
+      .mockup-card { flex-direction: column; min-height: auto; }
+      .mockup-right { border-left: none; border-top: 1px solid var(--border-color); }
+      .nav-links { display: none; }
     }
-    @media (max-width: 480px) {
-      .hero-ctas {
-        flex-direction: column;
-        gap: 12px;
-      }
-      .hero-ctas a {
-        width: 100%;
-        justify-content: center;
-      }
-      .hero-readout {
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1.5rem;
-      }
-      .hero-eyebrow {
-        font-size: 10px;
-        padding: 5px 12px;
-      }
+
+    /* Auth Nav Elements (Dynamically injected by common.js) */
+    .auth-user-badge { display: flex; align-items: center; gap: 12px; font-size: 13px; flex-shrink: 0; }
+    .auth-dash-link {
+      color: #fff; font-size: 13px; font-weight: 600; text-decoration: none;
+      display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+      border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.1);
+      white-space: nowrap; transition: background 0.2s;
     }
+    .auth-dash-link:hover { background: rgba(255, 255, 255, 0.15); }
+    .auth-dash-icon { font-size: 14px; }
+    .auth-nav-btn {
+      background: #fff; border: none; color: #000;
+      border-radius: var(--radius-sm); padding: 7px 14px; font-size: 12px;
+      cursor: pointer; font-weight: 600; transition: opacity 0.15s; white-space: nowrap;
+    }
+    .auth-nav-btn:hover { opacity: 0.8; }
   </style>
 </head>
-
 <body>
 
-  <!-- NAV -->
-  <nav>
+  <!-- Navigation -->
+  <nav id="mainNav">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
-        Quareo
-      </a>
-      <div class="nav-links" id="navLinks">
-
-      <a href="index.html" class="active" data-i="nav_home">Главная</a>
-      <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
-      <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
-      <a href="ntin.html" data-i="nav_ntin">NTIN</a>
-      <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
-      <a href="waybills.html" data-i="nav_waybills">Накладные</a>
-      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>
-      <a href="pricing.html" data-i="nav_pricing">Тарифы</a>
-    </div>
+      <a href="index.html" class="nav-logo">Quareo</a>
+      <div class="nav-links">
+        <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+        <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+        <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+        <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
+        <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+        <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Автоответчик</a>
+        <a href="#faq" data-i="nav_faq">FAQ</a>
+        <a href="pricing.html" data-i="nav_pricing">Все тарифы</a>
+      </div>
       <div class="nav-right">
         <div class="lang-switch">
-          <button class="lang-btn active" data-lang="ru" onclick="rpSetLang('ru')">RU</button>
-          <button class="lang-btn" data-lang="en" onclick="rpSetLang('en')">EN</button>
+          <button class="lang-btn active" onclick="rpSetLang('ru')">RU</button>
+          <button class="lang-btn" onclick="rpSetLang('en')">EN</button>
         </div>
-        <a href="auth.html?view=register" class="btn-nav-cta" data-i="nav_cta">Начать</a>
-        <button class="nav-burger" onclick="rpToggleMobileNav()" aria-label="Menu">☰</button>
+        
+        <!-- Auth logic (managed by common.js) -->
+        <div id="navAuth" style="display: block;">
+          <a href="auth.html" class="btn-nav-cta" data-i="login">Вход</a>
+        </div>
+        
+        <div id="navUser" style="display: none; align-items: center; gap: 16px;">
+          <a href="dashboard.html" style="color: #fff; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-i="dashboard">Личный кабинет</span>
+          </a>
+          <button onclick="rpLogout()" style="background: #fff; color: #000; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;" data-i="logout">Выйти</button>
+        </div>
       </div>
     </div>
   </nav>
 
-  <main>
-    <!-- HERO -->
+  <!-- Hero Section -->
+  <div class="container">
     <section class="hero">
-      <canvas id="particlesCanvas" class="hero-particles"></canvas>
-      <div class="container hero-content" data-reveal>
-        <div class="hero-eyebrow">
-          <span class="hero-eyebrow-dot"></span>
-          <span data-i="hero_eyebrow">Live · Kaspi.kz · 24/7 сканирование</span>
-        </div>
-        <h1 data-i="hero_h1">Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас</h1>
-        <p class="hero-sub" data-i="hero_sub">Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации
-          категорий и помечает товары с высокой маржой и слабой конкуренцией.</p>
-
-        <div class="hero-ctas">
-          <a href="scanner.html" class="btn-primary" data-i="hero_cta1"
-            style="padding: 14px 28px; font-size: 16px;">Запустить сканер</a>
-          <a href="#how" class="btn-secondary" data-i="hero_cta2" style="padding: 14px 28px; font-size: 16px;">Как это
-            работает</a>
-        </div>
-
-        <div class="hero-readout">
-          <div class="readout-item">
-            <div class="readout-label" data-i="ro1_label">Категорий в радаре</div>
-            <div class="readout-val signal" data-count="214">0</div>
-          </div>
-          <div class="readout-item">
-            <div class="readout-label" data-i="ro2_label">Уязвимых ниш</div>
-            <div class="readout-val signal" data-count="37">0</div>
-          </div>
-          <div class="readout-item">
-            <div class="readout-label" data-i="ro3_label">Success Fee</div>
-            <div class="readout-val">3–5%</div>
-          </div>
-        </div>
+      <h1 data-i="hero_h1">Находите <span class="text-gradient">слабые ниши</span> раньше конкурентов.</h1>
+      <p data-i="hero_sub">Quareo непрерывно сканирует категории Kaspi.kz, вычисляет индекс монополизации и помечает товары со слабой конкуренцией.</p>
+      
+      <div class="hero-ctas">
+        <a href="scanner.html" class="btn-primary" data-i="hero_cta1">Запустить сканер</a>
+        <a href="auth.html" class="btn-secondary">Регистрация</a>
       </div>
     </section>
+  </div>
 
-    <!-- MARQUEE -->
-    <div class="marquee-section">
-      <div class="marquee-track" id="marqueeTrack"></div>
+  <!-- Tech Marquee -->
+  <div style="border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 16px 0; overflow: hidden; background: rgba(255,255,255,0.02); display: flex;">
+    <div style="display: flex; gap: 40px; animation: scrollMarquee 30s linear infinite; white-space: nowrap; font-family: var(--font-mono); color: var(--text-faint); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em;">
+      <span>✦ MONITORING: HUMIDIFIERS ✦ PARSING: TWS EARBUDS ✦ ANALYZING: GARDEN GOODS ✦ TRACKING: TOYS ✦ SCORING: VITAMINS ✦ INDEXING: PHONE CASES ✦</span>
+      <span>✦ MONITORING: HUMIDIFIERS ✦ PARSING: TWS EARBUDS ✦ ANALYZING: GARDEN GOODS ✦ TRACKING: TOYS ✦ SCORING: VITAMINS ✦ INDEXING: PHONE CASES ✦</span>
     </div>
+  </div>
+  <style>
+    @keyframes scrollMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
 
-    <!-- HOW IT WORKS -->
-    <section id="how">
-      <div class="container">
-        <div class="section-tag" data-i="how_eyebrow">Процесс</div>
-        <h2 class="section-title" data-i="how_title">От сигнала до полки магазина</h2>
-        <p class="section-sub" data-i="how_sub">Четыре шага — от обнаружения ниши до товара, готового к продаже на
-          маркетплейсах.</p>
+  <!-- SCROLLSPY FEATURE SECTION -->
+  <section class="v-tabs-section">
+    <div class="container v-tabs-container">
+      
+      <!-- Left side: Sticky Nav -->
+      <div class="v-tabs-sidebar">
+        <div class="v-tabs-nav">
+          <a href="#card-scanner" class="v-tab active" data-target="card-scanner">
+            <h3>Сканер ниш</h3>
+            <p>Непрерывное сканирование Kaspi.kz для расчета индекса монополизации спроса и предложения.</p>
+          </a>
+          <a href="#card-audit" class="v-tab" data-target="card-audit">
+            <h3>Визуальный аудит</h3>
+            <p>Оценка фотографий, отзывов и описаний. Поиск слабых карточек конкурентов в топе.</p>
+          </a>
+          <a href="#card-econ" class="v-tab" data-target="card-econ">
+            <h3>Юнит-экономика</h3>
+            <p>Расчет маржинальности с учетом всех логистических сборов и комиссий Kaspi.</p>
+          </a>
+          <a href="#card-ntin" class="v-tab" data-target="card-ntin">
+            <h3>NTIN Интеграция</h3>
+            <p>Автоматическая генерация и привязка штрихкодов для быстрого выхода на полку.</p>
+          </a>
+        </div>
+      </div>
 
-        <div class="process-list">
-          <div class="process-row" data-reveal>
-            <div class="process-index">01</div>
-            <div class="process-name">
-              <h3 data-i="step1_h">Scouting Engine</h3>
-              <p data-i="step1_p">ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к
-                числу активных продавцов.</p>
+      <!-- Right side: Scrolling Content -->
+      <div class="v-tabs-content">
+        
+        <!-- Card 1: Scanner -->
+        <div class="mockup-card-wrapper" id="card-scanner">
+          <div class="mockup-card">
+            <div class="mockup-left">
+              <div class="diff-title text-gradient">NICHES AT A GLANCE</div>
+              <div class="big-num">+214</div>
+              <div class="big-num negative">-37</div>
+              <p>214 категорий проанализировано. Найдено 37 уязвимых ниш с высоким спросом.</p>
             </div>
-            <div class="process-visual">
-              <div class="pv-bars">
-                <span style="height:30%"></span><span style="height:55%"></span><span style="height:40%"></span>
-                <span style="height:80%" class="hi"></span><span style="height:35%"></span><span
-                  style="height:60%"></span>
-                <span style="height:25%"></span><span style="height:90%" class="hi"></span>
-              </div>
-              <div class="pv-readout"><strong class="text-signal">0.82</strong><span data-i="pv1_label">monop.
-                  index</span></div>
-            </div>
-          </div>
-
-          <div class="process-row" data-reveal>
-            <div class="process-index">02</div>
-            <div class="process-name">
-              <h3 data-i="step2_h">Визуальный аудит</h3>
-              <p data-i="step2_p">Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки
-                помечаются как точка входа.</p>
-            </div>
-            <div class="process-visual">
-              <div class="pv-cards">
-                <div class="pv-card weak"></div>
-                <div class="pv-card weak"></div>
-                <div class="pv-card" style="border-color:var(--brand)"></div>
-                <div class="pv-card weak"></div>
-              </div>
-              <div class="pv-readout"><strong class="text-alert">3 / 4</strong><span data-i="pv2_label">слабых
-                  карточек</span></div>
-            </div>
-          </div>
-
-          <div class="process-row" data-reveal>
-            <div class="process-index">03</div>
-            <div class="process-name">
-              <h3 data-i="step3_h">Юнит-экономика</h3>
-              <p data-i="step3_p">Аналитика магазина рассчитывает маржу до копейки, строит сезонные графики и помечает
-                товары, которые продаются в минус.</p>
-            </div>
-            <div class="process-visual">
-              <div class="pv-progress-line">
-                <div class="pv-progress-fill"></div>
-              </div>
-              <div class="pv-readout"><strong>100%</strong><span data-i="pv3_label">точный P&L</span></div>
-            </div>
-          </div>
-
-          <div class="process-row" data-reveal>
-            <div class="process-index">04</div>
-            <div class="process-name">
-              <h3 data-i="step4_h">Мультиканальный выход</h3>
-              <p data-i="step4_p">Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с
-                первого дня.</p>
-            </div>
-            <div class="process-visual">
-              <div class="pv-cards">
-                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
-                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
-                <div class="pv-card" style="border-color: var(--brand); background: var(--brand-light);"></div>
-              </div>
-              <div class="pv-readout"><strong class="text-signal" data-i="pv4_val">Kaspi+WB+Ozon</strong><span
-                  data-i="pv4_label">готово к запуску</span></div>
+            <div class="mockup-right">
+              <div class="file-item">categories/tws.json</div>
+              <div class="file-item">categories/garden.json</div>
+              <div class="file-item disabled">categories/beauty.json</div>
+              <div class="file-item disabled">categories/auto.json</div>
+              <div class="file-item disabled">+ 15 more categories</div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- FEATURES -->
-    <section id="features" style="background: var(--bg-2);">
-      <div class="container">
-        <div class="section-tag" data-i="feat_eyebrow">Возможности</div>
-        <h2 class="section-title" data-i="feat_title">Полный набор инструментов разведки</h2>
-        <p class="section-sub" data-i="feat_sub">Каждый модуль решает конкретную задачу — от поиска ниши до выхода на
-          полку.</p>
-
-        <div class="feature-grid">
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">◎</div>
-            <h3 data-i="f1_h">Kaspi Niche Scanner <span class="badge-new">New</span></h3>
-            <p data-i="f1_p">Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые
-              ниши.</p>
-          </div>
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">▣</div>
-            <h3 data-i="f2_h">Визуальный аудит карточек</h3>
-            <p data-i="f2_p">Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.</p>
-          </div>
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">⇄</div>
-            <h3 data-i="f3_h">Сканер профиля Kaspi</h3>
-            <p data-i="f3_p">Анализируйте продажи конкурентов и находите слабые места в своей юнит-экономике.</p>
-          </div>
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">▤</div>
-            <h3 data-i="f4_h">Офлайн + Онлайн аналитика</h3>
-            <p data-i="f4_p">Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.</p>
-          </div>
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">⌬</div>
-            <h3 data-i="f5_h">Telegram-бот</h3>
-            <p data-i="f5_p">Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.</p>
-          </div>
-          <div class="feature-cell" data-reveal>
-            <div class="feature-icon-mark">◧</div>
-            <h3 data-i="f6_h">Дизайн «под ключ»</h3>
-            <p data-i="f6_p">Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.</p>
+        <!-- Card 2: Audit -->
+        <div class="mockup-card-wrapper" id="card-audit">
+          <div class="mockup-card">
+            <div class="mockup-left">
+              <div class="diff-title text-gradient">WEAK LISTINGS</div>
+              <div class="big-num" style="font-size: 4rem;">68%</div>
+              <p>В этой категории конкуренты имеют некачественные фото и низкий рейтинг.</p>
+            </div>
+            <div class="mockup-right" style="align-items: center;">
+              <div class="widget-box">
+                <div class="widget-title">This week</div>
+                <div class="widget-row">
+                  <span>photos quality</span>
+                  <div class="widget-bar-bg"><div class="widget-bar-fill" style="width: 45%;"></div></div>
+                  <span class="text-gradient">-12.4%</span>
+                </div>
+                <div class="widget-row">
+                  <span>reviews rating</span>
+                  <div class="widget-bar-bg"><div class="widget-bar-fill" style="width: 30%;"></div></div>
+                  <span class="text-gradient">-6.1%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- CTA -->
-    <section>
-      <div class="container">
-        <div class="cta-banner" data-reveal>
-          <div class="section-tag" data-i="cta_eyebrow" style="justify-content:center">Готовы начать?</div>
-          <h2 data-i="cta_title">Найдите свою первую золотую нишу за 5 минут</h2>
-          <p data-i="cta_sub">Подключитесь к радару, получите первые инсайты в Telegram и масштабируйте свой магазин на
-            Kaspi.</p>
-          <a href="pricing.html" class="btn-primary" data-i="cta_btn">Выбрать тариф</a>
+        <!-- Card 3: Econ -->
+        <div class="mockup-card-wrapper" id="card-econ">
+          <div class="mockup-card">
+            <div class="mockup-left">
+              <div class="diff-title text-gradient">NET MARGIN</div>
+              <div class="big-num" style="font-size: 4rem;">~35%</div>
+              <p>Средняя расчетная чистая прибыль после вычета всех комиссий маркетплейса.</p>
+            </div>
+            <div class="mockup-right" style="align-items: center;">
+              <div class="widget-box">
+                <div class="widget-title text-gradient">Economics</div>
+                <div class="widget-row">
+                  <span style="color: #000;">gross profit</span>
+                  <div class="widget-bar-bg"><div class="widget-bar-fill" style="width: 85%;"></div></div>
+                  <span style="color: #000;">+42.4%</span>
+                </div>
+                <div class="widget-row">
+                  <span style="color: #000;">net margin</span>
+                  <div class="widget-bar-bg"><div class="widget-bar-fill" style="width: 65%;"></div></div>
+                  <span style="color: #000;">+35.1%</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand">Quareo</div>
-        <p class="footer-desc" data-i="footer_desc">ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и оптимизируем ваши продажи через глубокую аналитику.</p>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title" data-i="footer_product">Продукт</div>
-        <a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>
-        <a href="wb_scanner.html" data-i="footer_l_wb">Сканер WB</a>
-        <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
-        <a href="ntin.html" data-i="footer_l_ntin">NTIN</a>
-        <a href="waybills.html" data-i="footer_l_waybills">Накладные</a>
-        <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title" data-i="footer_company">Компания</div>
-        <a href="about.html" data-i="footer_l_about">О проекте</a>
-        <a href="https://t.me/Lulsiok" target="_blank" data-i="footer_l_contact">Контакты</a>
-        <a href="https://t.me/quareobot" target="_blank" data-i="footer_l_telegram">Telegram-бот</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title" data-i="footer_legal">Документы</div>
-        <a href="privacy.html" data-i="footer_l_privacy">Политика конфиденциальности</a>
-        <a href="terms.html" data-i="footer_l_terms">Условия использования</a>
-        <a href="terms.html" data-i="footer_l_offer">Публичная оферта</a>
+        <!-- Card 4: NTIN -->
+        <div class="mockup-card-wrapper" id="card-ntin">
+          <div class="mockup-card">
+            <div class="mockup-left">
+              <div class="diff-title text-gradient">AUTO SYNC</div>
+              <div class="big-num" style="font-size: 4rem;">100%</div>
+              <p>Полная автоматизация создания карточек и привязки к маркетплейсам.</p>
+            </div>
+            <div class="mockup-right">
+              <div class="file-item">ntin/register.ts</div>
+              <div class="file-item">kaspi/sync.ts</div>
+              <div class="file-item">wb/sync.ts</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-    <div class="footer-bottom">
-      <span data-i="footer_rights">© 2026 Quareo. Все права защищены.</span>
-      <span class="mono" data-i="footer_built">Алматы · Казахстан</span>
-    </div>
-  </footer>
+  </section>
 
-  <script src="assets/common.js"></script>
+  <!-- Pricing -->
+  <section id="pricing" style="background: rgba(255,255,255,0.02); border-top: 1px solid var(--border-color); padding: 120px 0;">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 64px;">
+        <span class="eyebrow">DEPLOYMENT PLANS</span>
+        <h2 style="font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 16px;">Выберите свой радар.</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+        <!-- Base Tier -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 48px; display: flex; flex-direction: column;">
+          <span class="mono" style="color: var(--text-muted); font-size: 12px; margin-bottom: 16px;">NODE: STARTER</span>
+          <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Базовый план</h3>
+          <div style="font-size: 3.5rem; font-weight: 700; font-family: var(--font-mono); margin-bottom: 32px;">Free</div>
+          <ul style="list-style: none; margin-bottom: 32px; color: var(--text-muted); line-height: 2;">
+            <li><span style="color: var(--brand-purple);">✓</span> 2 сканирования Kaspi/WB</li>
+            <li><span style="color: var(--brand-purple);">✓</span> 1 аналитический отчет</li>
+            <li><span style="color: var(--brand-purple);">✓</span> 2 регистрации NTIN</li>
+          </ul>
+          <a href="auth.html" class="btn-secondary" style="margin-top: auto; width: 100%;">Начать бесплатно</a>
+        </div>
+
+        <!-- Pro Tier -->
+        <div style="background: linear-gradient(180deg, rgba(124, 58, 237, 0.05) 0%, var(--bg-card) 100%); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: var(--radius-lg); padding: 48px; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(124, 58, 237, 0.05);">
+          <span class="mono text-gradient" style="font-size: 12px; margin-bottom: 16px; font-weight: 600;">NODE: BUSINESS</span>
+          <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Для профи</h3>
+          <div style="font-size: 3.5rem; font-weight: 700; font-family: var(--font-mono); margin-bottom: 32px;">12,000 ₸</div>
+          <ul style="list-style: none; margin-bottom: 32px; color: var(--text-muted); line-height: 2;">
+            <li><span style="color: var(--brand-purple);">✓</span> Безлимитный Kaspi Scanner</li>
+            <li><span style="color: var(--brand-purple);">✓</span> Мониторинг конкурентов (до 50)</li>
+            <li><span style="color: var(--brand-purple);">✓</span> Telegram-алерты</li>
+            <li><span style="color: var(--brand-purple);">✓</span> Приоритетная поддержка</li>
+          </ul>
+          <a href="pricing.html" class="btn-primary" style="margin-top: auto; width: 100%;">Выбрать тариф</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" style="padding: 120px 0; border-top: 1px solid var(--border-color);">
+    <div class="container" style="max-width: 800px;">
+      <div style="text-align: center; margin-bottom: 64px;">
+        <span class="eyebrow text-gradient">SUPPORT</span>
+        <h2 style="font-size: clamp(2.5rem, 4vw, 3.5rem);">Частые вопросы.</h2>
+      </div>
+
+      <div class="faq-list" style="display: flex; flex-direction: column; gap: 16px;">
+        <details class="faq-item">
+          <summary>Как работает сканер Kaspi?</summary>
+          <div class="faq-content">Мы используем распределенную сеть парсеров для сбора данных в реальном времени, обходя блокировки и предоставляя чистую аналитику без задержек.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Что такое индекс монополизации?</summary>
+          <div class="faq-content">Это наша проприетарная метрика, которая показывает, насколько сложно будет выйти в топ в определенной категории. Чем ниже индекс — тем проще занять долю рынка.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Могу ли я использовать платформу бесплатно?</summary>
+          <div class="faq-content">Да, базовый тариф Starter предоставляется навсегда и включает лимиты на сканирование и генерацию накладных.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+  <style>
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .faq-item:hover { border-color: rgba(124, 58, 237, 0.3); }
+    .faq-item summary {
+      padding: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+';
+      font-size: 20px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    .faq-item[open] summary::after { transform: rotate(45deg); color: #fff; }
+    .faq-content {
+      padding: 0 24px 24px;
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+  </style>
+
+  <!-- Footer -->
+  <div class="container">
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <div class="nav-logo" style="margin-bottom: 16px;">QUAREO</div>
+          <p style="color: var(--text-muted); font-size: 14px; max-width: 250px;" data-i="footer_desc">
+            ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4 data-i="footer_product">Инструменты</h4>
+          <a href="scanner.html" data-i="footer_l_scanner">Kaspi Scanner</a>
+          <a href="wb_scanner.html" data-i="footer_l_wb">WB Scanner</a>
+          <a href="ntin.html" data-i="footer_l_ntin">NTIN Интеграция</a>
+          <a href="analytics.html" data-i="footer_l_analytics">Аналитика</a>
+          <a href="waybills.html" data-i="footer_l_waybills">Накладные</a>
+          <a href="kaspi-bot.html">Автоответчик</a>
+        </div>
+        <div class="footer-col">
+          <h4 data-i="footer_company">Компания</h4>
+          <a href="pricing.html" data-i="footer_l_pricing">Тарифы</a>
+          <a href="https://t.me/Lulsiok" data-i="footer_l_contact">Связаться с нами</a>
+          <a href="privacy.html" data-i="footer_l_privacy">Политика конф.</a>
+        </div>
+      </div>
+      <div style="margin-top: 64px; border-top: 1px solid var(--border-color); padding-top: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); display: flex; justify-content: space-between;">
+        <span>SYS.DATE: 2026.07.23</span>
+        <span data-i="footer_rights">© QUAREO. ALL RIGHTS RESERVED.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="assets/common.js?v=3"></script>
   <script>
-    const PAGE_I18N = {
-      ru: {
-        hero_eyebrow: "Live · Kaspi.kz · 24/7 сканирование",
-        hero_h1: 'Радар находит<br><span class="accent">слабые ниши</span><br>раньше вас',
-        hero_sub: "Quareo непрерывно сканирует Kaspi.kz, вычисляет индекс монополизации категорий и помечает товары с высокой маржой и слабой конкуренцией.",
-        hero_cta1: "Запустить сканер", hero_cta2: "Как это работает",
-        ro1_label: "Категорий в радаре", ro2_label: "Уязвимых ниш", ro3_label: "Success Fee",
-        how_eyebrow: "Процесс", how_title: "От сигнала до полки магазина",
-        how_sub: "Четыре шага — от обнаружения ниши до товара, готового к продаже на маркетплейсах.",
-        step1_h: "Scouting Engine", step1_p: "ИИ парсит категории Kaspi.kz и считает индекс монополизации — соотношение спроса к числу активных продавцов.",
-        step2_h: "Визуальный аудит", step2_p: "Алгоритм проверяет фото, описания и отзывы конкурентов в топе — слабые карточки помечаются как точка входа.",
-        step3_h: "Юнит-экономика", step3_p: "Аналитика магазина рассчитывает маржу до копейки, строит сезонные графики и помечает товары, которые продаются в минус.",
-        step4_h: "Мультиканальный выход", step4_p: "Готовые карточки и инфографика для Kaspi, Wildberries и Ozon — выходите в топ с первого дня.",
-        pv1_label: "monop. index", pv2_label: "слабых карточек", pv3_label: "участников", pv4_label: "готово к запуску", pv4_val: "Kaspi+WB+Ozon",
-        feat_eyebrow: "Возможности", feat_title: "Полный набор инструментов разведки",
-        feat_sub: "Каждый модуль решает конкретную задачу — от поиска ниши до выхода на полку.",
-        f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Анализ соотношения спроса к предложению по каждой категории — находим монополизируемые ниши.",
-        f2_h: "Визуальный аудит карточек", f2_p: "Оценка фото, отзывов и описаний конкурентов. Слабые карточки = точка входа.",
-        f3_h: "Сканер профиля Kaspi", f3_p: "Анализируйте продажи конкурентов и находите слабые места в своей юнит-экономике.",
-        f4_h: "Офлайн + Онлайн аналитика", f4_p: "Остатки офлайн-магазинов и онлайн-сигналы — в одном интерфейсе.",
-        f5_h: "Telegram-бот", f5_p: "Инсайты, алерты и документы — прямо в мессенджер, без лишних приложений.",
-        f6_h: "Дизайн «под ключ»", f6_p: "Автогенерация карточек товара для Kaspi, WB и Ozon — готовы к продаже сразу.",
-        cta_eyebrow: "Готовы начать?", cta_title: "Найдите свою первую золотую нишу за 5 минут",
-        cta_sub: "Подключитесь к радару, получите первые инсайты в Telegram и масштабируйте свой магазин на Kaspi.",
-        cta_btn: "Выбрать тариф",
-        marquee: ["УВЛАЖНИТЕЛИ ВОЗДУХА", "НАУШНИКИ TWS", "ТОВАРЫ ДЛЯ ДАЧИ", "ДЕТСКИЕ ИГРУШКИ", "ВИТАМИНЫ И БАДЫ", "ЧЕХЛЫ ДЛЯ ТЕЛЕФОНОВ", "ОСВЕЖИТЕЛИ ВОЗДУХА", "ПОВЕРБАНКИ"],
-      },
-      en: {
-        hero_eyebrow: "Live · Kaspi.kz · 24/7 scanning",
-        hero_h1: 'The radar finds<br><span class="accent">weak niches</span><br>before you do',
-        hero_sub: "Quareo continuously scans Kaspi.kz, computes a monopolization index for every category, and flags products where competitors are weak — and demand is high.",
-        hero_cta1: "Run the scanner", hero_cta2: "How it works",
-        ro1_label: "Categories on radar", ro2_label: "Vulnerable niches found", ro3_label: "Success fee",
-        how_eyebrow: "Process", how_title: "From signal to shelf",
-        how_sub: "Four steps — from spotting a niche to a product ready to sell across three marketplaces.",
-        step1_h: "Scouting Engine", step1_p: "AI scans Kaspi.kz categories and computes a monopolization index — the ratio of demand to active sellers.",
-        step2_h: "Visual audit", step2_p: "The algorithm checks photos, descriptions and reviews of top competitors — weak listings are flagged as entry points.",
-        step3_h: "Unit Economics", step3_p: "Store analytics calculates margin down to the penny, builds seasonal charts and flags loss-making products.",
-        step4_h: "Multichannel launch", step4_p: "Ready-made cards and infographics for Kaspi, Wildberries and Ozon — top the category from day one.",
-        pv1_label: "monop. index", pv2_label: "weak listings", pv3_label: "participants", pv4_label: "ready to launch", pv4_val: "Kaspi+WB+Ozon",
-        feat_eyebrow: "Capabilities", feat_title: "A full scouting toolkit",
-        feat_sub: "Each module solves one specific job — from finding a niche to landing it on the shelf.",
-        f1_h: 'Kaspi Niche Scanner <span class="badge-new">New</span>', f1_p: "Supply/demand ratio analysis per category — we find monopolizable niches.",
-        f2_h: "Visual card audit", f2_p: "Evaluation of competitor photos, reviews and descriptions. Weak cards = entry point.",
-        f3_h: "Kaspi Profile Scanner", f3_p: "Analyze competitors' sales and find weak spots in your own unit economics.",
-        f4_h: "Offline + online analytics", f4_p: "Offline store inventory and online signals in one interface.",
-        f5_h: "Telegram bot", f5_p: "Insights, alerts and documents — straight to the messenger.",
-        f6_h: "Turn-key design", f6_p: "Auto-generated product cards for Kaspi, WB and Ozon — ready to sell immediately.",
-        cta_eyebrow: "Ready to start?", cta_title: "Find your first golden niche in 5 minutes",
-        cta_sub: "Connect to the radar, get your first Telegram insights, and scale your Kaspi store.",
-        cta_btn: "Choose a plan",
-        marquee: ["AIR HUMIDIFIERS", "TWS EARBUDS", "GARDEN GOODS", "KIDS TOYS", "VITAMINS & SUPPLEMENTS", "PHONE CASES", "AIR FRESHENERS", "POWER BANKS"],
-      }
-    };
-    // Merge page-specific translations into shared dictionary
-    Object.keys(PAGE_I18N).forEach(l => Object.assign(RP_I18N[l], PAGE_I18N[l]));
+    // SCROLLSPY LOGIC
+    document.addEventListener("DOMContentLoaded", () => {
+      const tabs = document.querySelectorAll('.v-tab');
+      const wrappers = document.querySelectorAll('.mockup-card-wrapper');
 
-    function renderMarquee() {
-      const items = RP_I18N[RP_LANG].marquee;
-      const html = items.map(m => `<span><span class="dot"></span>${m}</span>`).join('');
-      document.getElementById('marqueeTrack').innerHTML = html + html;
-    }
+      const observerOptions = {
+        root: null,
+        rootMargin: '-30% 0px -50% 0px', 
+        threshold: 0
+      };
 
-    function onLangChange() {
-      renderMarquee();
-      document.querySelectorAll('.nav-links a').forEach(a => {
-        if (a.getAttribute('href') === 'index.html') a.classList.add('active');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const targetId = entry.target.id;
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            const activeTab = document.querySelector(`.v-tab[data-target="${targetId}"]`);
+            if (activeTab) {
+              activeTab.classList.add('active');
+            }
+          }
+        });
+      }, observerOptions);
+
+      wrappers.forEach(wrapper => {
+        observer.observe(wrapper);
       });
-    }
 
-    renderMarquee();
-
-    // Initialize particles for hero
-    if (typeof rpInitParticles === 'function') {
-      rpInitParticles('particlesCanvas');
-    }
+      tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = tab.getAttribute('data-target');
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            const navHeight = 80;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navHeight - 40; 
+  
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth"
+            });
+          }
+        });
+      });
+    });
   </script>
 </body>
-
 </html>

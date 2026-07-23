@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Панель управления — Quareo</title>
-<link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="assets/dashboard.css">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<link rel="stylesheet" href="assets/dashboard.css?v=3">
 <link rel="icon" type="image/png" href="/assets/favicon.jpg">
 </head>
 <body class="dash-body">
@@ -37,18 +37,18 @@
   </header>
 
   <!-- ═══════ PAGE: Profile (Личный кабинет) ═══════ -->
-  <section class="page active" id="page-connect" style="background:#fff; padding: 2rem 3rem;">
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: #333;">Мой профиль</h2>
+  <section class="page active" id="page-connect" style=" padding: 2rem 3rem;">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: var(--text);">Мой профиль</h2>
     
     <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
       <!-- API Tokens Card -->
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid #E2E8F0; box-shadow: none;">
+      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid var(--border); box-shadow: none;">
         <h3 style="margin-bottom: 16px; font-size: 18px;">Подключение (API)</h3>
         
         <div class="form-group">
           <label class="form-label">Kaspi API-ключ</label>
           <input class="form-input" id="kaspiApiKey" type="password" placeholder="Вставьте ваш API-ключ от Kaspi Seller">
-          <p style="font-size: 12px; color: #64748B; margin-top: 4px;">
+          <p style="font-size: 12px; color: var(--text-2); margin-top: 4px;">
             <a href="#" style="color: #2563EB;">Где взять токен Kaspi?</a> Зайдите в Kaspi Pay -> Настройки -> API -> Сгенерировать.
           </p>
         </div>
@@ -56,7 +56,7 @@
         <div class="form-group" style="margin-top: 20px;">
           <label class="form-label">НКТ API-ключ (для NTIN)</label>
           <input class="form-input" id="nktApiKey" type="password" placeholder="Вставьте ваш API-ключ от NationalCatalog">
-          <p style="font-size: 12px; color: #64748B; margin-top: 4px;">
+          <p style="font-size: 12px; color: var(--text-2); margin-top: 4px;">
             <a href="#" style="color: #2563EB;">Где взять токен НКТ?</a> Зайдите на nationalcatalog.kz -> Профиль -> Управление токенами.
           </p>
         </div>
@@ -64,7 +64,7 @@
         <div class="form-group" style="margin-top: 20px;">
           <label class="form-label" style="color: #10B981; font-weight: bold;">Токен авторизации (для расширения Quareo)</label>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <input class="form-input" id="extTokenInputProfile" type="text" readonly style="background: #F8FAFC; color: #64748B; border-color: #10B981; flex: 1; min-width: 0;">
+            <input class="form-input" id="extTokenInputProfile" type="text" readonly style="background: var(--bg-2); color: var(--text-2); border-color: #10B981; flex: 1; min-width: 0;">
             <button class="btn-action" onclick="copyExtToken('extTokenInputProfile')" style="white-space: nowrap; border-color: #10B981; color: #10B981; flex-shrink: 0;">Копировать</button>
           </div>
         </div>
@@ -75,13 +75,13 @@
 
 
       <!-- Tariff Card -->
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; background: #F8FAFC; border: 1px solid #E2E8F0; box-shadow: none;">
+      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; background: var(--bg-2); border: 1px solid var(--border); box-shadow: none;">
         <h3 style="margin-bottom: 16px; font-size: 18px;">Текущий тариф</h3>
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
           <span id="profilePlanBadge" style="background: linear-gradient(135deg, #2563EB, #7C3AED); color: #fff; padding: 8px 16px; border-radius: 100px; font-weight: bold; text-transform: capitalize;">Free</span>
-          <span id="profilePlanExpiry" style="font-size: 14px; color: #475569;">Активен</span>
+          <span id="profilePlanExpiry" style="font-size: 14px; color: var(--text-2);">Активен</span>
         </div>
-        <ul id="profilePlanFeatures" style="font-size: 14px; color: #475569; padding-left: 20px; line-height: 1.8;">
+        <ul id="profilePlanFeatures" style="font-size: 14px; color: var(--text-2); padding-left: 20px; line-height: 1.8;">
           <li>Базовый доступ</li>
         </ul>
         <button class="btn-action" style="margin-top: 20px; width: 100%; justify-content: center;" onclick="window.location.href='pricing.html'">Улучшить тариф</button>
@@ -90,17 +90,17 @@
   </section>
 
   <!-- ═══════ PAGE: Auto-Reply (Автоответчик) ═══════ -->
-  <section class="page" id="page-autoreply" style="background:#fff; padding: 2rem 3rem;">
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: #333;">ИИ-Автоответчик (Chrome Расширение)</h2>
+  <section class="page" id="page-autoreply" style=" padding: 2rem 3rem;">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: var(--text);">ИИ-Автоответчик (Chrome Расширение)</h2>
     
     <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid #E2E8F0; box-shadow: none;">
+      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid var(--border); box-shadow: none;">
         <h3 style="margin-bottom: 16px; font-size: 18px;">Установка Автоответчика</h3>
-        <p style="font-size: 13px; color: #475569; margin-bottom: 16px;">Легкая программа, которая сама настроит расширение для работы с Kaspi (Отзывы и Чаты).</p>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Легкая программа, которая сама настроит расширение для работы с Kaspi (Отзывы и Чаты).</p>
         
-        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-          <h4 style="font-size: 14px; color: #1E3A8A; margin-bottom: 8px;">Как это работает:</h4>
-          <ol style="font-size: 13px; color: #1E40AF; padding-left: 20px; margin: 0; line-height: 1.6;">
+        <div style="background: var(--brand-light); border: 1px solid var(--brand); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 style="font-size: 14px; color: var(--brand-light); margin-bottom: 8px;">Как это работает:</h4>
+          <ol style="font-size: 13px; color: var(--brand); padding-left: 20px; margin: 0; line-height: 1.6;">
             <li>Нажмите <b>Скачать инсталлятор</b> и запустите скачанный файл.</li>
             <li>Он автоматически распакует нужные файлы и откроет страницу браузера.</li>
             <li>Следуйте подсказкам программы (путь к папке скопируется сам).</li>
@@ -112,7 +112,7 @@
         <div class="form-group">
           <label class="form-label">Ваш токен авторизации (вставите после установки)</label>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <input class="form-input" id="extTokenInput" type="text" readonly style="background: #F8FAFC; color: #64748B; flex: 1; min-width: 0;">
+            <input class="form-input" id="extTokenInput" type="text" readonly style="background: var(--bg-2); color: var(--text-2); flex: 1; min-width: 0;">
             <button class="btn-action" onclick="copyExtToken('extTokenInput')" style="white-space: nowrap; flex-shrink: 0;">Копировать</button>
           </div>
         </div>
@@ -200,10 +200,10 @@
           <div class="ph-icon" style="margin:0; font-size: 32px;">🔍</div>
           <h3 style="margin: 0; font-size: 1.25rem;">Сканер Kaspi</h3>
         </div>
-        <p style="color: #475569; line-height: 1.6; font-size: 14px;">
+        <p style="color: var(--text-2); line-height: 1.6; font-size: 14px;">
           С помощью этого инструмента вы можете находить прибыльные ниши и анализировать конкурентов на Kaspi.kz.
         </p>
-        <div style="background: #EFF6FF; border-left: 4px solid #2563EB; padding: 1rem; border-radius: 4px; font-size: 13px; color: #1E3A8A; margin-bottom: 1.5rem;">
+        <div style="background: var(--brand-light); border-left: 4px solid #2563EB; padding: 1rem; border-radius: 4px; font-size: 13px; color: var(--brand-light); margin-bottom: 1.5rem;">
           <strong>Инструкция:</strong>
           <ol style="margin-top: 8px; padding-left: 20px; margin-bottom: 0;">
             <li>Введите ссылку на категорию или поисковый запрос Kaspi.</li>
@@ -222,7 +222,7 @@
       <div class="card" style="flex: 1; min-width: 300px;">
         <h3 style="margin-bottom: 16px; font-size: 18px;">История сканирований</h3>
         <div style="display: flex; flex-direction: column; gap: 12px;" id="scanHistoryList">
-          <div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Загрузка истории...</div>
+          <div style="font-size: 13px; color: var(--text-2); text-align: center; padding: 1rem 0;">Загрузка истории...</div>
         </div>
       </div>
     </div>
@@ -231,7 +231,7 @@
   <!-- ═══════ PAGE: Analytics ═══════ -->
   <section class="page" id="page-analytics">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h2 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">Аналитика</h2>
+      <h2 style="font-size: 24px; font-weight: bold; color: var(--text); margin: 0;">Аналитика</h2>
     </div>
 
     <!-- Stats row -->
@@ -244,7 +244,7 @@
     <div class="card" style="margin-top: 24px;">
       <h3 style="margin-bottom: 16px; font-size: 18px;">Последнее сканирование рынка</h3>
       <div style="display: flex; flex-direction: column; gap: 12px;" id="latestScanBlock">
-        <div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Загрузка данных...</div>
+        <div style="font-size: 13px; color: var(--text-2); text-align: center; padding: 1rem 0;">Загрузка данных...</div>
       </div>
     </div>
   </section>
@@ -252,13 +252,13 @@
 
 
   <!-- ═══════ PAGE: Kaspi Calculator ═══════ -->
-  <section class="page" id="page-calculator" style="background:#F8FAFC; padding: 2rem 3rem;">
+  <section class="page" id="page-calculator" style="background: var(--bg-2); padding: 2rem 3rem;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h2 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">Калькулятор прибыли Kaspi</h2>
+      <h2 style="font-size: 24px; font-weight: bold; color: var(--text); margin: 0;">Калькулятор прибыли Kaspi</h2>
     </div>
     <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
       <!-- Ввод данных -->
-      <div class="card" style="flex: 1.5; min-width: 320px; border: 1px solid #E2E8F0; box-shadow: none;">
+      <div class="card" style="flex: 1.5; min-width: 320px; border: 1px solid var(--border); box-shadow: none;">
         <h3 style="margin-bottom: 20px; font-size: 18px;">Параметры товара</h3>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
@@ -276,7 +276,7 @@
           <div class="form-group">
             <label class="form-label">Вес товара (кг)</label>
             <input class="form-input calc-input" id="calcWeight" type="number" step="0.1" value="1.5" oninput="calculateProfit()">
-            <div style="font-size: 11px; color: #64748B; margin-top: 4px;">Нужен только если цена > 10 000 ₸</div>
+            <div style="font-size: 11px; color: var(--text-2); margin-top: 4px;">Нужен только если цена > 10 000 ₸</div>
           </div>
           <div class="form-group">
             <label class="form-label">Зона доставки</label>
@@ -297,7 +297,7 @@
             </select>
         </div>
 
-        <h3 style="margin: 24px 0 16px; font-size: 16px; color: #475569; border-top: 1px solid #E2E8F0; padding-top: 20px;">Комиссии и расходы</h3>
+        <h3 style="margin: 24px 0 16px; font-size: 16px; color: var(--text-2); border-top: 1px solid #E2E8F0; padding-top: 20px;">Комиссии и расходы</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
           <div class="form-group">
             <label class="form-label">Комиссия Kaspi (%)</label>
@@ -315,44 +315,44 @@
       </div>
 
       <!-- Результат -->
-      <div class="card" style="flex: 1; min-width: 300px; background: #fff; border: 1px solid #E2E8F0; box-shadow: none;">
+      <div class="card" style="flex: 1; min-width: 300px; background: #fff; border: 1px solid var(--border); box-shadow: none;">
         <h3 style="margin-bottom: 20px; font-size: 18px;">Юнит-экономика</h3>
         
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-2);">
           <span>Выручка:</span>
-          <span id="resRevenue" style="font-weight: 600; color: #0F172A;">15 000 ₸</span>
+          <span id="resRevenue" style="font-weight: 600; color: var(--text);">15 000 ₸</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-2);">
           <span>Общая комиссия Kaspi:</span>
           <span id="resCommission" style="font-weight: 600; color: #EF4444;">- 2 325 ₸</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-2);">
           <span>Доставка (Kaspi Доставка):</span>
           <span id="resDelivery" style="font-weight: 600; color: #EF4444;">- 1 507 ₸</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #475569;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-2);">
           <span>Упаковка:</span>
           <span id="resPackage" style="font-weight: 600; color: #EF4444;">- 100 ₸</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; color: #475569;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; color: var(--text-2);">
           <span>Себестоимость:</span>
           <span id="resCost" style="font-weight: 600; color: #EF4444;">- 8 000 ₸</span>
         </div>
         
         <div style="border-top: 1px solid #E2E8F0; padding-top: 16px; margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 16px; font-weight: 600; color: #0F172A;">Чистая прибыль:</span>
+            <span style="font-size: 16px; font-weight: 600; color: var(--text);">Чистая прибыль:</span>
             <span id="resProfit" style="font-size: 24px; font-weight: 800; color: #10B981;">3 068 ₸</span>
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #E2E8F0;">
-            <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">Маржинальность</div>
+          <div style="background: var(--bg-2); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
+            <div style="font-size: 12px; color: var(--text-2); margin-bottom: 4px;">Маржинальность</div>
             <div id="resMargin" style="font-size: 18px; font-weight: 700; color: #3B82F6;">20.5%</div>
           </div>
-          <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #E2E8F0;">
-            <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">ROI (Окупаемость)</div>
+          <div style="background: var(--bg-2); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
+            <div style="font-size: 12px; color: var(--text-2); margin-bottom: 4px;">ROI (Окупаемость)</div>
             <div id="resRoi" style="font-size: 18px; font-weight: 700; color: #8B5CF6;">31.9%</div>
           </div>
         </div>
@@ -366,7 +366,7 @@
   </section>
 </main>
 
-<script src="assets/common.js"></script>
+<script src="assets/common.js?v=3"></script>
 <script src="assets/dashboard.js"></script>
 </body>
 </html>

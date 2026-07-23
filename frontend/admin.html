@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quareo — Панель Администратора</title>
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=3">
 <link rel="icon" type="image/png" href="/assets/favicon.jpg">
 <style>
   body { background: var(--bg-2); }
@@ -67,19 +67,40 @@
 <body>
 
 <!-- NAV -->
-<nav>
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      Quareo <span style="font-size: 12px; color: var(--red); margin-left: 10px;">ADMIN</span>
-    </a>
-    <div class="nav-links">
-      <a href="dashboard.html">В кабинет</a>
+<nav id="mainNav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Quareo</a>
+      <div class="nav-links">
+        <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+        <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+        <a href="ntin.html" data-i="nav_ntin">NTIN</a>
+        <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
+        <a href="waybills.html" data-i="nav_waybills">Накладные</a>
+        <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Автоответчик</a>
+        <a href="#faq" data-i="nav_faq">FAQ</a>
+        <a href="pricing.html" data-i="nav_pricing">Все тарифы</a>
+      </div>
+      <div class="nav-right">
+        <div class="lang-switch">
+          <button class="lang-btn active" onclick="rpSetLang('ru')">RU</button>
+          <button class="lang-btn" onclick="rpSetLang('en')">EN</button>
+        </div>
+        
+        <!-- Auth logic (managed by common.js) -->
+        <div id="navAuth" style="display: block;">
+          <a href="auth.html" class="btn-nav-cta" data-i="login">Вход</a>
+        </div>
+        
+        <div id="navUser" style="display: none; align-items: center; gap: 16px;">
+          <a href="dashboard.html" style="color: #fff; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span data-i="dashboard">Личный кабинет</span>
+          </a>
+          <button onclick="rpLogout()" style="background: #fff; color: #000; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;" data-i="logout">Выйти</button>
+        </div>
+      </div>
     </div>
-    <div class="nav-right">
-      <button class="auth-nav-btn" onclick="rpLogout()" style="background:none;border:1px solid var(--border-2);color:var(--text-2);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;">Выйти</button>
-    </div>
-  </div>
-</nav>
+  </nav>
 
 <main class="admin-wrap">
   <div class="admin-header">
@@ -146,7 +167,7 @@
   </div>
 </main>
 
-<script src="assets/common.js"></script>
+<script src="assets/common.js?v=3"></script>
 <script>
 const ADMIN_EMAIL = "disairon.agent@bk.ru";
 

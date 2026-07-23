@@ -55,7 +55,7 @@ function esc(s) {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "🤖 Автоответчик", nav_pricing: "Тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Автоответчик", nav_faq: "FAQ", nav_pricing: "Все тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",
@@ -107,52 +107,17 @@ function rpSetLang(l) {
 
 /* ── Auth Nav ──────────────────────────────────────────────── */
 function rpUpdateAuthNav() {
-  const navRight = document.querySelector('.nav-right');
-  if (!navRight) return;
+  const isAuth = !!rpGetToken();
+  const d1 = document.getElementById('navAuth');
+  const d2 = document.getElementById('navUser');
 
-  // Remove existing auth buttons
-  navRight.querySelectorAll('.auth-nav-btn, .auth-user-badge').forEach(el => el.remove());
-
-  const t = RP_I18N[RP_LANG];
-  const user = rpGetUser();
-
-  if (user && rpGetToken()) {
-    // Logged in — show dashboard link + logout
-    const badge = document.createElement('div');
-    badge.className = 'auth-user-badge';
-
-    const dashLink = document.createElement('a');
-    dashLink.href = 'dashboard.html';
-    dashLink.className = 'auth-dash-link';
-    dashLink.innerHTML = `<span class="auth-dash-icon">👤</span><span class="auth-dash-text">Личный кабинет</span>`;
-
-    const logoutBtn = document.createElement('button');
-    logoutBtn.className = 'auth-nav-btn';
-    logoutBtn.textContent = t.nav_logout;
-    logoutBtn.onclick = rpLogout;
-
-    badge.appendChild(dashLink);
-    badge.appendChild(logoutBtn);
-
-    // Insert before burger button
-    const burger = navRight.querySelector('.nav-burger');
-    if (burger) {
-      navRight.insertBefore(badge, burger);
+  if (d1 && d2) {
+    if (isAuth) {
+      d1.style.display = 'none';
+      d2.style.display = 'flex';
     } else {
-      navRight.appendChild(badge);
-    }
-
-    // Replace CTA button
-    const cta = navRight.querySelector('.btn-nav-cta');
-    if (cta) cta.style.display = 'none';
-  } else {
-    // Not logged in — show login link
-    const cta = navRight.querySelector('.btn-nav-cta');
-    if (cta) {
-      cta.href = 'auth.html?view=login';
-      cta.setAttribute('data-i', 'nav_login');
-      cta.textContent = t.nav_login;
-      cta.style.display = '';
+      d1.style.display = 'block';
+      d2.style.display = 'none';
     }
   }
 }
@@ -315,8 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
         position: relative;
         width: 100%;
         max-width: 420px;
-        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(219,234,254,0.7));
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        background: linear-gradient(135deg, rgba(13, 13, 18, 0.85), rgba(37, 99, 235, 0.15));
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
         box-shadow:
           0 8px 16px rgba(37, 99, 235, 0.08),
@@ -331,10 +296,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       #rp-modal-overlay.rp-modal-show .rp-modal { transform: scale(1) translateY(0); }
       .rp-modal.rp-modal-error {
-        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(254,226,226,0.75));
+        background: linear-gradient(135deg, rgba(13, 13, 18, 0.85), rgba(239, 68, 68, 0.15));
       }
       .rp-modal.rp-modal-success {
-        background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(220,252,231,0.75));
+        background: linear-gradient(135deg, rgba(13, 13, 18, 0.85), rgba(16, 185, 129, 0.15));
       }
       .rp-modal-icon {
         width: 52px;
@@ -355,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
         font-family: var(--font-display, inherit);
         font-size: 15.5px;
         line-height: 1.6;
-        color: var(--text, #111827);
+        color: #ffffff;
         white-space: pre-line;
         margin-bottom: 22px;
       }
@@ -465,12 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
         left: 0;
         height: 100%;
         border-radius: var(--radius-sm, 8px);
-        background: linear-gradient(135deg, rgba(37,99,235,0.16), rgba(96,165,250,0.22));
-        border: 1px solid rgba(255,255,255,0.6);
+        background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(124,58,237,0.2));
+        border: 1px solid rgba(255,255,255,0.1);
         box-shadow:
-          0 2px 8px rgba(37, 99, 235, 0.18),
-          inset 0 1px 0 rgba(255,255,255,0.8),
-          inset 0 -1px 4px rgba(37, 99, 235, 0.08);
+          0 2px 8px rgba(37, 99, 235, 0.2),
+          inset 0 1px 0 rgba(255,255,255,0.15),
+          inset 0 -1px 4px rgba(124, 58, 237, 0.2);
         backdrop-filter: blur(10px) saturate(180%);
         -webkit-backdrop-filter: blur(10px) saturate(180%);
         pointer-events: none;
