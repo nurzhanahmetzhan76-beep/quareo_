@@ -72,6 +72,11 @@ class RepricingRule(Base):
         Integer, default=5,
         comment="Undercut step in KZT (max 5). Always exactly this much below competitor"
     )
+    
+    preorder_days: Mapped[int] = mapped_column(
+        Integer, default=0,
+        comment="Kaspi pre-order days (0 = disabled, max 30)"
+    )
 
     # Toggle — user manually enables/disables
     is_active: Mapped[bool] = mapped_column(

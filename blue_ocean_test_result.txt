@@ -1,0 +1,18 @@
+Query: робот пылесос
+Total cards from API: 12
+
+ID=157652580 | Brand=White Wave | Price=69800 | Rating=4.8 | Reviews=59 | Seller=Unknown (0 sellers)
+  Title: White Wave MFR01 + подарок пароочиститель
+
+ID=124138280 | Brand=TROUVER | Price=139990 | Rating=4.9 | Reviews=332 | Seller=Unknown (0 sellers)
+  Title: TROUVER E30 Ultra белый
+
+ID=152383608 | Brand=TROUVER | Price=199990 | Rating=4.9 | Reviews=184 | Seller=Unknown (0 sellers)
+  Title: TROUVER E40 Ultra RLE21SE / 23205632 белый
+
+ID=151138085 | Brand=Polaris | Price=69990 | Rating=4.9 | Reviews=350 | Seller=Unknown (0 sellers)
+  Title: Polaris PVCR G2 5001 белый
+
+ID=144653470 | Brand=TROUVER | Price=99990 | Rating=4.9 | Reviews=162 | Seller=Unknown (0 sellers)
+  Title: TROUVER Robot Vacuum E20s Pro Plus RLE24SD белый
+

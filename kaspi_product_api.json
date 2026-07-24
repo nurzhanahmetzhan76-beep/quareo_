@@ -1,0 +1,3354 @@
+{
+  "https://kaspi.kz/yml/main-navigation/n/n/desktop-topbar?depth=3&city&rootType=desktop": {
+    "code": "desktop-topbar",
+    "title": "desktop-topbar",
+    "seoTitle": "desktop-topbar",
+    "icon": null,
+    "image": null,
+    "darkImage": null,
+    "homepageImage": null,
+    "darkHomepageImage": null,
+    "level": 0,
+    "link": "c/desktop-topbar/",
+    "subNodes": [
+      {
+        "code": "clients",
+        "title": "Клиентам",
+        "seoTitle": "Клиентам",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/clients/",
+        "subNodes": [
+          {
+            "code": "Products",
+            "title": "Продукты Kaspi.kz",
+            "seoTitle": "Продукты Kaspi.kz",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/products/",
+            "subNodes": [
+              {
+                "code": "Gold",
+                "title": "Kaspi Gold",
+                "seoTitle": "Kaspi Gold",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/gold",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Gold"
+                ],
+                "categoryCodes": [
+                  "Gold"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 0,
+                "allGoods": false
+              },
+              {
+                "code": "Goldkids",
+                "title": "Kaspi Gold для ребенка",
+                "seoTitle": "Kaspi Gold для ребенка",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/goldkid",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Gold для ребенка"
+                ],
+                "categoryCodes": [
+                  "Goldkids"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 1,
+                "allGoods": false
+              },
+              {
+                "code": "Kaspired",
+                "title": "Kaspi Red",
+                "seoTitle": "Kaspi Red",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/kaspired",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Red"
+                ],
+                "categoryCodes": [
+                  "Kaspired"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 2,
+                "allGoods": false
+              },
+              {
+                "code": "Deposit",
+                "title": "Kaspi Депозит",
+                "seoTitle": "Kaspi Депозит",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/deposit",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Депозит"
+                ],
+                "categoryCodes": [
+                  "Deposit"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 3,
+                "allGoods": false
+              },
+              {
+                "code": "Purchase",
+                "title": "Кредит на Покупки",
+                "seoTitle": "Кредит на Покупки",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/purchase",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Кредит на Покупки"
+                ],
+                "categoryCodes": [
+                  "Purchase"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 4,
+                "allGoods": false
+              },
+              {
+                "code": "Installment",
+                "title": "Рассрочка",
+                "seoTitle": "Рассрочка",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/installment",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Рассрочка"
+                ],
+                "categoryCodes": [
+                  "Installment"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 5,
+                "allGoods": false
+              },
+              {
+                "code": "cashkreditbiz",
+                "title": "Кредит для ИП",
+                "seoTitle": "Кредит для ИП",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/cashkreditbiz",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Кредит для ИП"
+                ],
+                "categoryCodes": [
+                  "cashkreditbiz"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 6,
+                "allGoods": false
+              },
+              {
+                "code": "Cashkredit",
+                "title": "Кредит Наличными",
+                "seoTitle": "Кредит Наличными",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/cashkredit",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Кредит Наличными"
+                ],
+                "categoryCodes": [
+                  "Cashkredit"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 7,
+                "allGoods": false
+              }
+            ],
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": false,
+            "categoryNames": [
+              "Продукты Kaspi.kz"
+            ],
+            "categoryCodes": [
+              "Products"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "Services",
+            "title": "Сервисы Kaspi.kz",
+            "seoTitle": "Сервисы Kaspi.kz",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/services/",
+            "subNodes": [
+              {
+                "code": "Shop-services",
+                "title": "Магазин",
+                "seoTitle": "Магазин",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/shop",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Магазин"
+                ],
+                "categoryCodes": [
+                  "Shop-services"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 0,
+                "allGoods": false
+              },
+              {
+                "code": "Kaspitravel",
+                "title": "Travel",
+                "seoTitle": "Travel",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/kaspitravel",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Travel"
+                ],
+                "categoryCodes": [
+                  "Kaspitravel"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 1,
+                "allGoods": false
+              },
+              {
+                "code": "Payments",
+                "title": "Платежи",
+                "seoTitle": "Платежи",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/payments",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Платежи"
+                ],
+                "categoryCodes": [
+                  "Payments"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 2,
+                "allGoods": false
+              },
+              {
+                "code": "mybank",
+                "title": "Мой банк",
+                "seoTitle": "Мой банк",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "c/mybank/",
+                "subNodes": null,
+                "data": {
+                  "dialog": {
+                    "id": "app-invoke-mybank",
+                    "appLink": "https://dz3a4.app.goo.gl/C3q8",
+                    "title": "Мой Банк доступен в мобильном приложении Kaspi.kz"
+                  }
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Мой банк"
+                ],
+                "categoryCodes": [
+                  "mybank"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 3,
+                "allGoods": false
+              },
+              {
+                "code": "Transfers",
+                "title": "Переводы",
+                "seoTitle": "Переводы",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/transfers",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Переводы"
+                ],
+                "categoryCodes": [
+                  "Transfers"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 4,
+                "allGoods": false
+              },
+              {
+                "code": "Actions",
+                "title": "Акции",
+                "seoTitle": "Акции",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "c/actions/",
+                "subNodes": null,
+                "data": {
+                  "dialog": {
+                    "id": "app-invoke-actions",
+                    "appLink": "https://dz3a4.app.goo.gl/Xrw7",
+                    "title": "Узнать об акциях Вы можете в мобильном приложении Kaspi.kz"
+                  }
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Акции"
+                ],
+                "categoryCodes": [
+                  "Actions"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 5,
+                "allGoods": false
+              },
+              {
+                "code": "Gos",
+                "title": "Госуслуги",
+                "seoTitle": "Госуслуги",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "c/gos/",
+                "subNodes": null,
+                "data": {
+                  "dialog": {
+                    "id": "app-invoke-gos",
+                    "appLink": "https://dz3a4.app.goo.gl/QxvW",
+                    "title": "Оформить Госуслуги Вы можете в мобильном приложении Kaspi.kz"
+                  }
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Госуслуги"
+                ],
+                "categoryCodes": [
+                  "Gos"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 6,
+                "allGoods": false
+              },
+              {
+                "code": "announcements",
+                "title": "Объявления",
+                "seoTitle": "Объявления",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "c/announcements/",
+                "subNodes": null,
+                "data": {
+                  "dialog": {
+                    "id": "app-invoke-announcements",
+                    "appLink": "https://dz3a4.app.goo.gl/hhyc",
+                    "title": " Подать объявление, искать товары и услуги  вы можете в мобильном приложении Kaspi.kz"
+                  }
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Объявления"
+                ],
+                "categoryCodes": [
+                  "announcements"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 7,
+                "allGoods": false
+              },
+              {
+                "code": "Guide",
+                "title": "Kaspi Гид",
+                "seoTitle": "Kaspi Гид",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://guide.kaspi.kz/client/",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Гид"
+                ],
+                "categoryCodes": [
+                  "Guide"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 8,
+                "allGoods": false
+              }
+            ],
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Сервисы Kaspi.kz"
+            ],
+            "categoryCodes": [
+              "Services"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": true,
+        "categoryNames": [
+          "Клиентам"
+        ],
+        "categoryCodes": [
+          "clients"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 0,
+        "allGoods": false
+      },
+      {
+        "code": "Partners",
+        "title": "Бизнесу",
+        "seoTitle": "Бизнесу",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/partners/",
+        "subNodes": [
+          {
+            "code": "partners-block-1",
+            "title": " ",
+            "seoTitle": " ",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/partners-block-1/",
+            "subNodes": [
+              {
+                "code": "Kaspipay",
+                "title": "Kaspi Pay",
+                "seoTitle": "Kaspi Pay",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/kaspipay",
+                "subNodes": null,
+                "data": {
+                  "id": "partners-group-1"
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Pay"
+                ],
+                "categoryCodes": [
+                  "Kaspipay"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 0,
+                "allGoods": false
+              },
+              {
+                "code": "Bizkredit",
+                "title": "Бизнес Кредит",
+                "seoTitle": "Бизнес Кредит",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/bizkredit",
+                "subNodes": null,
+                "data": {
+                  "id": "partners-group-1"
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Бизнес Кредит"
+                ],
+                "categoryCodes": [
+                  "Bizkredit"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 1,
+                "allGoods": false
+              },
+              {
+                "code": "Cashkreditbiz",
+                "title": "Кредит для ИП",
+                "seoTitle": "Кредит для ИП",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/cashkreditbiz",
+                "subNodes": null,
+                "data": {
+                  "id": "partners-group-1"
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Кредит для ИП"
+                ],
+                "categoryCodes": [
+                  "Cashkreditbiz"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 2,
+                "allGoods": false
+              }
+            ],
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              " "
+            ],
+            "categoryCodes": [
+              "partners-block-1"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "partners-block-2",
+            "title": " ",
+            "seoTitle": " ",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/partners-block-2/",
+            "subNodes": [
+              {
+                "code": "Shop",
+                "title": "Продавать в Интернет-магазине на Kaspi.kz",
+                "seoTitle": "Продавать в Интернет-магазине на Kaspi.kz",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/shop/merchant/registration/",
+                "subNodes": null,
+                "data": {
+                  "id": "partners-group-2"
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Продавать в Интернет-магазине на Kaspi.kz"
+                ],
+                "categoryCodes": [
+                  "Shop"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 0,
+                "allGoods": false
+              },
+              {
+                "code": "Partnership",
+                "title": "Принимать платежи с Kaspi.kz",
+                "seoTitle": "Принимать платежи с Kaspi.kz",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://kaspi.kz/webpay/partnership",
+                "subNodes": null,
+                "data": {
+                  "id": "partners-group-2"
+                },
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Принимать платежи с Kaspi.kz"
+                ],
+                "categoryCodes": [
+                  "Partnership"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 2,
+                "allGoods": false
+              },
+              {
+                "code": "Guide-partners",
+                "title": "Kaspi Гид",
+                "seoTitle": "Kaspi Гид",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://guide.kaspi.kz/partner/",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Kaspi Гид"
+                ],
+                "categoryCodes": [
+                  "Guide-partners"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 3,
+                "allGoods": false
+              }
+            ],
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              " "
+            ],
+            "categoryCodes": [
+              "partners-block-2"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          }
+        ],
+        "data": {
+          "id": "partners-group-2"
+        },
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": true,
+        "categoryNames": [
+          "Бизнесу"
+        ],
+        "categoryCodes": [
+          "Partners"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 1,
+        "allGoods": false
+      },
+      {
+        "code": "KaspiGuidelink",
+        "title": "Kaspi Гид",
+        "seoTitle": "Kaspi Гид",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/kaspiguidelink/",
+        "subNodes": [
+          {
+            "code": "guide-block-1",
+            "title": " ",
+            "seoTitle": " ",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/guide-block-1/",
+            "subNodes": [
+              {
+                "code": "guide-clients",
+                "title": "Клиентам",
+                "seoTitle": "Клиентам",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://guide.kaspi.kz/client/",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Клиентам"
+                ],
+                "categoryCodes": [
+                  "guide-clients"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 0,
+                "allGoods": false
+              },
+              {
+                "code": "guide-partners",
+                "title": "Бизнесу",
+                "seoTitle": "Бизнесу",
+                "icon": null,
+                "image": null,
+                "darkImage": null,
+                "homepageImage": null,
+                "darkHomepageImage": null,
+                "level": 3,
+                "link": "https://guide.kaspi.kz/partner/",
+                "subNodes": null,
+                "data": null,
+                "includes": null,
+                "restrictions": [],
+                "visible": true,
+                "listView": true,
+                "categoryNames": [
+                  "Бизнесу"
+                ],
+                "categoryCodes": [
+                  "guide-partners"
+                ],
+                "popularity": 0,
+                "customPopularity": 0,
+                "position": 1,
+                "allGoods": false
+              }
+            ],
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": false,
+            "categoryNames": [
+              " "
+            ],
+            "categoryCodes": [
+              "guide-block-1"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Kaspi Гид"
+        ],
+        "categoryCodes": [
+          "KaspiGuidelink"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 2,
+        "allGoods": false
+      }
+    ],
+    "data": null,
+    "includes": null,
+    "restrictions": [],
+    "visible": true,
+    "listView": false,
+    "categoryNames": [
+      "desktop-topbar"
+    ],
+    "categoryCodes": [
+      "desktop-topbar"
+    ],
+    "popularity": 0,
+    "customPopularity": 0,
+    "position": 0,
+    "allGoods": false
+  },
+  "https://kaspi.kz/yml/main-navigation/n/n/desktop-menu?depth=1&city&code&rootType=desktop": {
+    "code": "desktop-menu",
+    "title": "desktop-menu",
+    "seoTitle": "desktop-menu",
+    "icon": null,
+    "image": null,
+    "darkImage": null,
+    "homepageImage": null,
+    "darkHomepageImage": null,
+    "level": 0,
+    "link": "c/desktop-menu/",
+    "subNodes": [
+      {
+        "code": "Smartphones and gadgets",
+        "title": "Телефоны и гаджеты",
+        "seoTitle": "Телефоны и гаджеты",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/smartphones%20and%20gadgets/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Smartphones and gadgets",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Телефоны и гаджеты"
+        ],
+        "categoryCodes": [
+          "Smartphones and gadgets"
+        ],
+        "popularity": 4590226,
+        "customPopularity": 220,
+        "position": 19,
+        "allGoods": false
+      },
+      {
+        "code": "Home equipment",
+        "title": "Бытовая техника",
+        "seoTitle": "Бытовую технику",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/home%20equipment/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Home equipment",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Бытовая техника"
+        ],
+        "categoryCodes": [
+          "Home equipment"
+        ],
+        "popularity": 8790988,
+        "customPopularity": 210,
+        "position": 12,
+        "allGoods": false
+      },
+      {
+        "code": "TV_Audio",
+        "title": "ТВ, Аудио, Видео",
+        "seoTitle": "ТВ, Аудио, Видео",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/tv_audio/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "TV_Audio",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "ТВ, Аудио, Видео"
+        ],
+        "categoryCodes": [
+          "TV_Audio"
+        ],
+        "popularity": 2512551,
+        "customPopularity": 200,
+        "position": 20,
+        "allGoods": false
+      },
+      {
+        "code": "Computers",
+        "title": "Компьютеры",
+        "seoTitle": "Компьютер",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/computers/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Computers",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Компьютеры"
+        ],
+        "categoryCodes": [
+          "Computers"
+        ],
+        "popularity": 1415603,
+        "customPopularity": 190,
+        "position": 4,
+        "allGoods": false
+      },
+      {
+        "code": "Furniture",
+        "title": "Мебель",
+        "seoTitle": "Мебель",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/furniture/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Furniture",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Мебель"
+        ],
+        "categoryCodes": [
+          "Furniture"
+        ],
+        "popularity": 2468753,
+        "customPopularity": 175,
+        "position": 9,
+        "allGoods": false
+      },
+      {
+        "code": "Beauty care",
+        "title": "Красота, здоровье",
+        "seoTitle": "Красота и здоровье",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/beauty%20care/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Beauty care",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Красота, здоровье"
+        ],
+        "categoryCodes": [
+          "Beauty care"
+        ],
+        "popularity": 23907163,
+        "customPopularity": 160,
+        "position": 1,
+        "allGoods": false
+      },
+      {
+        "code": "Child goods",
+        "title": "Детские товары",
+        "seoTitle": "Детские товары",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/child%20goods/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Child goods",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Детские товары"
+        ],
+        "categoryCodes": [
+          "Child goods"
+        ],
+        "popularity": 12539629,
+        "customPopularity": 150,
+        "position": 3,
+        "allGoods": false
+      },
+      {
+        "code": "Pharmacy",
+        "title": "Аптека",
+        "seoTitle": "Лекаства и медицинские приборы ",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/pharmacy/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Pharmacy",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Аптека"
+        ],
+        "categoryCodes": [
+          "Pharmacy"
+        ],
+        "popularity": 6816509,
+        "customPopularity": 140,
+        "position": 17,
+        "allGoods": false
+      },
+      {
+        "code": "Construction and repair",
+        "title": "Строительство, ремонт",
+        "seoTitle": "Строительство, ремонт",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/construction%20and%20repair/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Construction and repair",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Строительство, ремонт"
+        ],
+        "categoryCodes": [
+          "Construction and repair"
+        ],
+        "popularity": 7792756,
+        "customPopularity": 130,
+        "position": 5,
+        "allGoods": false
+      },
+      {
+        "code": "Sports and outdoors",
+        "title": "Спорт, <br/> туризм",
+        "seoTitle": "Спорт, туризм",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/sports%20and%20outdoors/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Спорт, <br/> туризм"
+        ],
+        "categoryCodes": [
+          "Sports and outdoors"
+        ],
+        "popularity": 3750792,
+        "customPopularity": 120,
+        "position": 0,
+        "allGoods": false
+      },
+      {
+        "code": "Leisure",
+        "title": "Досуг, книги",
+        "seoTitle": "Досуг, книги",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/leisure/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Leisure",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Досуг, книги"
+        ],
+        "categoryCodes": [
+          "Leisure"
+        ],
+        "popularity": 5352418,
+        "customPopularity": 110,
+        "position": 14,
+        "allGoods": false
+      },
+      {
+        "code": "Car goods",
+        "title": "Автотовары",
+        "seoTitle": "Автотовары",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/car%20goods/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Car goods",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Автотовары"
+        ],
+        "categoryCodes": [
+          "Car goods"
+        ],
+        "popularity": 7741842,
+        "customPopularity": 100,
+        "position": 2,
+        "allGoods": false
+      },
+      {
+        "code": "Jewelry and Bijouterie",
+        "title": "Украшения",
+        "seoTitle": "Украшения",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/jewelry%20and%20bijouterie/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Jewelry and Bijouterie",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Украшения"
+        ],
+        "categoryCodes": [
+          "Jewelry and Bijouterie"
+        ],
+        "popularity": 3238480,
+        "customPopularity": 90,
+        "position": 13,
+        "allGoods": false
+      },
+      {
+        "code": "Fashion accessories",
+        "title": "Аксессуары",
+        "seoTitle": "Аксессуары",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/fashion%20accessories/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Fashion accessories",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Аксессуары"
+        ],
+        "categoryCodes": [
+          "Fashion accessories"
+        ],
+        "popularity": 3230495,
+        "customPopularity": 80,
+        "position": 7,
+        "allGoods": false
+      },
+      {
+        "code": "Fashion",
+        "title": "Одежда",
+        "seoTitle": "Одежду",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/fashion/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Fashion",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Одежда"
+        ],
+        "categoryCodes": [
+          "Fashion"
+        ],
+        "popularity": 7792395,
+        "customPopularity": 70,
+        "position": 6,
+        "allGoods": false
+      },
+      {
+        "code": "Shoes",
+        "title": "Обувь",
+        "seoTitle": "Обувь",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/shoes/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Shoes",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Обувь"
+        ],
+        "categoryCodes": [
+          "Shoes"
+        ],
+        "popularity": 1257411,
+        "customPopularity": 60,
+        "position": 18,
+        "allGoods": false
+      },
+      {
+        "code": "Home",
+        "title": "Товары для дома и дачи",
+        "seoTitle": "Товары для дома и дачи",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/home/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Home",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Товары для дома и дачи"
+        ],
+        "categoryCodes": [
+          "Home"
+        ],
+        "popularity": 16886244,
+        "customPopularity": 0,
+        "position": 11,
+        "allGoods": false
+      },
+      {
+        "code": "Office and school supplies",
+        "title": "Канцелярские товары",
+        "seoTitle": "Канцелярские товары",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/office%20and%20school%20supplies/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Office and school supplies",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Канцелярские товары"
+        ],
+        "categoryCodes": [
+          "Office and school supplies"
+        ],
+        "popularity": 1794912,
+        "customPopularity": 0,
+        "position": 15,
+        "allGoods": false
+      },
+      {
+        "code": "Gifts and party supplies",
+        "title": "Подарки, товары для праздников",
+        "seoTitle": "Подарки и товары для праздников",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/gifts%20and%20party%20supplies/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Gifts and party supplies",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Подарки, товары для праздников"
+        ],
+        "categoryCodes": [
+          "Gifts and party supplies"
+        ],
+        "popularity": 1691543,
+        "customPopularity": 0,
+        "position": 10,
+        "allGoods": false
+      },
+      {
+        "code": "Pet goods",
+        "title": "Товары для животных",
+        "seoTitle": "Товары для животных",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "/shop/c/pet%20goods/",
+        "subNodes": null,
+        "data": null,
+        "includes": null,
+        "restrictions": [
+          {
+            "category": "Pet goods",
+            "kidsCompatible": true,
+            "type": "CATEGORY",
+            "fulfilled": true
+          }
+        ],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Товары для животных"
+        ],
+        "categoryCodes": [
+          "Pet goods"
+        ],
+        "popularity": 1616424,
+        "customPopularity": 0,
+        "position": 16,
+        "allGoods": false
+      }
+    ],
+    "data": {
+      "maxMainNav": 8,
+      "maxRowsAllowed": 6,
+      "mainButton": {
+        "title": "Все категории",
+        "link": "/shop/c/categories/"
+      }
+    },
+    "includes": null,
+    "restrictions": [],
+    "visible": true,
+    "listView": false,
+    "categoryNames": [
+      "desktop-menu"
+    ],
+    "categoryCodes": [
+      "desktop-menu"
+    ],
+    "popularity": 0,
+    "customPopularity": 0,
+    "position": 0,
+    "allGoods": false
+  },
+  "https://kaspi.kz/yml/main-navigation/n/n/desktop-footer?depth=2&city&rootType=desktop": {
+    "code": "desktop-footer",
+    "title": "desktop-footer",
+    "seoTitle": "desktop-footer",
+    "icon": null,
+    "image": null,
+    "darkImage": null,
+    "homepageImage": null,
+    "darkHomepageImage": null,
+    "level": 0,
+    "link": "c/desktop-footer/",
+    "subNodes": [
+      {
+        "code": "Products",
+        "title": "Продукты Kaspi.kz",
+        "seoTitle": "Продукты Kaspi.kz",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/products/",
+        "subNodes": [
+          {
+            "code": "Gold",
+            "title": "Kaspi Gold",
+            "seoTitle": "Kaspi Gold",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/gold",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Gold"
+            ],
+            "categoryCodes": [
+              "Gold"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "Goldkid",
+            "title": "Kaspi Gold для ребенка",
+            "seoTitle": "Kaspi Gold для ребенка",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/goldkid",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Gold для ребенка"
+            ],
+            "categoryCodes": [
+              "Goldkid"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          },
+          {
+            "code": "Kaspired",
+            "title": "Kaspi Red",
+            "seoTitle": "Kaspi Red",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/kaspired",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Red"
+            ],
+            "categoryCodes": [
+              "Kaspired"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 2,
+            "allGoods": false
+          },
+          {
+            "code": "deposit",
+            "title": "Kaspi Депозит",
+            "seoTitle": "Kaspi Депозит",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/deposit",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Депозит"
+            ],
+            "categoryCodes": [
+              "deposit"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 3,
+            "allGoods": false
+          },
+          {
+            "code": "Shoppingcredit",
+            "title": "Кредит на Покупки",
+            "seoTitle": "Кредит на Покупки",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/purchase",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Кредит на Покупки"
+            ],
+            "categoryCodes": [
+              "Shoppingcredit"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 4,
+            "allGoods": false
+          },
+          {
+            "code": "Installment",
+            "title": "Рассрочка",
+            "seoTitle": "Рассрочка",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/installment",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Рассрочка"
+            ],
+            "categoryCodes": [
+              "Installment"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 5,
+            "allGoods": false
+          },
+          {
+            "code": "cashkreditbiz",
+            "title": "Кредит для ИП",
+            "seoTitle": "Кредит для ИП",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/cashkreditbiz",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Кредит для ИП"
+            ],
+            "categoryCodes": [
+              "cashkreditbiz"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 6,
+            "allGoods": false
+          },
+          {
+            "code": "Cashkredit",
+            "title": "Кредит наличными",
+            "seoTitle": "Кредит наличными",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/cashkredit",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Кредит наличными"
+            ],
+            "categoryCodes": [
+              "Cashkredit"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 7,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Продукты Kaspi.kz"
+        ],
+        "categoryCodes": [
+          "Products"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 0,
+        "allGoods": false
+      },
+      {
+        "code": "Services",
+        "title": "Сервисы Kaspi.kz",
+        "seoTitle": "Сервисы Kaspi.kz",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/services/",
+        "subNodes": [
+          {
+            "code": "Shop",
+            "title": "Магазин",
+            "seoTitle": "Магазин",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/shop",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Магазин"
+            ],
+            "categoryCodes": [
+              "Shop"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "Kaspitravel",
+            "title": "Travel",
+            "seoTitle": "Travel",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/kaspitravel",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Travel"
+            ],
+            "categoryCodes": [
+              "Kaspitravel"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          },
+          {
+            "code": "Payments",
+            "title": "Платежи",
+            "seoTitle": "Платежи",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/payments",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Платежи"
+            ],
+            "categoryCodes": [
+              "Payments"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 2,
+            "allGoods": false
+          },
+          {
+            "code": "mybank",
+            "title": "Мой банк",
+            "seoTitle": "Мой банк",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/mybank/",
+            "subNodes": null,
+            "data": {
+              "dialog": {
+                "id": "app-invoke-mybank",
+                "appLink": "https://dz3a4.app.goo.gl/C3q8",
+                "title": "Мой Банк доступен в мобильном приложении Kaspi.kz"
+              }
+            },
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Мой банк"
+            ],
+            "categoryCodes": [
+              "mybank"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 3,
+            "allGoods": false
+          },
+          {
+            "code": "Transfers",
+            "title": "Переводы",
+            "seoTitle": "Переводы",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/transfers",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Переводы"
+            ],
+            "categoryCodes": [
+              "Transfers"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 4,
+            "allGoods": false
+          },
+          {
+            "code": "Actions",
+            "title": "Акции",
+            "seoTitle": "Акции",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/actions/",
+            "subNodes": null,
+            "data": {
+              "dialog": {
+                "id": "app-invoke-actions",
+                "appLink": "https://dz3a4.app.goo.gl/Xrw7",
+                "title": "Узнать об акциях Вы можете в мобильном приложении Kaspi.kz"
+              }
+            },
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Акции"
+            ],
+            "categoryCodes": [
+              "Actions"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 5,
+            "allGoods": false
+          },
+          {
+            "code": "Gos",
+            "title": "Госуслуги",
+            "seoTitle": "Госуслуги",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/gos/",
+            "subNodes": null,
+            "data": {
+              "dialog": {
+                "id": "app-invoke-gos",
+                "appLink": "https://dz3a4.app.goo.gl/QxvW",
+                "title": "Оформить Госуслуги Вы можете в мобильном приложении Kaspi.kz"
+              }
+            },
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Госуслуги"
+            ],
+            "categoryCodes": [
+              "Gos"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 6,
+            "allGoods": false
+          },
+          {
+            "code": "announcements",
+            "title": "Объявления",
+            "seoTitle": "Объявления",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "c/announcements/",
+            "subNodes": null,
+            "data": {
+              "dialog": {
+                "id": "app-invoke-announcements",
+                "appLink": "https://dz3a4.app.goo.gl/hhyc",
+                "title": " Подать объявление, искать товары и услуги  вы можете в мобильном приложении Kaspi.kz"
+              }
+            },
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Объявления"
+            ],
+            "categoryCodes": [
+              "announcements"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 7,
+            "allGoods": false
+          },
+          {
+            "code": "Guide",
+            "title": "Kaspi Гид",
+            "seoTitle": "Kaspi Гид",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://guide.kaspi.kz/client/",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Гид"
+            ],
+            "categoryCodes": [
+              "Guide"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 8,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Сервисы Kaspi.kz"
+        ],
+        "categoryCodes": [
+          "Services"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 1,
+        "allGoods": false
+      },
+      {
+        "code": "Business",
+        "title": "Для Бизнеса",
+        "seoTitle": "Для Бизнеса",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/business/",
+        "subNodes": [
+          {
+            "code": "Kaspipay",
+            "title": "Kaspi Pay",
+            "seoTitle": "Kaspi Pay",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/kaspipay",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Pay"
+            ],
+            "categoryCodes": [
+              "Kaspipay"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "Bizkredit",
+            "title": "Бизнес Кредит",
+            "seoTitle": "Бизнес Кредит",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/bizkredit",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Бизнес Кредит"
+            ],
+            "categoryCodes": [
+              "Bizkredit"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          },
+          {
+            "code": "Cashkreditbiz",
+            "title": "Кредит для ИП",
+            "seoTitle": "Кредит для ИП",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/cashkreditbiz",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Кредит для ИП"
+            ],
+            "categoryCodes": [
+              "Cashkreditbiz"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 2,
+            "allGoods": false
+          },
+          {
+            "code": "Webpay",
+            "title": "Принимать платежи с Kaspi.kz",
+            "seoTitle": "Принимать платежи с Kaspi.kz",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/webpay/partnership",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Принимать платежи с Kaspi.kz"
+            ],
+            "categoryCodes": [
+              "Webpay"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 5,
+            "allGoods": false
+          },
+          {
+            "code": "Guide-partners",
+            "title": "Kaspi Гид",
+            "seoTitle": "Kaspi Гид",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://guide.kaspi.kz/partner/",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Kaspi Гид"
+            ],
+            "categoryCodes": [
+              "Guide-partners"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 6,
+            "allGoods": false
+          },
+          {
+            "code": "Merchantcabinet",
+            "title": "Кабинет продавца",
+            "seoTitle": "Кабинет продавца",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/mc/#/login",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Кабинет продавца"
+            ],
+            "categoryCodes": [
+              "Merchantcabinet"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 7,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "Для Бизнеса"
+        ],
+        "categoryCodes": [
+          "Business"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 2,
+        "allGoods": false
+      },
+      {
+        "code": "Others",
+        "title": "9999 Бесплатно с мобильного",
+        "seoTitle": "9999 Бесплатно с мобильного",
+        "icon": null,
+        "image": null,
+        "darkImage": null,
+        "homepageImage": null,
+        "darkHomepageImage": null,
+        "level": 1,
+        "link": "c/others/",
+        "subNodes": [
+          {
+            "code": "User-agreement",
+            "title": "Пользовательское соглашение",
+            "seoTitle": "Пользовательское соглашение",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://guide.kaspi.kz/client/ru/shop/documents/polzovatelskoye-soglasheniye-magazin-na-kaspi.kz",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Пользовательское соглашение"
+            ],
+            "categoryCodes": [
+              "User-agreement"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 0,
+            "allGoods": false
+          },
+          {
+            "code": "Jobskaspi",
+            "title": "Вакансии",
+            "seoTitle": "Вакансии",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://job.kaspi.kz/",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Вакансии"
+            ],
+            "categoryCodes": [
+              "Jobskaspi"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 1,
+            "allGoods": false
+          },
+          {
+            "code": "Investorrelations",
+            "title": "Investor Relations",
+            "seoTitle": "Investor Relations",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://ir.kaspi.kz/",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Investor Relations"
+            ],
+            "categoryCodes": [
+              "Investorrelations"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 2,
+            "allGoods": false
+          },
+          {
+            "code": "bank-services-offer",
+            "title": "Договор присоединения",
+            "seoTitle": "Договор присоединения",
+            "icon": null,
+            "image": null,
+            "darkImage": null,
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/shop/legal/bank_services_offer.pdf",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Договор присоединения"
+            ],
+            "categoryCodes": [
+              "bank-services-offer"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 3,
+            "allGoods": false
+          },
+          {
+            "code": "Delivery-agreement",
+            "title": "Договор по оказанию услуги доставки",
+            "seoTitle": "Договор по оказанию услуги доставки",
+            "icon": null,
+            "image": {
+              "url": "https://resources.cdn-kaspi.kz/img/cnt/m/n/08e9e836-7dbc-46e3-a3f8-89780d7e349d-Blank.jpeg",
+              "uid": "08e9e836-7dbc-46e3-a3f8-89780d7e349d-Blank.jpeg",
+              "alt": null,
+              "width": null,
+              "height": null
+            },
+            "darkImage": {
+              "url": "https://resources.cdn-kaspi.kz/img/cnt/m/n/08e9e836-7dbc-46e3-a3f8-89780d7e349d-Blank.jpeg",
+              "uid": "08e9e836-7dbc-46e3-a3f8-89780d7e349d-Blank.jpeg",
+              "alt": null,
+              "width": null,
+              "height": null
+            },
+            "homepageImage": null,
+            "darkHomepageImage": null,
+            "level": 2,
+            "link": "https://kaspi.kz/shop/legal/delivery_agreement.pdf",
+            "subNodes": null,
+            "data": null,
+            "includes": null,
+            "restrictions": [],
+            "visible": true,
+            "listView": true,
+            "categoryNames": [
+              "Договор по оказанию услуги доставки"
+            ],
+            "categoryCodes": [
+              "Delivery-agreement"
+            ],
+            "popularity": 0,
+            "customPopularity": 0,
+            "position": 4,
+            "allGoods": false
+          }
+        ],
+        "data": null,
+        "includes": null,
+        "restrictions": [],
+        "visible": true,
+        "listView": false,
+        "categoryNames": [
+          "9999 Бесплатно с мобильного"
+        ],
+        "categoryCodes": [
+          "Others"
+        ],
+        "popularity": 0,
+        "customPopularity": 0,
+        "position": 3,
+        "allGoods": false
+      }
+    ],
+    "data": null,
+    "includes": null,
+    "restrictions": [],
+    "visible": true,
+    "listView": true,
+    "categoryNames": [
+      "desktop-footer"
+    ],
+    "categoryCodes": [
+      "desktop-footer"
+    ],
+    "popularity": 0,
+    "customPopularity": 0,
+    "position": 0,
+    "allGoods": false
+  },
+  "https://kaspi.kz/yml/review-view/api/v1/reviews/product/136658828?baseProductCode&orderCode&filter=COMMENT&sort=POPULARITY&limit=9&merchantCodes&withAgg=true": {
+    "data": [
+      {
+        "id": "8a5c30609780436901979284f27d7319",
+        "author": "Мирхия",
+        "date": "21.06.2025",
+        "orderNumber": "573914875",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Первое впечатление - кресло не стоит своих денег. Спинка хлипко держится, регулировка высоты спинки номинальная, нет четкой фиксации. То же самое и о подлокотниках. Боялся, что будет неполная комплектация, потому что на коробке было две дырки, но судя по инструкции для сборки всего хватило. Единственный плюс - удобная сборка. Регулировка кресла по глубине вообще не работает, хотя о ней заявлено в карточке товара. UPD 23.06.25: После двух дней использования разобрался с механизмами регулировки + сотрудники магазина связались и отправили дополнительно инструкции по регулировке. На подлокотнике была небольшая потертость, но в целом на впечатления от использования кресла это не влияет. На самом кресле довольно удобно сидеть, был небольшой дискомфорт в первый день использования, но после регулировки глубины кресла во второй день проблем уже не было. Могу порекомендовать этого продавца за качественную поддержку!"
+        },
+        "feedback": {
+          "positive": 7,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "573914875-136658828/962521b8-adc8-49f6-9582-f9a2d4c78207.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/573914875-136658828/962521b8-adc8-49f6-9582-f9a2d4c78207.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/573914875-136658828/962521b8-adc8-49f6-9582-f9a2d4c78207.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/573914875-136658828/962521b8-adc8-49f6-9582-f9a2d4c78207.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": true,
+        "locale": null
+      },
+      {
+        "id": "8a5cc6249b34f2ca019b6df62ab65b70",
+        "author": "Евгений",
+        "date": "30.12.2025",
+        "orderNumber": "768587016",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Хорошее кресло. Мне понравилось, что есть регулировка вообще всего во все стороны, можно очень точно настроить стул под себя и под свой стол. Из прикольных бонусов – есть подставка для ног и можно отклонить стул назад – почти кровать. Я не фанат поспать на работе, но опция имеется XD. Сборка на уровне любого компьютерного стула, что-то типа простой мебели из IKEA с пошаговой инструкцией. Все болты и инструмент в наборе есть, даже запасные болты добавили. Если вы ранее мебель не собирали, то минут 30-40. А на опыте можно минут за 15 сделать."
+        },
+        "feedback": {
+          "positive": 4,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "768587016-136658828/a50d3d52-9051-41c4-a2ff-8e9ba8b0f89a.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/a50d3d52-9051-41c4-a2ff-8e9ba8b0f89a.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/a50d3d52-9051-41c4-a2ff-8e9ba8b0f89a.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/a50d3d52-9051-41c4-a2ff-8e9ba8b0f89a.jpeg?format=review_large"
+          },
+          {
+            "id": "768587016-136658828/2c98dae9-7bac-451e-8446-a29d740792a1.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/2c98dae9-7bac-451e-8446-a29d740792a1.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/2c98dae9-7bac-451e-8446-a29d740792a1.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/2c98dae9-7bac-451e-8446-a29d740792a1.jpeg?format=review_large"
+          },
+          {
+            "id": "768587016-136658828/7c25bf05-82fc-46da-b6fa-b018f68d99ad.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/7c25bf05-82fc-46da-b6fa-b018f68d99ad.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/7c25bf05-82fc-46da-b6fa-b018f68d99ad.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/768587016-136658828/7c25bf05-82fc-46da-b6fa-b018f68d99ad.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5cd5979767b4ba0197929ee7cf2639",
+        "author": "Дастан",
+        "date": "25.06.2025",
+        "orderNumber": "572620091",
+        "rating": 4,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Давно хотел купить себе кресло. Старое еле дышало, но служило 20 лет. Плюсы: лёгкое, мягкое, удобное. Поддержка поясницы сказочнао удобное. Впервые поясница не болит, под каким наклоном вы бы не сидели. Очень много регулирующихся частей. Наклон выдерживает мужчину 110+ кг. Ещё понравился набор с универсальным ключом и болтиками. Легко собирается одним человеком за 30 минут. Минусы: цена для среднего кресла слишком высокая. Дешёвый пластик, очень хлипкие колёсики(через год два нужно будет менять). От материала чешется кожа при длительном использовании, хоть и не потеет. Подставка для ног не закреплена и не имеет стопов, выскакивает при движении. Она же очень хлипкая, легко сломается через год. Вердикт: среднее кресло с дешёвыми материалами, по неприятно высокой цене. Был бы выбор ещё, возможно и не взял бы это кресло."
+        },
+        "feedback": {
+          "positive": 3,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "572620091-136658828/78c39d40-8cb8-45c5-934a-76b08ae7a8fa.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/78c39d40-8cb8-45c5-934a-76b08ae7a8fa.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/78c39d40-8cb8-45c5-934a-76b08ae7a8fa.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/78c39d40-8cb8-45c5-934a-76b08ae7a8fa.jpeg?format=review_large"
+          },
+          {
+            "id": "572620091-136658828/f318bb4b-c7d7-4e4f-ae7c-64de42f112e9.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/f318bb4b-c7d7-4e4f-ae7c-64de42f112e9.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/f318bb4b-c7d7-4e4f-ae7c-64de42f112e9.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/f318bb4b-c7d7-4e4f-ae7c-64de42f112e9.jpeg?format=review_large"
+          },
+          {
+            "id": "572620091-136658828/b77f0bb5-3f9c-42d8-937a-9357919731da.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/b77f0bb5-3f9c-42d8-937a-9357919731da.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/b77f0bb5-3f9c-42d8-937a-9357919731da.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/b77f0bb5-3f9c-42d8-937a-9357919731da.jpeg?format=review_large"
+          },
+          {
+            "id": "572620091-136658828/60a4e28b-1751-4f8f-81e4-c8c9d6422024.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/60a4e28b-1751-4f8f-81e4-c8c9d6422024.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/60a4e28b-1751-4f8f-81e4-c8c9d6422024.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/572620091-136658828/60a4e28b-1751-4f8f-81e4-c8c9d6422024.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5cb9f49eed9a63019f0f785b274400",
+        "author": "Нурлан",
+        "date": "28.06.2026",
+        "orderNumber": "970726776",
+        "rating": 3,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Выпирающий поясничный упор оказался неприятной вещью, мешает нормально сидеть. 5 дней пользуюсь. Честно говоря, спина устаёт так же как и от обычного стула."
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "970726776-136658828/5c728b8f-1109-4b83-8ec3-4673889f4b14.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/5c728b8f-1109-4b83-8ec3-4673889f4b14.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/5c728b8f-1109-4b83-8ec3-4673889f4b14.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/5c728b8f-1109-4b83-8ec3-4673889f4b14.jpeg?format=review_large"
+          },
+          {
+            "id": "970726776-136658828/0268149e-8aba-478f-b537-9e2037a32a6f.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/0268149e-8aba-478f-b537-9e2037a32a6f.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/0268149e-8aba-478f-b537-9e2037a32a6f.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/970726776-136658828/0268149e-8aba-478f-b537-9e2037a32a6f.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5c4ef19cbc5a86019cc2b97da20839",
+        "author": "Исфандияр",
+        "date": "06.03.2026",
+        "orderNumber": "843637830",
+        "rating": 4,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Супер стул, классный для студента архитектора, прям клад прям золото! Чуть неудобно с подлокотниками, нет фиксации чтоб они не уезжали вперед назад."
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "843637830-136658828/ca5891e1-d8e5-42ae-ac55-2bdbb386069c.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/843637830-136658828/ca5891e1-d8e5-42ae-ac55-2bdbb386069c.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/843637830-136658828/ca5891e1-d8e5-42ae-ac55-2bdbb386069c.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/843637830-136658828/ca5891e1-d8e5-42ae-ac55-2bdbb386069c.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5c0ce49bb0c18a019bb2ac5b262213",
+        "author": "Ольга",
+        "date": "12.01.2026",
+        "orderNumber": "781439190",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Кресло прекрасное начиная с доставки. Приехало за два дня, все было хорошо запаковано в две коробки, а все детали в пупырку. Легкое в сборке, а также очень удобное, сетка не натирает и не хуже чем та же экокожа или текстиль, на вид выполнено качественно и аккуратно, в общем все отлично, берите не пожалеете!"
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "781439190-136658828/43a59e7a-443c-4ede-b530-e57994413657.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/43a59e7a-443c-4ede-b530-e57994413657.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/43a59e7a-443c-4ede-b530-e57994413657.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/43a59e7a-443c-4ede-b530-e57994413657.jpeg?format=review_large"
+          },
+          {
+            "id": "781439190-136658828/18ec7e39-6680-4a67-9864-2af30d43f406.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/18ec7e39-6680-4a67-9864-2af30d43f406.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/18ec7e39-6680-4a67-9864-2af30d43f406.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/18ec7e39-6680-4a67-9864-2af30d43f406.jpeg?format=review_large"
+          },
+          {
+            "id": "781439190-136658828/3b558cc8-6729-4428-8f5c-44fb5b946823.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/3b558cc8-6729-4428-8f5c-44fb5b946823.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/3b558cc8-6729-4428-8f5c-44fb5b946823.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/781439190-136658828/3b558cc8-6729-4428-8f5c-44fb5b946823.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5c70dc9a955b61019aaa4419b535b6",
+        "author": "Аскар",
+        "date": "22.11.2025",
+        "orderNumber": "715068534",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Запаковано было хорошо. Привезли на день раньше. Сборка была отдельным семейным развлечением, напомнило Ekea детали качественные, само кресло оказалось четким, стильным, крепким. Кутешка и спина не потеют из-за сеточного материала. Выглядит дороже, чем заявленная цена. Берите смело, для работы и каток то, что надо!"
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "715068534-136658828/7439bb03-cb0f-46f3-9809-8edff49f981d.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/7439bb03-cb0f-46f3-9809-8edff49f981d.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/7439bb03-cb0f-46f3-9809-8edff49f981d.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/7439bb03-cb0f-46f3-9809-8edff49f981d.jpeg?format=review_large"
+          },
+          {
+            "id": "715068534-136658828/9dc561e6-8d84-4107-a70c-75bb006d098f.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/9dc561e6-8d84-4107-a70c-75bb006d098f.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/9dc561e6-8d84-4107-a70c-75bb006d098f.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/715068534-136658828/9dc561e6-8d84-4107-a70c-75bb006d098f.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5cc05d98dee00e0198dff6e89d01fe",
+        "author": "Талғат",
+        "date": "25.08.2025",
+        "orderNumber": "617333274",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Кресло удобное, собирается быстро, доставили вовремя."
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "617333274-136658828/c68798f8-e7f6-460d-8c99-554e6eda3c19.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/617333274-136658828/c68798f8-e7f6-460d-8c99-554e6eda3c19.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/617333274-136658828/c68798f8-e7f6-460d-8c99-554e6eda3c19.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/617333274-136658828/c68798f8-e7f6-460d-8c99-554e6eda3c19.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      },
+      {
+        "id": "8a5c370998a211d90198a2972e680a8e",
+        "author": "Дархан",
+        "date": "13.08.2025",
+        "orderNumber": "611094795",
+        "rating": 5,
+        "comment": {
+          "minus": "",
+          "plus": "",
+          "text": "Мега удобное кресло, а то что оно из пластика - не обращайте внимания. До этого были разные кресла и в два и три раза дороже, так называемые игровые, с сидушками гоночными, это в сто раз лучше. Спина теперь не отваливается после 10 часов сидячей работы."
+        },
+        "feedback": {
+          "positive": 2,
+          "voted": false
+        },
+        "galleryImages": [
+          {
+            "id": "611094795-136658828/45a86c78-464e-4d67-b2da-42daaba1c7d4.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/45a86c78-464e-4d67-b2da-42daaba1c7d4.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/45a86c78-464e-4d67-b2da-42daaba1c7d4.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/45a86c78-464e-4d67-b2da-42daaba1c7d4.jpeg?format=review_large"
+          },
+          {
+            "id": "611094795-136658828/51a8b689-8a4f-4194-813a-824925916050.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/51a8b689-8a4f-4194-813a-824925916050.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/51a8b689-8a4f-4194-813a-824925916050.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/51a8b689-8a4f-4194-813a-824925916050.jpeg?format=review_large"
+          },
+          {
+            "id": "611094795-136658828/71bf477f-cb4e-45fa-ab94-543c375db498.jpeg",
+            "small": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/71bf477f-cb4e-45fa-ab94-543c375db498.jpeg?format=review_small",
+            "medium": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/71bf477f-cb4e-45fa-ab94-543c375db498.jpeg?format=review_medium",
+            "large": "https://resources.cdn-kaspi.kz/img/p/r/611094795-136658828/71bf477f-cb4e-45fa-ab94-543c375db498.jpeg?format=review_large"
+          }
+        ],
+        "product": {
+          "id": "136658828",
+          "name": "Игровое кресло Mizone Ergo, серый",
+          "categoryCode": "Master - Desk chairs",
+          "categoryName": "Компьютерные и офисные кресла",
+          "link": "https://kaspi.kz/shop/p/igrovoe-kreslo-mizone-ergo-seryi-136658828/"
+        },
+        "merchant": {
+          "name": "Mi Zone",
+          "code": "15551141"
+        },
+        "editable": false,
+        "editedByCustomer": false,
+        "locale": null
+      }
+    ],
+    "summary": {
+      "global": 4.9,
+      "statistic": [
+        {
+          "rate": 5,
+          "count": 303
+        },
+        {
+          "rate": 4,
+          "count": 26
+        },
+        {
+          "rate": 3,
+          "count": 2
+        },
+        {
+          "rate": 2,
+          "count": 0
+        },
+        {
+          "rate": 1,
+          "count": 0
+        }
+      ]
+    },
+    "groupSummary": [
+      {
+        "id": "ALL",
+        "total": 331
+      },
+      {
+        "id": "COMMENT",
+        "total": 311
+      },
+      {
+        "id": "PICTURE",
+        "total": 269
+      },
+      {
+        "id": "POSITIVE",
+        "total": 309
+      },
+      {
+        "id": "NEGATIVE",
+        "total": 2
+      }
+    ],
+    "imagesSummaryCount": 551
+  },
+  "https://kaspi.kz/yml/offer-view/offers/136658828": {
+    "offers": [
+      {
+        "masterSku": "136658828",
+        "masterCategory": "Master - Desk chairs",
+        "merchantId": "15551141",
+        "merchantName": "Mi Zone",
+        "merchantSku": "559268257",
+        "merchantReviewsQuantity": 1018,
+        "merchantRating": 4.9,
+        "merchantSegmentId": 2.0,
+        "purchaseCount": 0,
+        "title": "Игровое кресло Mizone Ergo, серый",
+        "price": 84998.0,
+        "priceMinusBonus": 82449.0,
+        "delivery": "2026-07-23T14:45:08.000+00:00",
+        "deliveryMovedBySlot": false,
+        "deliverySteps": {},
+        "pickupSteps": {
+          "P": "2026-07-23T11:45:08.804+00:00",
+          "MA": "2026-07-23T11:45:08.804+00:00"
+        },
+        "kdPickupDate": "2026-07-23T12:45:08.000+00:00",
+        "availabilityDate": "2026-07-23T11:45:08.808+00:00",
+        "pickup": "2026-07-23T11:45:08.804+00:00",
+        "kaspiDelivery": true,
+        "kdPoints": [
+          "15551141_Astana",
+          "15551141_PP1"
+        ],
+        "pointsWithAvailability": [
+          "15551141_PP1"
+        ],
+        "preorder": 0,
+        "locatedInPoint": "15551141_PP1",
+        "deliveryType": "EXPRESS",
+        "deliveryDuration": "EXPRESS",
+        "badges": [
+          {
+            "code": "DEFAULT_BONUS_BADGE_FROM_5K",
+            "imageUrl": "https://static.cdn-kaspi.kz/msd/goods_badge/3.png",
+            "type": "BONUS",
+            "priority": 3,
+            "bonusInCurrency": 2549,
+            "owner": "KASPI",
+            "bonusType": "RELATIVE",
+            "paymentModes": [
+              "GOLD"
+            ],
+            "displayType": "ABSOLUTE"
+          },
+          {
+            "code": "RASSROCHKA_DEFAULT_BADGE",
+            "imageUrl": "https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png",
+            "type": "LOAN",
+            "priority": 12,
+            "duration": 12,
+            "owner": "KASPI",
+            "bonusType": ""
+          }
+        ],
+        "deliveryOptions": {
+          "TO_DOOR": {
+            "delivery": "2026-07-25T18:00:00.000+00:00",
+            "deliveryDays": 2,
+            "kdPickupDate": "2026-07-24T15:00:00.000+00:00",
+            "deliveryType": "TO_DOOR",
+            "locatedInPoint": "15551141_PP1",
+            "kaspiDelivery": true,
+            "deliveryCost": 995.0,
+            "deliveryThreshold": 5000.0,
+            "interCity": false
+          },
+          "EXPRESS": {
+            "delivery": "2026-07-23T14:45:08.000+00:00",
+            "deliveryDays": 0,
+            "kdPickupDate": "2026-07-23T12:45:08.000+00:00",
+            "deliveryType": "EXPRESS",
+            "locatedInPoint": "15551141_PP1",
+            "kaspiDelivery": true,
+            "cost": 995.0,
+            "deliveryCost": 995.0,
+            "deliveryThreshold": 999999999.0,
+            "interCity": false,
+            "description": {
+              "deliveryDurationInHours": 3,
+              "deliverySlotsExists": true,
+              "deferredExpress": false,
+              "deferredExpressDate": null
+            }
+          },
+          "PICKUP": {
+            "delivery": "2026-07-23T11:45:08.804+00:00",
+            "deliveryDays": 0,
+            "deliveryType": "PICKUP",
+            "deliverySteps": {
+              "P": "2026-07-23T11:45:08.804+00:00",
+              "MA": "2026-07-23T11:45:08.804+00:00"
+            },
+            "interCity": false
+          }
+        },
+        "freeAssembly": false,
+        "benefits": [],
+        "isBrandOfficialPartner": false
+      }
+    ],
+    "total": 1,
+    "offersCount": 1,
+    "pcmResponsePresent": true,
+    "badges": [
+      {
+        "code": "DEFAULT_BONUS_BADGE_FROM_5K",
+        "imageUrl": "https://static.cdn-kaspi.kz/msd/goods_badge/3.png",
+        "type": "BONUS",
+        "priority": 3,
+        "bonusInCurrency": 2549,
+        "owner": "KASPI",
+        "bonusType": "RELATIVE",
+        "paymentModes": [
+          "GOLD"
+        ],
+        "displayType": "ABSOLUTE"
+      },
+      {
+        "code": "RASSROCHKA_DEFAULT_BADGE",
+        "imageUrl": "https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png",
+        "type": "LOAN",
+        "priority": 12,
+        "duration": 12,
+        "owner": "KASPI",
+        "bonusType": ""
+      }
+    ],
+    "loanPicker": {
+      "present": true,
+      "maxInterestFreeDuration": 12
+    },
+    "deliveryDurationFacetValues": {
+      "TILL_7_DAYS": 1,
+      "TODAY": 1,
+      "EXPRESS": 1,
+      "TOMORROW": 1,
+      "TILL_5_DAYS": 1,
+      "TILL_2_DAYS": 1
+    },
+    "highRatingPresent": true,
+    "brandOfficialPartnerPresent": false,
+    "excellentMerchantPresent": true,
+    "pcmRequestId": "58b5eba6-7664-4821-a44a-cd7cf42a929d",
+    "productCardInfo": {
+      "badges": [
+        {
+          "code": "DEFAULT_BONUS_BADGE_FROM_5K",
+          "imageUrl": "https://static.cdn-kaspi.kz/msd/goods_badge/3.png",
+          "type": "BONUS",
+          "priority": 3,
+          "bonusInCurrency": 2549,
+          "owner": "KASPI",
+          "bonusType": "RELATIVE",
+          "paymentModes": [
+            "GOLD"
+          ],
+          "displayType": "ABSOLUTE"
+        },
+        {
+          "code": "RASSROCHKA_DEFAULT_BADGE",
+          "imageUrl": "https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png",
+          "type": "LOAN",
+          "priority": 12,
+          "duration": 12,
+          "owner": "KASPI",
+          "bonusType": ""
+        }
+      ],
+      "bestPrice": 84998.0,
+      "bonusInCurrency": 2549.0,
+      "priceMinusBonus": 82449.0,
+      "merchantId": "15551141"
+    },
+    "hasBetterOffer": false,
+    "hasWorseDelivery": false
+  },
+  "https://kaspi.kz/yml/offer-view/offers": [
+    {
+      "masterSku": "136658828",
+      "groupedSku": "136658828_15551141",
+      "merchantId": "15551141",
+      "merchantName": "Mi Zone",
+      "merchantSku": "559268257",
+      "merchantReviewsQuantity": 2615,
+      "merchantRating": 4.9,
+      "title": "Игровое кресло Mizone Ergo, серый",
+      "price": 84998.0,
+      "deliveryMovedBySlot": false,
+      "kaspiDelivery": false,
+      "deliveryOptions": {},
+      "freeAssembly": false,
+      "benefits": []
+    }
+  ]
+}

@@ -316,7 +316,7 @@ class KaspiScraper:
                 ".product, .item, [data-product-id]", timeout=10000
             )
 
-            return page.evaluate("""() => {
+            eval_data = page.evaluate("""() => {
                 const gallery = document.querySelectorAll(
                     '.gallery__thumb, .product-gallery img, [data-gallery] img'
                 );
@@ -333,6 +333,35 @@ class KaspiScraper:
                 const reviewEl = document.querySelector(
                     '.reviews-count, .product-rating__count'
                 );
+                
+                // Brand extraction
+                let brand = "";
+                const brandEl = document.querySelector('.item__brand a, .product-info__brand, [data-brand]');
+                if (brandEl) {
+                    brand = brandEl.textContent.trim();
+                } else {
+                    const dtEls = document.querySelectorAll('.specifications-list__spec-term-text');
+                    const ddEls = document.querySelectorAll('.specifications-list__spec-def');
+                    for (let i = 0; i < dtEls.length; i++) {
+                        if (dtEls[i].textContent.includes('Бренд') && ddEls[i]) {
+                            brand = ddEls[i].textContent.trim();
+                            break;
+                        }
+                    }
+                }
+                
+                // BuyBox seller extraction
+                let buyboxSeller = "";
+                const sellerEl = document.querySelector('.seller__name a, .item__merchant-name, .merchant-profile__name, a[href*="/shop/info/merchant/"]');
+                if (sellerEl) {
+                    buyboxSeller = sellerEl.textContent.trim();
+                } else {
+                    const firstSeller = document.querySelector('.sellers-table__merchant-name a');
+                    if (firstSeller) {
+                        buyboxSeller = firstSeller.textContent.trim();
+                    }
+                }
+
                 return {
                     photo_count: gallery.length,
                     has_infographics: hasInfographics,
@@ -343,8 +372,26 @@ class KaspiScraper:
                           || ratingEl.textContent) || null : null,
                     review_count: reviewEl
                         ? parseInt(reviewEl.textContent.replace(/[^\\d]/g, '')) || 0 : 0,
+                    brand: brand,
+                    buybox_seller: buyboxSeller
                 };
             }""")
+            
+            if eval_data:
+                import re
+                content = page.content()
+                if not eval_data.get('brand'):
+                    brand_match = re.search(r'brand[^\w]{1,5}([\w\s\&]+)', content, re.IGNORECASE)
+                    if brand_match:
+                        eval_data['brand'] = brand_match.group(1).strip()
+                
+                if not eval_data.get('buybox_seller'):
+                    seller_match = re.search(r'merchantName[^\w]{1,5}([\w\s\&]+)', content)
+                    if seller_match:
+                        eval_data['buybox_seller'] = seller_match.group(1).strip()
+                        
+            return eval_data
+            
         except Exception as exc:
             logger.error("Error scraping product %s: %s", product_url, exc)
             return None

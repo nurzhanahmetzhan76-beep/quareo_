@@ -22,6 +22,7 @@ class RepricingRuleCreate(BaseModel):
     base_price: float | None = Field(None, gt=0)
     step_kzt: int = Field(default=5, ge=1, le=5, description="Undercut step (max 5 KZT)")
     is_active: bool = Field(default=False, description="Bot OFF by default")
+    preorder_days: int = Field(default=0, ge=0, le=30, description="Kaspi pre-order days")
 
 
 class RepricingRuleUpdate(BaseModel):
@@ -34,6 +35,7 @@ class RepricingRuleUpdate(BaseModel):
     base_price: float | None = Field(None, gt=0)
     step_kzt: int | None = Field(None, ge=1, le=5)
     is_active: bool | None = None
+    preorder_days: int | None = Field(None, ge=0, le=30)
 
 
 class RepricingRuleOut(BaseModel):
@@ -49,6 +51,7 @@ class RepricingRuleOut(BaseModel):
     base_price: float | None
     step_kzt: int
     is_active: bool
+    preorder_days: int
     last_competitor_price: float | None
     last_checked_at: datetime | None
     created_at: datetime

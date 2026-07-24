@@ -1,0 +1,7 @@
+200 | application/json | https://kaspi.kz/yml/main-navigation/n/n/desktop-menu?depth=1&city&code&rootType=desktop
+200 | application/json | https://kaspi.kz/yml/main-navigation/n/n/desktop-topbar?depth=3&city&rootType=desktop
+200 | application/json | https://kaspi.kz/yml/main-navigation/n/n/desktop-footer?depth=2&city&rootType=desktop
+200 | application/json | https://kaspi.kz/yml/product-view/pl/filters?text=%D0%BA%D1%80%D0%B5%D1%81%D0%BB%D0%BE&page=0&all=false&fl=true&ui=d&q=%3AavailableInZones%3AMagnum_ZONE1&i=-1&c=750000000
+200 | application/json | https://ks.kaspi.kz/media/api/status/cnt/mp/v/t?o=p7e%2Fp68%2F134847558%2Cp7e%2Fp68%2F134847557
+
+Total API calls: 5

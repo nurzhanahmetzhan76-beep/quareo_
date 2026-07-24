@@ -86,10 +86,10 @@
     }
     .nav-inner {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1300px;
       display: flex;
       align-items: center;
-      gap: 48px;
+      gap: 24px;
     }
     .nav-logo {
       font-weight: 700;
@@ -97,9 +97,30 @@
       letter-spacing: -0.02em;
       color: #fff;
     }
-    .nav-links { display: flex; gap: 24px; font-size: 14px; font-weight: 500; }
+    .nav-links { display: flex; gap: 12px; font-size: 13px; font-weight: 500; }
     .nav-links a { color: var(--text-muted); transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: #fff; }
+    
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; height: 100%; }
+    .nav-dropdown-content {
+      display: none; position: absolute; top: 100%; left: 0;
+      background-color: var(--bg-card); min-width: 180px;
+      box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.6); z-index: 1000;
+      border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 0;
+      flex-direction: column; gap: 0;
+    }
+    .nav-dropdown-content a {
+      color: var(--text-muted); padding: 10px 16px; text-decoration: none;
+      display: block; font-size: 14px; transition: 0.2s; white-space: nowrap;
+    }
+    .nav-dropdown-content a:hover { background-color: rgba(255, 255, 255, 0.05); color: #fff; }
+    .nav-dropdown:hover .nav-dropdown-content { display: flex; }
+
+    .badge-new {
+      white-space: nowrap; font-size: 10px; background: rgba(37,99,235,0.15);
+      color: #60a5fa; padding: 3px 6px; border-radius: 4px; margin-left: 6px;
+      vertical-align: middle; display: inline-block; font-weight: 700; border: 1px solid rgba(37,99,235,0.3);
+    }
     .nav-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
     
     .lang-switch { display: flex; gap: 8px; font-size: 13px; font-weight: 500;}
@@ -469,12 +490,19 @@
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Quareo</a>
       <div class="nav-links">
-        <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
-        <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+        <div class="nav-dropdown">
+          <a style="cursor: pointer;" data-i="nav_scanners">Сканеры ▾</a>
+          <div class="nav-dropdown-content">
+            <a href="scanner.html" data-i="nav_scanner">Сканер Kaspi</a>
+            <a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>
+            <a href="blue_ocean.html" data-i="nav_blue_ocean">Blue Ocean 🌊</a>
+          </div>
+        </div>
         <a href="ntin.html" data-i="nav_ntin">NTIN</a>
         <a href="analytics.html" data-i="nav_analytics">Аналитика</a>
         <a href="waybills.html" data-i="nav_waybills">Накладные</a>
-        <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Автоответчик</a>
+        <a href="kaspi-bot.html" data-i="nav_repricer">Репрайсер</a>
+        <a href="dashboard.html" data-i="nav_kaspi_bot" onclick="localStorage.setItem('rp_dashboard_tab', 'autoreply')">Автоответчик</a>
         <a href="#faq" data-i="nav_faq">FAQ</a>
         <a href="pricing.html" data-i="nav_pricing">Все тарифы</a>
       </div>
@@ -778,7 +806,7 @@
     </footer>
   </div>
 
-  <script src="assets/common.js?v=3"></script>
+  <script src="assets/common.js?v=4"></script>
   <script>
     // SCROLLSPY LOGIC
     document.addEventListener("DOMContentLoaded", () => {

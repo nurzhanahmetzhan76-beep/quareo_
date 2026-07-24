@@ -55,7 +55,7 @@ function esc(s) {
 /* ── i18n ──────────────────────────────────────────────────── */
 const RP_I18N = {
   ru: {
-    nav_home: "Главная", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_kaspi_bot: "Автоответчик", nav_faq: "FAQ", nav_pricing: "Все тарифы", nav_cta: "Начать",
+    nav_home: "Главная", nav_scanners: "Сканеры ▾", nav_scanner: "Сканер Kaspi", nav_wb_scanner: "Сканер WB", nav_blue_ocean: "Blue Ocean 🌊", nav_ozon_scanner: "Сканер Ozon", nav_analytics: "Аналитика", nav_ntin: "NTIN", nav_waybills: "Накладные", nav_repricer: "Репрайсер <span class='badge-new'>BETA</span>", nav_kaspi_bot: "Автоответчик <span class='badge-new'>BETA</span>", nav_faq: "FAQ", nav_pricing: "Все тарифы", nav_cta: "Начать",
     nav_login: "Войти", nav_register: "Регистрация", nav_logout: "Выйти", nav_profile: "Профиль",
     footer_desc: "ИИ-радар по Kaspi.kz: находим ниши со слабой конкуренцией и собираем синдикаты совместных закупок для МСБ Казахстана.",
     footer_product: "Продукт", footer_company: "Компания", footer_legal: "Документы",
@@ -66,7 +66,7 @@ const RP_I18N = {
     footer_built: "Алматы · Казахстан",
   },
   en: {
-    nav_home: "Home", nav_scanner: "Kaspi Scanner", nav_wb_scanner: "WB Scanner", nav_ozon_scanner: "Ozon Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_kaspi_bot: "Kaspi-bot", nav_pricing: "Pricing", nav_cta: "Get started",
+    nav_home: "Home", nav_scanners: "Scanners ▾", nav_scanner: "Kaspi Scanner", nav_wb_scanner: "WB Scanner", nav_blue_ocean: "Blue Ocean 🌊", nav_ozon_scanner: "Ozon Scanner", nav_analytics: "Analytics", nav_ntin: "NTIN", nav_waybills: "Waybills", nav_repricer: "Repricer <span class='badge-new'>BETA</span>", nav_kaspi_bot: "Kaspi-bot <span class='badge-new'>BETA</span>", nav_pricing: "Pricing", nav_cta: "Get started",
     nav_login: "Sign in", nav_register: "Sign up", nav_logout: "Sign out", nav_profile: "Profile",
     footer_desc: "An AI radar for Kaspi.kz: we find low-competition niches and form co-buying syndicates for Kazakhstani SMBs.",
     footer_product: "Product", footer_company: "Company", footer_legal: "Legal",

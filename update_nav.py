@@ -1,35 +1,23 @@
 import os
 import glob
 
-frontend_dir = r'c:\Users\user\Desktop\retailpool\frontend'
-html_files = glob.glob(os.path.join(frontend_dir, '*.html'))
-
+html_files = glob.glob('frontend/*.html')
 for file in html_files:
-    try:
-        with open(file, 'r', encoding='utf-8') as f:
-            content = f.read()
-        
-        updated = False
-        
-        # Add to nav
-        if 'data-i="nav_kaspi_bot"' not in content:
-            content = content.replace(
-                '<a href="waybills.html" data-i="nav_waybills">Накладные</a>',
-                '<a href="waybills.html" data-i="nav_waybills">Накладные</a>\n      <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>'
-            )
-            updated = True
-            
-        # Add to footer
-        if 'data-i="footer_l_scanner"' in content and '<a href="kaspi-bot.html"' not in content[content.find('footer_l_scanner'):content.find('footer_l_scanner')+300]:
-            content = content.replace(
-                '<a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>',
-                '<a href="scanner.html" data-i="footer_l_scanner">Niche Scanner</a>\n        <a href="kaspi-bot.html" data-i="nav_kaspi_bot">Kaspi-бот</a>'
-            )
-            updated = True
-            
-        if updated:
-            with open(file, 'w', encoding='utf-8') as f:
-                f.write(content)
-            print(f'Updated {os.path.basename(file)}')
-    except Exception as e:
-        print(f'Error on {os.path.basename(file)}: {e}')
+    if file.endswith('blue_ocean.html'): continue
+    with open(file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    if '<a href="blue_ocean.html"' in content: continue
+    
+    old_line = '<a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>'
+    new_line = '<a href="wb_scanner.html" data-i="nav_wb_scanner">Сканер WB</a>\n        <a href="blue_ocean.html" data-i="nav_blue_ocean">Blue Ocean 🌊</a>'
+    
+    old_line_active = '<a href="wb_scanner.html" class="active" data-i="nav_wb_scanner">Сканер WB</a>'
+    new_line_active = '<a href="wb_scanner.html" class="active" data-i="nav_wb_scanner">Сканер WB</a>\n        <a href="blue_ocean.html" data-i="nav_blue_ocean">Blue Ocean 🌊</a>'
+    
+    content = content.replace(old_line, new_line)
+    content = content.replace(old_line_active, new_line_active)
+    
+    with open(file, 'w', encoding='utf-8') as f:
+        f.write(content)
+print('Done replacing in HTML files.')

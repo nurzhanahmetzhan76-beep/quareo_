@@ -44,6 +44,8 @@ from retailpool.routers.store_scanner import router as store_scanner_router
 from retailpool.routers.admin import router as admin_router
 from retailpool.routers.autoreply import router as autoreply_router
 from retailpool.routers.extension import router as extension_router
+from retailpool.routers.blue_ocean import router as blue_ocean_router
+from retailpool.routers.feed import router as feed_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -151,6 +153,8 @@ app.include_router(repricing_router)
 app.include_router(admin_router)
 app.include_router(autoreply_router)
 app.include_router(extension_router)
+app.include_router(blue_ocean_router)
+app.include_router(feed_router)
 
 # ── Static assets (CSS, JS) ─────────────────────────────────────────────
 if FRONTEND_DIR.exists():
@@ -220,6 +224,7 @@ _PAGE_ROUTES = [
     ("/reviews",     "reviews.html"),
     ("/waybills",    "waybills.html"),
     ("/dashboard",   "dashboard.html"),
+    ("/blue_ocean",  "blue_ocean.html"),
     ("/wb_scanner",  "wb_scanner.html"),
     ("/ozon_scanner", "ozon_scanner.html"),
     ("/privacy",     "privacy.html"),

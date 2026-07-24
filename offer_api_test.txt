@@ -1,0 +1,6 @@
+GET /offers/ID: status=405 len=114
+GET /offers/ID?cityId: status=405 len=114
+POST /offers: status=500 len=107
+
+Best response body snippet:
+{"timestamp":"2026-07-23T11:50:07.689+00:00","status":405,"error":"Method Not Allowed","path":"/offers/124138280"}

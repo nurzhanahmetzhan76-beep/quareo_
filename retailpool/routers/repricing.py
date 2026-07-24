@@ -93,6 +93,7 @@ async def create_rule(
         base_price=data.base_price or data.my_current_price,
         step_kzt=step,
         is_active=data.is_active,
+        preorder_days=data.preorder_days,
     )
 
     db.add(rule)
@@ -676,13 +677,15 @@ async def process_excel(
         )
     )
     rules = result.scalars().all()
-    price_map = {
-        str(r.kaspi_sku).strip(): r.my_current_price
+    
+    # Store the full rule object instead of just the price
+    rule_map = {
+        str(r.kaspi_sku).strip(): r
         for r in rules
-        if r.kaspi_sku and r.my_current_price
+        if r.kaspi_sku
     }
 
-    if not price_map:
+    if not rule_map:
         raise HTTPException(
             status_code=400,
             detail="Нет активных товаров с посчитанной ценой. Включите бота и дождитесь расчёта.",
@@ -734,9 +737,14 @@ async def process_excel(
                 except ValueError:
                     price = 0
 
-                # OVERRIDE PRICE if bot is active for this SKU
-                if sku_str in price_map:
-                    price = price_map[sku_str]
+                preorder_days = ""
+                # OVERRIDE PRICE and PREORDER if bot is active for this SKU
+                if sku_str in rule_map:
+                    rule = rule_map[sku_str]
+                    if rule.my_current_price:
+                        price = rule.my_current_price
+                    if rule.preorder_days and rule.preorder_days > 0:
+                        preorder_days = min(rule.preorder_days, 30)
                     changed += 1
 
                 # Quantities
@@ -760,7 +768,7 @@ async def process_excel(
                 row = [
                     sku_str, model, brand, price,
                     pp_stocks['PP1'], pp_stocks['PP2'], pp_stocks['PP3'], 
-                    pp_stocks['PP4'], pp_stocks['PP5'], ""
+                    pp_stocks['PP4'], pp_stocks['PP5'], preorder_days
                 ]
                 ws.append(row)
                 
@@ -789,14 +797,29 @@ async def process_excel(
             )
 
         sku_col, price_col = headers["sku"], headers["price"]
+        preorder_col = headers.get("preorder")
 
         for r in range(2, ws.max_row + 1):
             sku = ws.cell(r, sku_col).value
             if sku is None:
                 continue
             sku = str(sku).strip()
-            if sku in price_map:
-                ws.cell(r, price_col).value = price_map[sku]
+            if sku in rule_map:
+                rule = rule_map[sku]
+                if rule.my_current_price:
+                    ws.cell(r, price_col).value = rule.my_current_price
+                
+                if rule.preorder_days and rule.preorder_days > 0:
+                    preorder_val = min(rule.preorder_days, 30)
+                    if preorder_col:
+                        ws.cell(r, preorder_col).value = preorder_val
+                    else:
+                        # Append the column if it doesn't exist
+                        preorder_col = ws.max_column + 1
+                        ws.cell(1, preorder_col).value = "preorder"
+                        headers["preorder"] = preorder_col
+                        ws.cell(r, preorder_col).value = preorder_val
+
                 changed += 1
 
     logger.info("process_excel: user=%s changed=%d rows", current_user.id, changed)

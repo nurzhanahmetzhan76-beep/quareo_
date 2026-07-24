@@ -1,0 +1,15 @@
+Product 136658828: status=200 reviews_in_page=20 totalCount=0
+  Merchants from reviews: {'Mi Zone'}
+  Aggregations keys: []
+
+Product 124138280: status=200 reviews_in_page=20 totalCount=0
+  Merchants from reviews: {'1kz', 'Slopestyle', 'M Home Premium', 'Sulpak', 'ТОО "ABK INTEGRA"', 'NEMO-KZ'}
+  Aggregations keys: []
+
+Product 150419990: status=200 reviews_in_page=20 totalCount=0
+  Merchants from reviews: {'ИП LUXURY'}
+  Aggregations keys: []
+
+Product 130209647: status=200 reviews_in_page=20 totalCount=0
+  Merchants from reviews: {'UNITECH', 'Dumbelik', 'ULTRA-S', 'KOMPLEKT', 'SPORT-FITNESS', 'SPORT&FITNESS OFFICIAL', 'ENVIZHL KAZAKHSTAN - РЕСМИ ДҮКЕНІ'}
+  Aggregations keys: []

@@ -1,0 +1,56 @@
+Total cards: 12
+
+=== ALL KEYS IN FIRST CARD ===
+  id: 141256914
+  configSku: 141256914
+  title: Игровое кресло Sport&Fitness SFBRFRGC14Combo4, черный
+  brand: Sport&Fitness
+  categoryId: 05376
+  hasVariants: False
+  loanAvailable: True
+  shopLink: /p/igrovoe-kreslo-sport-fitness-sfbrfrgc14combo4-chernyi-141256914/?c=750000000
+  unitPrice: 49800
+  unitSalePrice: 49800
+  priceFormatted: 49 800 ₸
+  priceMinusBonus: 48306
+  createdTime: 2025-06-16T07:32:48.299Z
+  stickers: []
+  previewImages: [14 images]
+  teasers: []
+  creditMonthlyPrice: 4150.0
+  monthlyInstallment: {"id": 12, "installment": true, "formattedPerMonth": "4 150 ₸"}
+  reviewsLink: /p/igrovoe-kreslo-sport-fitness-sfbrfrgc14combo4-chernyi-141256914/?c=750000000&tab=reviews
+  weight: 0.0
+  unit: {"type": "PIECES", "increment": 1.0, "measurementLiteral": "шт", "countingLiteral": "шт", "code": null}
+  rating: 4.9
+  reviewsQuantity: 68
+  stock: 1
+  currency: KZT
+  mods: 
+  deliveryDuration: EXPRESS
+  baseProductCodes: ['[Master - Desk chairs][sport-fitness]{игровое кресло}{SFBRFRGC14Combo4}']
+  isBrandOfficialPartner: False
+  category: ['Мебель', 'Офис и кабинет', 'Компьютерные и офисные кресла']
+  categoryRu: ['Мебель', 'Офис и кабинет', 'Компьютерные и офисные кресла']
+  categoryCodes: ['Desk chairs', 'Office', 'Furniture', 'Categories']
+  groups: ['cd2608c8-37ec-41db-b619-2321db5837da']
+  promo: [{'code': 'RASSROCHKA_DEFAULT_BADGE', 'type': 'LOAN', 'priority': 12, 'owner': 'KASPI', 'bonusType': '', 'img': {'alt': None, 'large': {'src': 'https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png', 'width': 55, 'height': 31}, 'small': {'src': 'https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png', 'width': 40, 'height': 22}, 'medium': {'src': 'https://mrk.cdn-kaspi.kz/msd/Aimira/2026/FEB/YELLOW_BADGE/card_small/0012/0012_3x.png', 'width': 40, 'height': 22}}}, {'code': 'DEFAULT_BONUS_BADGE_FROM_5K', 'type': 'BONUS', 'priority': 3, 'owner': 'KASPI', 'bonusType': 'RELATIVE', 'bonusInCurrency': 1494, 'displayType': 'ABSOLUTE', 'img': {'alt': None, 'large': {'src': 'https://static.cdn-kaspi.kz/msd/goods_badge/3.png', 'width': 55, 'height': 31}, 'small': {'src': 'https://static.cdn-kaspi.kz/msd/goods_badge/3.png', 'width': 40, 'height': 22}, 'medium': {'src': 'https://static.cdn-kaspi.kz/msd/goods_badge/3.png', 'width': 40, 'height': 22}}}]
+  majorMerchants: []
+  bestMerchant: 30214700
+  deliveryZones: ['750000000']
+
+=== SUMMARY OF ALL 20 CARDS ===
+  ID=141256914 | brand=Sport&Fitness | price=49800 | rating=4.9 | reviews=68 | sellers=None | title=Игровое кресло Sport&Fitness SFBRFRGC14Combo4, чер
+  ID=159544511 | brand=Sport&Fitness | price=37002 | rating=4.8 | reviews=37 | sellers=None | title=Офисное кресло Sport&Fitness SFBRGCFR11, черный, х
+  ID=152335228 | brand=Sport&Fitness | price=35800 | rating=4.8 | reviews=2 | sellers=None | title=Офисное кресло Sport&Fitness SFBRCS24B, черный
+  ID=130209647 | brand=Sport&Fitness | price=35575 | rating=4.8 | reviews=107 | sellers=None | title=Офисное кресло Sport&Fitness SFBRGCFR11, черный
+  ID=165653044 | brand=Sport&Fitness | price=19800 | rating=4.9 | reviews=10 | sellers=None | title=Офисное кресло Sport&Fitness SFBRCS25С1, черный
+  ID=154162191 | brand=Sport&Fitness | price=59000 | rating=5.0 | reviews=4 | sellers=None | title=Игровое кресло Sport&Fitness SF-GC11-LeatherFootre
+  ID=136658828 | brand=Mizone | price=84998 | rating=4.9 | reviews=316 | sellers=None | title=Игровое кресло Mizone Ergo, серый
+  ID=150419990 | brand=LUXURY | price=26999 | rating=4.8 | reviews=275 | sellers=None | title=Компьютерное кресло LUXURY 078, черный, белый
+  ID=140564998 | brand=Без бренда | price=50000 | rating=4.9 | reviews=250 | sellers=None | title=Игровое кресло DJYLD-CBG, серый
+  ID=138338984 | brand=Mizone | price=84998 | rating=4.9 | reviews=282 | sellers=None | title=Игровое кресло Mizone Ergo, черный
+  ID=136765263 | brand=Chairman | price=28827 | rating=4.7 | reviews=115 | sellers=None | title=Кресло-качалка Chairman 503276094 , обивка водоотт
+  ID=122041815 | brand=Без бренда | price=60200 | rating=4.6 | reviews=150 | sellers=None | title=Кресло-кровать Hammer , обивка велюр, серый
+
+totalElements/total: 20073

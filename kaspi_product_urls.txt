@@ -1,0 +1,6 @@
+https://kaspi.kz/yml/main-navigation/n/n/desktop-topbar?depth=3&city&rootType=desktop
+https://kaspi.kz/yml/main-navigation/n/n/desktop-menu?depth=1&city&code&rootType=desktop
+https://kaspi.kz/yml/main-navigation/n/n/desktop-footer?depth=2&city&rootType=desktop
+https://kaspi.kz/yml/review-view/api/v1/reviews/product/136658828?baseProductCode&orderCode&filter=COMMENT&sort=POPULARITY&limit=9&merchantCodes&withAgg=true
+https://kaspi.kz/yml/offer-view/offers/136658828
+https://kaspi.kz/yml/offer-view/offers
