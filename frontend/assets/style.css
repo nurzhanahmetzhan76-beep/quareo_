@@ -559,13 +559,14 @@ section {
 .card::after {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 55%;
-  height: 55%;
-  background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.25), rgba(96, 165, 250, 0) 70%);
-  pointer-events: none;
+  inset: 0;
   border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.9), rgba(96, 165, 250, 0) 65%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .card:hover {
