@@ -976,6 +976,8 @@ class NtinService:
         if "tpl_brand" in data: settings.tpl_brand = data["tpl_brand"]
         if "tpl_unit" in data: settings.tpl_unit = data["tpl_unit"]
         if "tpl_qty" in data: settings.tpl_qty = data["tpl_qty"]
+        if "health_monitor_enabled" in data:
+            settings.health_monitor_enabled = data["health_monitor_enabled"]
 
         await self.session.flush()
         logger.info("Saved seller settings for user %s", user_id)
