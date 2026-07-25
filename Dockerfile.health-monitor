@@ -1,0 +1,13 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Background worker — no HTTP server, no port to expose.
+# Watches order cancellation rate and new 1-star reviews via the Kaspi
+# Seller API and notifies the seller over Telegram. Never writes to Kaspi.
+CMD ["python", "-m", "retailpool.bot.health_monitor_worker"]
