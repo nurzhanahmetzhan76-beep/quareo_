@@ -617,76 +617,86 @@ async def upload_sync(
         except Exception:
             raise HTTPException(status_code=400, detail="Не удалось открыть файл. Загрузите Excel или XML.")
 
-        ws = wb.worksheets[0]
-        headers = {}
-        for c in range(1, ws.max_column + 1):
-            v = ws.cell(1, c).value
-            if v is not None:
-                headers[str(v).strip().lower()] = c
+        try:
+            ws = wb.worksheets[0]
+            headers = {}
+            for c in range(1, ws.max_column + 1):
+                v = ws.cell(1, c).value
+                if v is not None:
+                    headers[str(v).strip().lower()] = c
 
-        if not headers:
-            raise HTTPException(status_code=400, detail="Файл пуст или не содержит заголовков.")
+            if not headers:
+                raise HTTPException(status_code=400, detail="Файл пуст или не содержит заголовков.")
 
-        sku_col = None
-        price_col = None
-        for h_key, h_col in headers.items():
-            if any(p in h_key for p in ["sku", "артикул", "код"]):
-                sku_col = h_col
-            if any(p in h_key for p in ["price", "цена"]):
-                price_col = h_col
+            sku_col = None
+            price_col = None
+            for h_key, h_col in headers.items():
+                if any(p in h_key for p in ["sku", "артикул", "код"]):
+                    sku_col = h_col
+                if any(p in h_key for p in ["price", "цена"]):
+                    price_col = h_col
 
-        if not sku_col or not price_col:
-            raise HTTPException(
-                status_code=400,
-                detail="Неверный формат Excel: нет колонок SKU (Артикул) или Цена."
-            )
-        
-        name_col = None
-        # Look for partial matches to catch 'название товара', 'наименование', etc.
-        for h_key, h_col in headers.items():
-            if any(p in h_key for p in ["model", "name", "название", "наименовани", "title"]):
-                name_col = h_col
-                break
-        
-        if not name_col:
-            name_col = sku_col
-
-        for r in range(2, ws.max_row + 1):
-            sku = ws.cell(r, sku_col).value
-            if sku is None:
-                continue
-            sku = str(sku).strip()
+            if not sku_col or not price_col:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Неверный формат Excel: нет колонок SKU (Артикул) или Цена."
+                )
             
-            if sku in existing_skus:
-                skipped += 1
-                continue
-            existing_skus.add(sku)
-
-            name = ws.cell(r, name_col).value
-            name = str(name).strip() if name else f"Товар {sku}"
+            name_col = None
+            # Look for partial matches to catch 'название товара', 'наименование', etc.
+            for h_key, h_col in headers.items():
+                if any(p in h_key for p in ["model", "name", "название", "наименовани", "title"]):
+                    name_col = h_col
+                    break
             
-            price_val = ws.cell(r, price_col).value
-            try:
-                price = float(price_val) if price_val is not None else 0
-            except ValueError:
-                price = 0
+            if not name_col:
+                name_col = sku_col
 
-            rule = RepricingRule(
-                user_id=current_user.id,
-                product_name=str(name)[:512],
-                kaspi_sku=str(sku),
-                my_merchant_name=merchant_name,
-                my_current_price=price,
-                min_price=price * 0.9 if price else 0,
-                base_price=price,
-                step_kzt=5,
-                is_active=False,
-            )
-            db.add(rule)
-            synced += 1
-            
-            if synced % 50 == 0:
-                await db.flush()
+            for r in range(2, ws.max_row + 1):
+                sku = ws.cell(r, sku_col).value
+                if sku is None:
+                    continue
+                sku = str(sku).strip()
+                
+                if sku in existing_skus:
+                    skipped += 1
+                    continue
+                existing_skus.add(sku)
+
+                name = ws.cell(r, name_col).value
+                name = str(name).strip() if name else f"Товар {sku}"
+                
+                price_val = ws.cell(r, price_col).value
+                try:
+                    price = float(price_val) if price_val is not None else 0
+                except (ValueError, TypeError):
+                    price = 0
+
+                rule = RepricingRule(
+                    user_id=current_user.id,
+                    product_name=str(name)[:512],
+                    kaspi_sku=str(sku),
+                    my_merchant_name=merchant_name,
+                    my_current_price=price,
+                    min_price=price * 0.9 if price else 0,
+                    base_price=price,
+                    step_kzt=5,
+                    is_active=False,
+                )
+                db.add(rule)
+                synced += 1
+                
+                if synced % 50 == 0:
+                    try:
+                        await db.flush()
+                    except Exception as e:
+                        logger.exception("Database batch flush error in upload_sync: %s", e)
+                        raise HTTPException(status_code=400, detail=f"Ошибка базы данных при пакетном сохранении: {str(e)}")
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.exception("Unexpected error processing Excel in upload_sync: %s", e)
+            raise HTTPException(status_code=400, detail=f"Неожиданная ошибка обработки Excel: {str(e)}")
 
     try:
         await db.flush()
