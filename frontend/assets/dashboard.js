@@ -472,7 +472,51 @@ document.addEventListener('DOMContentLoaded', () => {
   
   loadUserProfile();
   loadScanHistory();
+  loadHealthMonitorStatus();
 });
+
+/* ── Health Monitor (cancellation rate + 1-star review alerts) ── */
+async function loadHealthMonitorStatus() {
+  const toggle = document.getElementById('healthMonitorToggle');
+  if (!toggle) return;
+  try {
+    const r = await fetch(API + '/api/ntin/settings', { headers: rpAuthHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    toggle.checked = !!d.health_monitor_enabled;
+    if (d.health_monitor_enabled && !d.has_kaspi_key) {
+      document.getElementById('healthMonitorStatus').innerHTML =
+        '<span style="color:#EF4444">⚠ Включено, но не хватает Kaspi API-ключа — добавьте выше</span>';
+    }
+  } catch (e) { /* silent — non-critical */ }
+}
+
+async function toggleHealthMonitor() {
+  const toggle = document.getElementById('healthMonitorToggle');
+  const status = document.getElementById('healthMonitorStatus');
+  const enabled = toggle.checked;
+
+  try {
+    const r = await fetch(API + '/api/ntin/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...rpAuthHeaders() },
+      body: JSON.stringify({ health_monitor_enabled: enabled }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Ошибка сохранения');
+
+    if (enabled && !d.has_kaspi_key) {
+      status.innerHTML = '<span style="color:#EF4444">⚠ Включено, но добавьте Kaspi API-ключ выше и нажмите "Сохранить настройки"</span>';
+    } else if (enabled) {
+      status.innerHTML = '<span style="color:#10B981">✓ Мониторинг включён</span>';
+    } else {
+      status.innerHTML = '<span style="color:var(--text-2)">Мониторинг выключен</span>';
+    }
+  } catch (e) {
+    toggle.checked = !enabled; // revert on failure
+    status.innerHTML = '<span style="color:#EF4444">Ошибка: ' + e.message + '</span>';
+  }
+}
 
 /* ── Kaspi Profile Tabs ───────────────────────────────────── */
 function switchKaspiTab(tabId, el) {

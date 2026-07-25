@@ -455,3 +455,11 @@ textarea.form-input { resize: vertical; }
   border-radius: 100px;
   text-transform: uppercase;
 }
+
+/* ── Toggle switch (matches kaspi-bot.html repricing toggle) ──── */
+.toggle{position:relative;width:44px;height:24px;display:inline-block;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:24px;cursor:pointer;transition:all .25s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;left:3px;top:3px;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked+.toggle-slider{background:var(--brand)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
