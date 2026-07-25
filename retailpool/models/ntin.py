@@ -21,6 +21,7 @@ from sqlalchemy import (
     Text,
     Float,
     Integer,
+    BigInteger,
     Boolean,
     DateTime,
     ForeignKey,
@@ -234,6 +235,20 @@ class UserSellerSettings(Base):
     tpl_brand: Mapped[str | None] = mapped_column(String(256), nullable=True)
     tpl_unit: Mapped[str | None] = mapped_column(String(32), nullable=True)
     tpl_qty: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # ── Health Monitor (cancellation rate + 1-star review alerts) ─
+    health_monitor_enabled: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="false",
+        comment="Whether the 'fire alarm' health monitor is active for this user"
+    )
+    last_review_check_ts: Mapped[int | None] = mapped_column(
+        BigInteger, nullable=True,
+        comment="Unix ms cursor of last checked review, to avoid re-alerting"
+    )
+    cancellation_alert_sent: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="false",
+        comment="True while cancellation rate is above threshold (avoids alert spam)"
+    )
 
     # ── Timestamps ───────────────────────────────────────────────
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
