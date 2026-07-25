@@ -34,11 +34,14 @@
   .price-card::after {
     content: '';
     position: absolute;
-    top: 0; right: 0;
-    width: 55%; height: 55%;
-    background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.25), rgba(96, 165, 250, 0) 70%);
-    pointer-events: none;
+    inset: 0;
     border-radius: inherit;
+    padding: 1.5px;
+    background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.9), rgba(96, 165, 250, 0) 65%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
   .price-card:hover {
     transform: translateY(-4px);
@@ -54,7 +57,7 @@
     background: linear-gradient(135deg, rgba(30,30,42,0.6), rgba(17,17,24,0.45));
   }
   .price-card.featured::after {
-    background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.4), rgba(96, 165, 250, 0) 70%);
+    background: radial-gradient(circle at top right, rgba(96, 165, 250, 1), rgba(96, 165, 250, 0) 65%);
   }
   .price-popular {
     position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
