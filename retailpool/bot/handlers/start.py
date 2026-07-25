@@ -97,3 +97,6 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             parse_mode="HTML",
             reply_markup=back_to_menu_keyboard(),
         )
+    elif action == "products":
+        from retailpool.bot.handlers.products import products_menu
+        await products_menu(update, context)

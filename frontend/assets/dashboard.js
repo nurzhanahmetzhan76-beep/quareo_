@@ -165,7 +165,11 @@ function copyExtToken(inputId) {
 async function loadScanHistory() {
   try {
     const r = await fetch(API + '/api/scanner/niches');
-    if (!r.ok) return;
+    if (!r.ok) {
+        document.getElementById('scanHistoryList').innerHTML = '<div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">История пуста</div>';
+        document.getElementById('latestScanBlock').innerHTML = '<div style="font-size: 13px; color: #64748B; text-align: center; padding: 1rem 0;">Нет данных о сканированиях</div>';
+        return;
+    }
     const scans = await r.json();
     
     const historyList = document.getElementById('scanHistoryList');

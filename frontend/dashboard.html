@@ -19,16 +19,18 @@
     <a class="sb-link" data-page="scanner" onclick="showPage('scanner')">🔍 Сканер Kaspi</a>
     <a class="sb-link" data-page="analytics" onclick="showPage('analytics')">📊 Аналитика</a>
     <a class="sb-link" data-page="calculator" onclick="showPage('calculator')">🧮 Калькулятор Kaspi</a>
-    <a class="sb-link" data-page="waybills" onclick="showPage('waybills')">🖨️ Накладные</a>
+    <a class="sb-link" href="waybills.html">🖨️ Накладные</a>
   </div>
   <div class="sb-footer">
     <a href="index.html" class="sb-back">← На главную</a>
   </div>
 </aside>
 
+<div id="sidebarBackdrop" class="sidebar-backdrop" onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.remove('active');"></div>
+
 <main class="dash-main">
   <header class="dash-header">
-    <button class="burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <button class="burger" onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarBackdrop').classList.toggle('active');">☰</button>
     <h2 class="dash-title" id="pageTitle">NTIN Маркировка</h2>
     <div style="flex:1"></div>
     <div id="shopBadge" class="shop-badge" style="display:none">
@@ -203,7 +205,7 @@
         <p style="color: var(--text-2); line-height: 1.6; font-size: 14px;">
           С помощью этого инструмента вы можете находить прибыльные ниши и анализировать конкурентов на Kaspi.kz.
         </p>
-        <div style="background: var(--brand-light); border-left: 4px solid #2563EB; padding: 1rem; border-radius: 4px; font-size: 13px; color: var(--brand-light); margin-bottom: 1.5rem;">
+        <div style="background: var(--brand-light); border-left: 4px solid #2563EB; padding: 1rem; border-radius: 4px; font-size: 13px; color: #1D4ED8; margin-bottom: 1.5rem;">
           <strong>Инструкция:</strong>
           <ol style="margin-top: 8px; padding-left: 20px; margin-bottom: 0;">
             <li>Введите ссылку на категорию или поисковый запрос Kaspi.</li>

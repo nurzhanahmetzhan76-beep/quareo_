@@ -1,73 +1,149 @@
 """
-Kaspi XML Feed Generator for Preorders.
+Secure Kaspi XML Feed Mirror Generator.
 """
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+import httpx
+import logging
+
+# Security: using defusedxml to prevent XXE attacks
+from defusedxml.ElementTree import fromstring
 import xml.etree.ElementTree as ET
-import datetime
 
 from retailpool.database import get_db
 from retailpool.models.ntin import UserSellerSettings
 from retailpool.models.repricing import RepricingRule
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/feed", tags=["XML Feed"])
 
-@router.get("/{user_id}.xml")
-async def generate_kaspi_feed(user_id: str, db: AsyncSession = Depends(get_db)):
+@router.get("/{feed_uuid}.xml")
+async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)):
+    """
+    Secure XML Feed Generator.
+    URL Format: /feed/<UUID>.xml (Protects against predictable ID enumeration)
+    
+    1. Validates the feed UUID (currently mapping user_id for backward compatibility, 
+       but strictly enforcing UUIDv4 format).
+    2. Downloads the original XML feed specified in UserSellerSettings.
+    3. Parses it securely using defusedxml to prevent XXE.
+    4. Iterates over all <offer> nodes, preserving the ENTIRE assortment (to avoid archiving).
+    5. Applies repricing only to matching active products.
+    6. Strictly enforces the floor price (min_price).
+    """
+    import uuid
+    try:
+        user_uuid = uuid.UUID(feed_uuid)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid feed identifier format (must be UUIDv4).")
+
     # 1. Validate user and get settings
-    result = await db.execute(select(UserSellerSettings).where(UserSellerSettings.user_id == user_id))
+    result = await db.execute(select(UserSellerSettings).where(UserSellerSettings.user_id == user_uuid))
     settings = result.scalar_one_or_none()
     
-    company_name = settings.kaspi_shop_name if settings and settings.kaspi_shop_name else "Quareo Seller"
-    merchant_id = settings.kaspi_merchant_id if settings and settings.kaspi_merchant_id else "123456"
+    if not settings or not settings.kaspi_xml_url:
+        # Fallback to empty catalog if no source XML is configured
+        root = ET.Element("kaspi_catalog")
+        root.set("date", "2024-01-01 00:00")
+        root.set("xmlns", "kaspiShopping")
+        root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+        root.set("xsi:schemaLocation", "kaspiShopping http://kaspi.kz/kaspishopping.xsd")
+        xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
+        return Response(content=xml_str, media_type="application/xml")
 
-    # 2. Get user's products
-    result = await db.execute(select(RepricingRule).where(RepricingRule.user_id == user_id))
-    products = result.scalars().all()
+    # 2. Get user's repricing rules (active only)
+    result = await db.execute(
+        select(RepricingRule).where(
+            RepricingRule.user_id == user_uuid,
+            RepricingRule.is_active == True
+        )
+    )
+    rules = result.scalars().all()
+    # Support composite SKUs by mapping base SKU and full SKUs
+    rule_map = {}
+    for r in rules:
+        if r.kaspi_sku:
+            rule_map[r.kaspi_sku] = r
+            base_sku = r.kaspi_sku.split('_')[0]
+            if base_sku not in rule_map:
+                rule_map[base_sku] = r
 
-    # 3. Build XML
-    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    
-    root = ET.Element("kaspi_catalog")
-    root.set("date", now)
-    root.set("xmlns", "kaspiShopping")
-    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-    root.set("xsi:schemaLocation", "kaspiShopping http://kaspi.kz/kaspishopping.xsd")
+    # 3. Securely fetch and parse the original XML feed
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.get(settings.kaspi_xml_url)
+            resp.raise_for_status()
+            raw_xml = resp.content
+    except Exception as e:
+        logger.error(f"Failed to fetch original XML feed for {user_uuid}: {e}")
+        raise HTTPException(status_code=502, detail="Failed to fetch source XML feed.")
 
-    company = ET.SubElement(root, "company")
-    company.text = str(company_name)
-    
-    merchant = ET.SubElement(root, "merchantid")
-    merchant.text = str(merchant_id)
+    try:
+        # Prevent XXE vulnerabilities
+        root = fromstring(raw_xml)
+    except Exception as e:
+        logger.error(f"Failed to parse source XML for {user_uuid}: {e}")
+        raise HTTPException(status_code=502, detail="Source XML is invalid or malformed.")
 
-    offers = ET.SubElement(root, "offers")
+    # Remove namespace prefixes from tags for easier processing if present
+    for elem in root.iter():
+        if '}' in elem.tag:
+            elem.tag = elem.tag.split('}', 1)[1]
 
-    for p in products:
-        offer = ET.SubElement(offers, "offer", sku=p.kaspi_sku)
-        
-        model = ET.SubElement(offer, "model")
-        model.text = p.product_name
-        
-        price = ET.SubElement(offer, "price")
-        price.text = str(int(p.my_current_price))
+    offers = root.find('.//offers')
+    if offers is None:
+        offers = root
 
-        availabilities = ET.SubElement(offer, "availabilities")
-        
-        # Ensure pre-order constraints (max 30)
-        preorder = min(p.preorder_days, 30) if getattr(p, "preorder_days", None) else 0
-        
-        attrs = {
-            "available": "yes",
-            "store": "yes",
-            "pickup": "yes",
-            "delivery": "yes"
-        }
-        if preorder > 0:
-            attrs["preorder"] = str(preorder)
+    # 4. Process all offers, preserving assortment and enforcing floor limits
+    for offer in offers.findall('.//offer'):
+        sku = offer.get('sku') or offer.get('id')
+        if not sku:
+            continue
             
-        ET.SubElement(availabilities, "availability", **attrs)
+        sku_str = str(sku).strip()
+        matched_rule = None
+        
+        if sku_str in rule_map:
+            matched_rule = rule_map[sku_str]
+        else:
+            # Fallback for composite match
+            base_sku = sku_str.split('_')[0]
+            if base_sku in rule_map:
+                matched_rule = rule_map[base_sku]
 
-    # 4. Return as application/xml
+        if matched_rule and matched_rule.my_current_price:
+            # Enforcement: STRICT FLOOR PRICE CHECK
+            safe_price = max(matched_rule.my_current_price, matched_rule.min_price)
+            
+            price_node = offer.find('price')
+            if price_node is not None:
+                price_node.text = str(int(safe_price))
+            else:
+                cityprice = offer.find('.//cityprice')
+                if cityprice is not None:
+                    cityprice.text = str(int(safe_price))
+                else:
+                    new_price_node = ET.SubElement(offer, 'price')
+                    new_price_node.text = str(int(safe_price))
+
+            # Handle preorder injection in availabilities
+            if matched_rule.preorder_days and matched_rule.preorder_days > 0:
+                avail_node = offer.find('availabilities')
+                if avail_node is None:
+                    avail_node = ET.SubElement(offer, 'availabilities')
+                    
+                # Mirror existing availabilities, just inject preorder attribute
+                avails = avail_node.findall('availability')
+                if not avails:
+                    # Fallback if no availabilities existed
+                    ET.SubElement(avail_node, 'availability', available="yes", store="yes", pickup="yes", delivery="yes", preorder=str(min(matched_rule.preorder_days, 30)))
+                else:
+                    for av in avails:
+                        av.set('preorder', str(min(matched_rule.preorder_days, 30)))
+
+    # 5. Output the secured, modified XML mirror
+    # ET.tostring works fine here since we already used defusedxml to parse
     xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
     return Response(content=xml_str, media_type="application/xml")

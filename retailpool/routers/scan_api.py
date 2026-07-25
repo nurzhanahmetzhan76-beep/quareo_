@@ -398,9 +398,9 @@ async def scan_niche(
             
         if current_user.email != "karimbai.ali10@mail.ru":
             plan_limits = {
-                "free": 2,
-                "start": 50,
-                "business": 200,
+                "free": 1,
+                "start": 25,
+                "business": 100,
                 "unlimited": 999999
             }
             user_plan = (current_user.plan or "free").lower()
@@ -416,7 +416,7 @@ async def scan_niche(
                 if user_plan == "free":
                     raise HTTPException(
                         status_code=403,
-                        detail="Вы исчерпали лимит бесплатного тарифа (2 сканирования). Пожалуйста, выберите платный тариф."
+                        detail="Вы исчерпали лимит бесплатного тарифа (1 сканирование). Пожалуйста, выберите платный тариф."
                     )
                 raise HTTPException(
                     status_code=403,

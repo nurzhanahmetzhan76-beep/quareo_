@@ -166,6 +166,19 @@
         </div>
       </div>
 
+      <!-- XML Feed auto integration banner -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;display:flex;gap:1rem;align-items:flex-start">
+        <div style="font-size:24px;margin-top:2px">⚡</div>
+        <div style="width:100%">
+          <h4 style="margin-bottom:6px">Автоматическое обновление (XML Фид)</h4>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Скопируйте эту ссылку и вставьте её в Кабинете Kaspi (Управление товарами → Загрузить прайс-лист → <b>Указать ссылку (XML)</b>).<br>Kaspi будет сам забирать ваши актуальные цены и настройки предзаказа <b>каждый час</b> без вашего участия!</p>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="text" id="xmlFeedUrl" readonly style="flex:1; padding:8px 12px; font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:4px; font-family:var(--font-mono); color:var(--text);">
+            <button class="btn-secondary" onclick="copyXmlLink()" style="padding:8px 16px;white-space:nowrap">📋 Скопировать</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Add product form -->
       <div class="add-form visible" id="addForm">
         <h3 style="margin-bottom:1.5rem">➕ Добавить товар</h3>
@@ -198,21 +211,52 @@
             <label class="form-label">Шаг демпинга (макс. 5 ₸)</label>
             <input class="form-input" type="number" id="fStep" value="5" min="1" max="5">
           </div>
+          <div class="form-group">
+            <label class="form-label">Предзаказ (дн)</label>
+            <input class="form-input" type="number" id="fPreorder" value="0" min="0" max="30">
+          </div>
         </div>
         <div style="display:flex;gap:1rem;margin-top:1rem">
           <button class="btn-primary" onclick="submitNewRule()" style="padding:12px 28px">Добавить</button>
         </div>
       </div>
 
+      <!-- Pre-order panel -->
+      <div class="rp-panel visible" id="preorderPanel" style="border: 2px solid var(--brand); background: rgba(0, 113, 227, 0.05); margin-bottom: 2rem;">
+        <h2 style="font-size:1.5rem; color: var(--brand); margin-bottom: 0.5rem;">🚚 Управление Предзаказами</h2>
+        <p style="color: var(--text-2); margin-bottom: 1.5rem;">Продавайте товары из Китая без заморозки денег на складе. Укажите срок доставки, скачайте Excel и загрузите в Kaspi.</p>
+        
+        <div style="display: flex; gap: 1rem; align-items: center; background: var(--bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 250px;">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Массовая настройка</h3>
+                <p style="color: var(--text-3); font-size: 0.9rem;">Применить единый срок предзаказа ко всем вашим товарам.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <input type="number" id="bulkPreorderInput" value="14" min="0" max="30" style="width: 80px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-2); color: var(--text); font-size: 1.1rem; text-align: center;">
+                <span style="color: var(--text-2); margin-right: 1rem;">дней</span>
+                <button class="btn-primary" onclick="applyBulkPreorderUi()" style="padding: 10px 24px; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 113, 227, 0.4);">Применить ко всем</button>
+            </div>
+        </div>
+      </div>
+
+
+
       <!-- Products panel -->
-      <div class="rp-panel" data-reveal>
+      <div class="rp-panel visible" id="rulesPanel">
         <div class="rp-header">
           <h2 style="font-size:1.3rem">📦 Товары на репрайсинге</h2>
           <div style="display:flex; gap:10px; flex-wrap:wrap">
             <input type="file" id="importUpload" accept=".xlsx,.xml" style="display:none" onchange="uploadSync(this)">
-            <button class="btn-secondary" onclick="document.getElementById('importUpload').click()" id="importBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📥 Загрузить файл (Excel / XML)</button>
+            <button class="btn-secondary" onclick="document.getElementById('importUpload').click()" id="importBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📥 Загрузить файл</button>
             <button class="btn-secondary" onclick="syncFromNtin()" id="syncNtinBtn" style="padding:8px 16px;font-size:13px; background:var(--bg-2)">📝 Взять из NTIN</button>
+            <button class="btn-primary" onclick="forceRunRepricing()" id="forceRunBtn" style="padding:8px 16px;font-size:13px; background:var(--brand); color:var(--text); border:none;">🚀 Запустить проверку</button>
+            <button class="btn-secondary" onclick="clearAllRules()" style="padding:8px 16px;font-size:13px; background:var(--red-bg); color:var(--red); border-color:rgba(239, 68, 68, 0.3);">🗑️ Очистить таблицу</button>
           </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; position: relative;">
+            <input type="text" id="searchInput" placeholder="Поиск по названию или SKU..." style="width: 100%; padding: 12px 16px; padding-left: 42px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-2); color: var(--text); font-size: 14px; transition: border-color 0.2s;" oninput="filterRules()" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+            <span style="position: absolute; left: 16px; top: 12px; font-size: 14px; opacity: 0.5;">🔍</span>
         </div>
 
         <div id="rulesContent">
@@ -228,7 +272,9 @@
               <tr>
                 <th>Товар</th>
                 <th>Моя цена</th>
+                <th>Предзаказ (дн)</th>
                 <th>Мин. цена</th>
+                <th>Шаг (₸)</th>
                 <th>Конкурент</th>
                 <th>Статус</th>
                 <th>Бот</th>
@@ -400,9 +446,9 @@ async function loadRules() {
 }
 
 function renderRules() {
+  const tbody = document.querySelector('#rulesTable tbody');
   const empty = document.getElementById('emptyState');
   const table = document.getElementById('rulesTable');
-  const body = document.getElementById('rulesBody');
 
   if (rules.length === 0) {
     empty.style.display = 'block';
@@ -412,9 +458,7 @@ function renderRules() {
 
   empty.style.display = 'none';
   table.style.display = 'table';
-  body.innerHTML = '';
-
-  rules.forEach(r => {
+  tbody.innerHTML = rules.map(r => {
     const isWinning = r.last_competitor_price && r.my_current_price < r.last_competitor_price;
     const compPriceStr = r.last_competitor_price
       ? `${Number(r.last_competitor_price).toLocaleString('ru-RU')} ₸`
@@ -426,29 +470,61 @@ function renderRules() {
       ? (isWinning ? '<span class="badge badge-win">#1</span>' : '<span class="badge badge-lose">Проигрыш</span>')
       : '<span class="badge badge-off">—</span>';
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div style="font-weight:600;color:var(--text)">${escHtml(r.product_name)}</div>
-        <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono)">${escHtml(r.kaspi_sku)}</div>
-      </td>
-      <td class="price-my">${Number(r.my_current_price).toLocaleString('ru-RU')} ₸</td>
-      <td class="price-min">${Number(r.min_price).toLocaleString('ru-RU')} ₸</td>
-      <td class="price-comp ${compClass}">${compPriceStr}</td>
-      <td>${statusBadge}</td>
-      <td>
-        <label class="toggle">
-          <input type="checkbox" ${r.is_active ? 'checked' : ''} onchange="toggleBot('${r.id}', this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      </td>
-      <td>
-        <button onclick="showLogs('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="История">📊</button>
-        <button onclick="deleteRule('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="Удалить">🗑️</button>
-      </td>
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:600;color:var(--text)">${escHtml(r.product_name)}</div>
+          <div style="font-size:11px;color:var(--text-3);font-family:var(--font-mono)">${escHtml(r.kaspi_sku)}</div>
+        </td>
+        <td class="price-my">${Number(r.my_current_price).toLocaleString('ru-RU')} ₸</td>
+        <td>
+          <input type="number" min="0" max="30" value="${r.preorder_days || 0}" 
+                 onchange="updatePreorder('${r.id}', this.value)"
+                 style="width:50px; padding:4px; border:1px solid var(--border); border-radius:4px; background:var(--bg-2); color:var(--text); font-family:var(--font-mono); font-size:13px">
+        </td>
+        <td>
+          <input type="number" min="0" value="${r.min_price || 0}" 
+                 onchange="updateMinPrice('${r.id}', this.value)"
+                 style="width:80px; padding:4px; border:1px solid var(--border); border-radius:4px; background:var(--bg-2); color:var(--text); font-family:var(--font-mono); font-size:13px">
+        </td>
+        <td>
+          <input type="number" min="1" max="5" value="${r.step_kzt || 5}" 
+                 onchange="updateStep('${r.id}', this.value)"
+                 style="width:50px; padding:4px; border:1px solid var(--border); border-radius:4px; background:var(--bg-2); color:var(--text); font-family:var(--font-mono); font-size:13px">
+        </td>
+        <td class="price-comp ${compClass}">${compPriceStr}</td>
+        <td>${statusBadge}</td>
+        <td>
+          <label class="toggle">
+            <input type="checkbox" ${r.is_active ? 'checked' : ''} onchange="toggleBot('${r.id}', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </td>
+        <td>
+          <button onclick="showLogs('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="История">📊</button>
+          <button onclick="deleteRule('${r.id}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px" title="Удалить">🗑️</button>
+        </td>
+      </tr>
     `;
-    body.appendChild(tr);
-  });
+  }).join('');
+  
+  filterRules();
+}
+
+function filterRules() {
+    const input = document.getElementById('searchInput');
+    if (!input) return;
+    const query = input.value.toLowerCase();
+    const rows = document.querySelectorAll('#rulesTable tbody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(query)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
 }
 
 function escHtml(s) {
@@ -472,6 +548,95 @@ async function toggleBot(ruleId, isActive) {
   }
 }
 
+// ── Update preorder days ──
+async function updatePreorder(ruleId, days) {
+  let val = parseInt(days) || 0;
+  if (val < 0) val = 0;
+  if (val > 30) val = 30;
+  try {
+    await apiFetch(`/rules/${ruleId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ preorder_days: val }),
+    });
+    // Don't reload entirely to prevent input losing focus, just notify if needed or do nothing silently on success
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+    await loadRules();
+  }
+}
+
+async function updateMinPrice(ruleId, val) {
+  let num = parseInt(val) || 0;
+  try {
+    await apiFetch(`/rules/${ruleId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ min_price: num }),
+    });
+    showToast('Минимальная цена обновлена', 'success');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+    await loadRules();
+  }
+}
+
+async function updateStep(ruleId, val) {
+  let num = parseInt(val) || 5;
+  if (num < 1) num = 1;
+  if (num > 5) num = 5;
+  try {
+    await apiFetch(`/rules/${ruleId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ step_kzt: num }),
+    });
+    showToast('Шаг демпинга обновлен', 'success');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+    await loadRules();
+  }
+}
+
+async function bulkPreorder() {
+  const days = prompt('Введите количество дней предзаказа для ВСЕХ товаров (от 0 до 30):', '14');
+  if (days === null) return;
+  const d = parseInt(days);
+  if (isNaN(d) || d < 0 || d > 30) {
+    alert('Пожалуйста, введите корректное число от 0 до 30.');
+    return;
+  }
+  if (!confirm(`Вы уверены, что хотите установить предзаказ ${d} дн. для всех ${rules.length} товаров?`)) return;
+
+  try {
+    const res = await apiFetch('/bulk_preorder', {
+      method: 'POST',
+      body: JSON.stringify({ preorder_days: d }),
+    });
+    alert(`Обновлено товаров: ${res.updated}`);
+    await loadRules();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+async function applyBulkPreorderUi() {
+  const d = parseInt(document.getElementById('bulkPreorderInput').value);
+  if (isNaN(d) || d < 0 || d > 30) {
+    alert('Пожалуйста, введите корректное число от 0 до 30.');
+    return;
+  }
+  if (!confirm(`Вы уверены, что хотите установить предзаказ ${d} дн. для всех ${rules.length} товаров?`)) return;
+
+  try {
+    const res = await apiFetch('/bulk_preorder', {
+      method: 'POST',
+      body: JSON.stringify({ preorder_days: d }),
+    });
+    alert(`Успешно! Обновлено товаров: ${res.updated}.\nТеперь нажмите "Обновить цены в файле", чтобы скачать итоговый Excel.`);
+    await loadRules();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
 // ── Add product ──
 async function submitNewRule() {
   const name = document.getElementById('fName').value.trim();
@@ -481,6 +646,7 @@ async function submitNewRule() {
   const price = parseFloat(document.getElementById('fPrice').value);
   const minPrice = parseFloat(document.getElementById('fMinPrice').value);
   const step = parseInt(document.getElementById('fStep').value) || 5;
+  const preorder = parseInt(document.getElementById('fPreorder').value) || 0;
 
   if (!name || !sku || !price || !minPrice) {
     alert('Заполните все обязательные поля');
@@ -507,6 +673,7 @@ async function submitNewRule() {
         min_price: minPrice,
         step_kzt: Math.min(step, 5),
         is_active: false,
+        preorder_days: Math.min(preorder, 30),
       }),
     });
 
@@ -515,6 +682,7 @@ async function submitNewRule() {
       document.getElementById(id).value = '';
     });
     document.getElementById('fStep').value = '5';
+    document.getElementById('fPreorder').value = '0';
 
     await loadRules();
     await loadStats();
@@ -532,6 +700,42 @@ async function deleteRule(ruleId) {
     await loadStats();
   } catch(e) {
     alert('Ошибка: ' + e.message);
+  }
+}
+
+async function clearAllRules() {
+  if (!confirm('ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ УДАЛИТЬ ВСЕ ТОВАРЫ? Это действие нельзя отменить!')) return;
+  if (!confirm('Точно удалить все ваши товары из таблицы?')) return;
+  
+  try {
+    await apiFetch(`/rules/clear`, { method: 'DELETE' });
+    alert('Все товары успешно удалены.');
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+async function forceRunRepricing() {
+  const btn = document.getElementById('forceRunBtn');
+  btn.innerHTML = '⏳ Проверяем Kaspi...';
+  btn.disabled = true;
+  
+  try {
+    const res = await apiFetch('/rules/force_run', { method: 'POST' });
+    if (res.results) {
+        alert(`Проверка завершена!\nОбработано товаров: ${res.results.length}`);
+    } else {
+        alert(res.message || 'Проверка завершена!');
+    }
+    await loadRules();
+    await loadStats();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.innerHTML = '🚀 Запустить проверку';
+    btn.disabled = false;
   }
 }
 
@@ -633,8 +837,19 @@ function closeLogsPanel() {
 }
 
 // ── Init ──
-loadStats();
-loadRules();
+document.addEventListener('DOMContentLoaded', () => {
+  loadStats();
+  loadRules();
+  loadXmlFeedUrl();
+});
+
+
+(function initXmlFeedUrl() {
+    const user = rpGetUser();
+    if (user && user.id) {
+        document.getElementById('xmlFeedUrl').value = window.location.origin + `/feed/${user.id}.xml`;
+    }
+})();
 </script>
 </body>
 </html>

@@ -453,10 +453,11 @@
     .footer-col a:hover { color: #fff; }
 
     @media (max-width: 900px) {
-      .v-tabs-container { grid-template-columns: 1fr; gap: 40px; }
-      .v-tabs-sidebar { position: relative; top: 0; }
-      .v-tabs-nav { flex-direction: row; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;}
-      .v-tab { padding: 12px 24px; border-left: none; margin-left: 0; }
+      .v-tabs-container { grid-template-columns: 1fr; gap: 40px; width: 100%; max-width: 100vw; }
+      .v-tabs-sidebar { position: relative; top: 0; min-width: 0; width: 100%; overflow: hidden; }
+      .v-tabs-nav { flex-direction: row; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .v-tabs-nav::-webkit-scrollbar { display: none; }
+      .v-tab { padding: 12px 24px; border-left: none; margin-left: 0; display: inline-block; }
       .v-tab p { display: none !important; }
       .v-tabs-content { gap: 64px; }
       .mockup-card-wrapper { min-height: auto; }

@@ -122,17 +122,40 @@ async def process_waybills(
                             # Normalize whitespace to make regex matching more predictable
                             text_clean = re.sub(r'\s+', ' ', text)
                             
+                            # DATE EXTRACTION
                             date_match = re.search(r"(?:дата доставки|доставки)[\s:]*(\d{1,2})\s*([а-яА-ЯёЁa-zA-Z]+)", text_clean, re.IGNORECASE)
                             if date_match:
                                 sort_date = parse_date(date_match.group(1), date_match.group(2))
+                            else:
+                                alt_date = re.search(r"\b(\d{1,2})\s+(янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек)[a-zA-Zа-яА-ЯёЁ]*", text_clean, re.IGNORECASE)
+                                if alt_date:
+                                    sort_date = parse_date(alt_date.group(1), alt_date.group(2))
                                 
-                            prod_match = re.search(r"1\s*\.\s*(.*?)(?=\s+\d+\s*шт|\s+Итого|$)", text_clean, re.IGNORECASE)
-                            if prod_match:
-                                product_val = prod_match.group(1).strip()
+                            # PRODUCT EXTRACTION
+                            clean_filename = re.sub(r'^\d+[\s_-]*', '', pdf_name)
+                            clean_filename = re.sub(r'\.pdf$', '', clean_filename, flags=re.IGNORECASE).strip()
+                            
+                            if len(clean_filename) > 3:
+                                product_val = clean_filename
+                            else:
+                                prod_match = re.search(r"1\s*\.\s*(.*?)(?=\s+\d+\s*шт|\s+Итого|$)", text_clean, re.IGNORECASE)
+                                if prod_match:
+                                    product_val = prod_match.group(1).strip()
+                                else:
+                                    lines = [l.strip() for l in text.split('\n') if l.strip()]
+                                    longest = ""
+                                    for l in lines:
+                                        if len(l) > len(longest) and not re.search(r'(Kaspi|Доставка|Заказ|Покупатель|Продавец|Сумма|Итого)', l, re.IGNORECASE):
+                                            longest = l
+                                    if longest:
+                                        product_val = longest
                                         
+                            # QUANTITY EXTRACTION
                             qty_matches = re.findall(r"(\d+)\s*шт", text_clean, re.IGNORECASE)
                             if qty_matches:
                                 quantity_val = sum(int(q) for q in qty_matches)
+                            else:
+                                quantity_val = 1
                     except Exception as e:
                         logger.warning(f"Error parsing PDF text for {pdf_name}: {e}")
                 

@@ -22,11 +22,12 @@ def main_menu_keyboard() -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton("🔔 Мои алерты", callback_data="menu:alerts"),
-            InlineKeyboardButton("📄 Документы", callback_data="menu:documents"),
+            InlineKeyboardButton("📦 Мои товары", callback_data="menu:products"),
         ],
         [
+            InlineKeyboardButton("📄 Документы", callback_data="menu:documents"),
             InlineKeyboardButton("ℹ️ Помощь", callback_data="menu:help"),
-        ],
+        ]
     ])
 
 

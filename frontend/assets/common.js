@@ -182,7 +182,62 @@ function rpInitScrollNav() {
 /* ── Mobile nav toggle ──────────────────────────────────────── */
 function rpToggleMobileNav() {
   const links = document.getElementById('navLinks');
+  const btn = document.querySelector('.mobile-nav-toggle');
   if (links) links.classList.toggle('mobile-open');
+  if (btn) btn.classList.toggle('active');
+}
+
+function rpInitMobileNav() {
+  const navLinks = document.querySelector('.nav-links');
+  const navRight = document.querySelector('.nav-right');
+  
+  if (navLinks && navRight && !document.getElementById('navLinks')) {
+    navLinks.id = 'navLinks';
+    
+    // Create Hamburger
+    const btn = document.createElement('button');
+    btn.className = 'mobile-nav-toggle';
+    btn.innerHTML = '<span></span><span></span><span></span>';
+    btn.onclick = rpToggleMobileNav;
+    navRight.appendChild(btn);
+    
+    // Inject mobile CSS
+    if (!document.getElementById('mobileNavStyle')) {
+      const style = document.createElement('style');
+      style.id = 'mobileNavStyle';
+      style.innerHTML = `
+        .mobile-nav-toggle {
+          display: none;
+          background: transparent; border: none; cursor: pointer;
+          width: 30px; height: 24px; position: relative; z-index: 101;
+          flex-direction: column; justify-content: space-between;
+        }
+        .mobile-nav-toggle span {
+          display: block; width: 100%; height: 2px;
+          background-color: var(--text-main, #fff);
+          transition: all 0.3s ease; border-radius: 2px;
+        }
+        @media(max-width: 768px) {
+          .nav-links { display: none !important; }
+          .mobile-nav-toggle { display: flex; margin-left: 8px; }
+          .nav-links.mobile-open {
+            display: flex !important;
+            flex-direction: column;
+            position: fixed; top: 64px; left: 0; right: 0;
+            background: rgba(4, 4, 5, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 24px; gap: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            align-items: flex-start;
+          }
+          .nav-links.mobile-open a { font-size: 16px; width: 100%; padding: 12px; }
+          .nav-dropdown-content { position: static; display: none; box-shadow: none; border: none; padding-left: 16px; }
+          .nav-dropdown.active .nav-dropdown-content { display: flex; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
 }
 
 /* ── Hero particles ─────────────────────────────────────────── */
@@ -248,6 +303,7 @@ function rpInitParticles(canvasId) {
 
 document.addEventListener('DOMContentLoaded', () => {
   rpApplyTranslations();
+  rpInitMobileNav();
   rpInitReveal();
   rpAnimateCounters();
   rpInitScrollNav();

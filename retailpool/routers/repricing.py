@@ -72,6 +72,14 @@ async def create_rule(
     Bot is OFF by default — user must explicitly toggle it ON.
     Step is capped at 5 KZT maximum.
     """
+    # Validate plan for repricing if is_active is true
+    user_plan = (current_user.plan or "free").lower()
+    if data.is_active and user_plan == "free" and current_user.email != "karimbai.ali10@mail.ru":
+        raise HTTPException(
+            status_code=403,
+            detail="Бот-репрайсер недоступен на бесплатном тарифе. Пожалуйста, обновите тариф."
+        )
+
     # Enforce step cap
     step = min(data.step_kzt, MAX_STEP_KZT)
 
@@ -181,6 +189,21 @@ async def update_rule(
 
 
 @router.delete(
+    "/rules/clear",
+    status_code=204,
+    summary="Delete all repricing rules for the user",
+)
+async def clear_all_rules(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Remove ALL products from the repricing bot for this user."""
+    from sqlalchemy import delete
+    stmt = delete(RepricingRule).where(RepricingRule.user_id == current_user.id)
+    await db.execute(stmt)
+    await db.flush()
+
+@router.delete(
     "/rules/{rule_id}",
     status_code=204,
     summary="Delete a repricing rule",
@@ -196,9 +219,65 @@ async def delete_rule(
     await db.flush()
 
 
+@router.post(
+    "/bulk_preorder",
+    summary="Bulk update preorder days for all products",
+)
+async def bulk_preorder(
+    body: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Set the same preorder_days for all products of the current user."""
+    days = body.get("preorder_days", 0)
+    if not isinstance(days, int) or not (0 <= days <= 30):
+        raise HTTPException(status_code=400, detail="preorder_days must be between 0 and 30")
+
+    from sqlalchemy import update
+    stmt = (
+        update(RepricingRule)
+        .where(RepricingRule.user_id == current_user.id)
+        .values(preorder_days=days)
+    )
+    result = await db.execute(stmt)
+    await db.commit()
+    return {"status": "ok", "updated": result.rowcount}
+
+
+@router.post(
+    "/rules/force_run",
+    summary="Manually trigger repricing cycle for current user",
+)
+async def force_run_repricing(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Manually run a repricing cycle for the user's active rules immediately."""
+    from retailpool.services.repricing_service import process_single_rule
+    
+    stmt = select(RepricingRule).where(
+        RepricingRule.user_id == current_user.id,
+        RepricingRule.is_active == True
+    )
+    rows = await db.execute(stmt)
+    rules = rows.scalars().all()
+    
+    if not rules:
+        return {"status": "ok", "message": "Нет активных товаров для проверки"}
+        
+    results = []
+    for rule in rules:
+        rule.owner_telegram_id = current_user.telegram_id
+        res = await process_single_rule(rule, None, db)
+        results.append(res)
+        
+    await db.commit()
+    return {"status": "ok", "results": results}
+
 # ══════════════════════════════════════════════════════════════
 # Toggle ON/OFF — the core user control
 # ══════════════════════════════════════════════════════════════
+
 
 @router.post(
     "/rules/{rule_id}/toggle",
@@ -215,6 +294,13 @@ async def toggle_rule(
 
     When toggled OFF, the bot immediately stops monitoring this product.
     """
+    user_plan = (current_user.plan or "free").lower()
+    if body.is_active and user_plan == "free" and current_user.email != "karimbai.ali10@mail.ru":
+        raise HTTPException(
+            status_code=403,
+            detail="Бот-репрайсер недоступен на бесплатном тарифе. Пожалуйста, обновите тариф."
+        )
+
     rule = await _get_rule_for_user(rule_id, current_user, db)
     old_state = rule.is_active
     rule.is_active = body.is_active
@@ -542,7 +628,16 @@ async def upload_sync(
 
         sku_col = headers["sku"]
         price_col = headers["price"]
-        name_col = headers.get("name", sku_col)
+        
+        name_col = None
+        # Look for partial matches to catch 'название товара', 'наименование', etc.
+        for h_key, h_col in headers.items():
+            if any(p in h_key for p in ["model", "name", "название", "наименовани", "title"]):
+                name_col = h_col
+                break
+        
+        if not name_col:
+            name_col = sku_col
 
         for r in range(2, ws.max_row + 1):
             sku = ws.cell(r, sku_col).value
@@ -672,8 +767,7 @@ async def process_excel(
     """
     result = await db.execute(
         select(RepricingRule).where(
-            RepricingRule.user_id == current_user.id,
-            RepricingRule.is_active == True,  # noqa: E712
+            RepricingRule.user_id == current_user.id
         )
     )
     rules = result.scalars().all()
@@ -707,7 +801,7 @@ async def process_excel(
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.title = "Лист1"
-            headers = ['SKU', 'model', 'brand', 'price', 'PP1', 'PP2', 'PP3', 'PP4', 'PP5', 'preorder']
+            headers = ['SKU', 'model', 'brand', 'price', 'PP1', 'PP2', 'PP3', 'PP4', 'PP5', 'preOrder']
             ws.append(headers)
 
             for offer in offers:
@@ -741,7 +835,7 @@ async def process_excel(
                 # OVERRIDE PRICE and PREORDER if bot is active for this SKU
                 if sku_str in rule_map:
                     rule = rule_map[sku_str]
-                    if rule.my_current_price:
+                    if rule.is_active and rule.my_current_price:
                         price = rule.my_current_price
                     if rule.preorder_days and rule.preorder_days > 0:
                         preorder_days = min(rule.preorder_days, 30)
@@ -797,28 +891,58 @@ async def process_excel(
             )
 
         sku_col, price_col = headers["sku"], headers["price"]
-        preorder_col = headers.get("preorder")
+        
+        # Look for existing preorder column by partial match
+        preorder_col = None
+        for h_key, h_col in headers.items():
+            if any(p in h_key.lower() for p in ["предзаказ", "preorder"]):
+                preorder_col = h_col
+                break
+        
+        # Get PP columns to activate archived products
+        pp_cols = [headers[k] for k in headers if k.startswith("pp")]
 
         for r in range(2, ws.max_row + 1):
             sku = ws.cell(r, sku_col).value
             if sku is None:
                 continue
-            sku = str(sku).strip()
-            if sku in rule_map:
-                rule = rule_map[sku]
-                if rule.my_current_price:
-                    ws.cell(r, price_col).value = rule.my_current_price
                 
-                if rule.preorder_days and rule.preorder_days > 0:
-                    preorder_val = min(rule.preorder_days, 30)
+            # ensure string, handle .0 floats
+            if isinstance(sku, float):
+                sku = str(int(sku))
+            else:
+                sku = str(sku).strip()
+                
+            matched_rule = None
+            if sku in rule_map:
+                matched_rule = rule_map[sku]
+            else:
+                # Handle Kaspi composite SKUs like "118285743_372127156"
+                for part in sku.split('_'):
+                    if part in rule_map:
+                        matched_rule = rule_map[part]
+                        break
+                        
+            if matched_rule:
+                if matched_rule.is_active and matched_rule.my_current_price:
+                    ws.cell(r, price_col).value = matched_rule.my_current_price
+                
+                if matched_rule.preorder_days and matched_rule.preorder_days > 0:
+                    preorder_val = min(matched_rule.preorder_days, 30)
                     if preorder_col:
                         ws.cell(r, preorder_col).value = preorder_val
                     else:
                         # Append the column if it doesn't exist
                         preorder_col = ws.max_column + 1
-                        ws.cell(1, preorder_col).value = "preorder"
+                        ws.cell(1, preorder_col).value = "preOrder"
                         headers["preorder"] = preorder_col
                         ws.cell(r, preorder_col).value = preorder_val
+                        
+                    # Force availability to 'yes' for preorders so archived items become active
+                    for col_idx in pp_cols:
+                        val = ws.cell(r, col_idx).value
+                        if not val or str(val).strip().lower() == "no":
+                            ws.cell(r, col_idx).value = "yes"
 
                 changed += 1
 

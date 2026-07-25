@@ -51,7 +51,7 @@ class RepricingRuleOut(BaseModel):
     base_price: float | None
     step_kzt: int
     is_active: bool
-    preorder_days: int
+    preorder_days: int | None = 0
     last_competitor_price: float | None
     last_checked_at: datetime | None
     created_at: datetime

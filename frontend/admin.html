@@ -176,11 +176,11 @@
 
 <script src="assets/common.js?v=4"></script>
 <script>
-const ADMIN_EMAIL = "disairon.agent@bk.ru";
+const ADMIN_EMAILS = ["disairon.agent@bk.ru", "karimbai.ali10@mail.ru"];
 
 // Check admin right away
 const user = rpGetUser();
-if (!user || user.email !== ADMIN_EMAIL) {
+if (!user || !ADMIN_EMAILS.includes(user.email)) {
   alert("Доступ запрещен. Эта страница только для администратора.");
   window.location.href = "index.html";
 }

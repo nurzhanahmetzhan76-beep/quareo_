@@ -137,6 +137,36 @@ async def scan_blue_ocean_niche(
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
 
+    if current_user and current_user.email != "karimbai.ali10@mail.ru":
+        plan_limits = {
+            "free": 1,
+            "start": 25,
+            "business": 100,
+            "unlimited": 999999
+        }
+        user_plan = (current_user.plan or "free").lower()
+        limit = plan_limits.get(user_plan, 0)
+
+        if user_plan not in plan_limits:
+            raise HTTPException(
+                status_code=403,
+                detail="У вас нет активного тарифа. Пожалуйста, выберите тариф, чтобы пользоваться сканером."
+            )
+
+        if getattr(current_user, 'scans_used', 0) >= limit:
+            if user_plan == "free":
+                raise HTTPException(
+                    status_code=403,
+                    detail="Вы исчерпали лимит бесплатного тарифа (1 сканирование). Пожалуйста, выберите платный тариф."
+                )
+            raise HTTPException(
+                status_code=403,
+                detail="Лимит сканирований по вашему тарифу исчерпан. Пожалуйста, обновите тариф."
+            )
+            
+        current_user.scans_used = getattr(current_user, 'scans_used', 0) + 1
+        await db.commit()
+
     logger.info("Blue Ocean Scan (API mode) for: %s", query)
 
     enriched_products: list[dict] = []

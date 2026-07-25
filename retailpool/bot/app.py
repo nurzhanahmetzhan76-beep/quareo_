@@ -47,6 +47,10 @@ from retailpool.bot.handlers.auth import (
     login_command,
     auth_middleware,
 )
+from retailpool.bot.handlers.products import (
+    product_callback,
+    handle_preorder_input,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +108,7 @@ def create_application() -> Application:
 
 
     app.add_handler(CallbackQueryHandler(alert_callback, pattern=r"^alert:"))
+    app.add_handler(CallbackQueryHandler(product_callback, pattern=r"^prod:"))
     app.add_handler(CallbackQueryHandler(
         _scan_callback, pattern=r"^scan:"
     ))
@@ -145,7 +150,9 @@ async def _post_init(application: Application) -> None:
 async def _text_router(update: Update, context) -> None:
     """Route plain text messages to the appropriate handler."""
     # Check if user is in a specific flow
-    if context.user_data.get("creating_alert"):
+    if context.user_data.get("waiting_for_preorder"):
+        await handle_preorder_input(update, context)
+    elif context.user_data.get("creating_alert"):
         await alert_text_input(update, context)
     # Otherwise ignore plain text (don't auto-scan)
 

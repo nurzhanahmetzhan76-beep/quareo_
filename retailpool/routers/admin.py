@@ -12,11 +12,11 @@ from retailpool.services.auth_service import get_current_user
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
-ADMIN_EMAIL = "disairon.agent@bk.ru"
-
+ADMIN_EMAILS = ["disairon.agent@bk.ru", "karimbai.ali10@mail.ru"]
+import os
 
 async def get_admin_user(user: User = Depends(get_current_user)) -> User:
-    if user.email != ADMIN_EMAIL:
+    if user.email not in ADMIN_EMAILS and user.email != os.environ.get("ADMIN_EMAIL"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin privileges required",

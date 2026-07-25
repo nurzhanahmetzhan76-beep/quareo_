@@ -214,7 +214,7 @@ def compute_new_price(
 
 async def process_single_rule(
     rule: RepricingRule,
-    kaspi_client: KaspiSellerClient,
+    kaspi_client: KaspiSellerClient | None,
     db: AsyncSession,
 ) -> dict:
     """Process a single repricing rule: scrape, decide, push, log.
@@ -233,8 +233,12 @@ async def process_single_rule(
     try:
         # Step 1: Scrape competitor prices
         if not rule.product_url:
-            result["action"] = "skip_no_url"
-            return result
+            if rule.kaspi_sku:
+                # Kaspi supports short URLs that automatically redirect to the canonical page
+                rule.product_url = f"https://kaspi.kz/shop/p/item-{rule.kaspi_sku}/"
+            else:
+                result["action"] = "skip_no_url"
+                return result
 
         sellers = await scrape_competitor_prices(
             rule.product_url,
@@ -243,6 +247,13 @@ async def process_single_rule(
 
         if not sellers:
             result["action"] = "skip_no_competitors"
+            return result
+
+        # Anti-self-undercut logic: 
+        # If the only seller is __main__ and its price is exactly our price,
+        # it's highly likely it's us in the buybox as the sole seller.
+        if len(sellers) == 1 and sellers[0]["merchant"] == "__main__" and sellers[0]["price"] == rule.my_current_price:
+            result["action"] = "skip_sole_seller_is_user"
             return result
 
         lowest = min(s["price"] for s in sellers)
@@ -278,8 +289,7 @@ async def process_single_rule(
         
         rule.my_current_price = new_price
 
-        # Step 4: Notify user only when a competitor undercut them.
-        # We do NOT touch Kaspi — the user updates prices via safe Excel upload.
+        # Notify user only when a competitor undercut them.
         if action in ("undercut", "floor_hit"):
             await _notify_user_undercut(
                 telegram_id=getattr(rule, "owner_telegram_id", None),
@@ -288,7 +298,7 @@ async def process_single_rule(
                 recommended_price=new_price,
             )
 
-        result["new_price"] = new_price  # recommended price, not applied
+        result["new_price"] = new_price
 
         logger.info(
             "Repricing [%s]: %s -> %s (competitor: %s, action: %s)",
