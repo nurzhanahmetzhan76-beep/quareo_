@@ -591,7 +591,7 @@ async def upload_sync(
 
                 rule = RepricingRule(
                     user_id=current_user.id,
-                    product_name=str(title)[:512],
+                    product_name=str(title)[:255],
                     kaspi_sku=str(sku),
                     my_merchant_name=merchant_name,
                     my_current_price=price,
@@ -603,12 +603,16 @@ async def upload_sync(
                 db.add(rule)
                 synced += 1
                 
-                if synced % 50 == 0:
-                    await db.flush()
+                if synced % 20 == 0:
+                    try:
+                        await db.flush()
+                    except Exception as e:
+                        logger.exception("Database batch flush error in upload_sync (XML): %s", e)
+                        raise HTTPException(status_code=400, detail=f"Ошибка базы данных (XML batch): {repr(e)}")
 
         except Exception as e:
             logger.exception("Failed to parse Kaspi XML file: %s", e)
-            raise HTTPException(status_code=400, detail=f"Ошибка парсинга XML файла: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Ошибка парсинга XML файла: {repr(e)}")
 
     else:
         # PARSE EXCEL FILE
@@ -674,7 +678,7 @@ async def upload_sync(
 
                 rule = RepricingRule(
                     user_id=current_user.id,
-                    product_name=str(name)[:512],
+                    product_name=str(name)[:255],
                     kaspi_sku=str(sku),
                     my_merchant_name=merchant_name,
                     my_current_price=price,
@@ -686,23 +690,23 @@ async def upload_sync(
                 db.add(rule)
                 synced += 1
                 
-                if synced % 50 == 0:
+                if synced % 20 == 0:
                     try:
                         await db.flush()
                     except Exception as e:
                         logger.exception("Database batch flush error in upload_sync: %s", e)
-                        raise HTTPException(status_code=400, detail=f"Ошибка базы данных при пакетном сохранении: {str(e)}")
+                        raise HTTPException(status_code=400, detail=f"Ошибка БД при пакетном сохранении (Excel): {repr(e)}")
         except HTTPException:
             raise
         except Exception as e:
             logger.exception("Unexpected error processing Excel in upload_sync: %s", e)
-            raise HTTPException(status_code=400, detail=f"Неожиданная ошибка обработки Excel: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Неожиданная ошибка обработки Excel: {repr(e)}")
 
     try:
         await db.flush()
     except Exception as e:
         logger.exception("Database flush error in upload_sync: %s", e)
-        raise HTTPException(status_code=400, detail=f"Ошибка базы данных при сохранении: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Ошибка базы данных при сохранении (итог): {repr(e)}")
 
     return {
         "synced": synced,
