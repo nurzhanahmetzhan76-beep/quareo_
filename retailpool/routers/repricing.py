@@ -578,6 +578,7 @@ async def upload_sync(
                 if str(sku) in existing_skus:
                     skipped += 1
                     continue
+                existing_skus.add(str(sku))
                 
                 title_elem = offer.find('model')
                 title = title_elem.text if title_elem is not None else f"Товар {sku}"
@@ -601,6 +602,9 @@ async def upload_sync(
                 )
                 db.add(rule)
                 synced += 1
+                
+                if synced % 50 == 0:
+                    await db.flush()
 
         except Exception as e:
             logger.exception("Failed to parse Kaspi XML file: %s", e)
@@ -656,6 +660,7 @@ async def upload_sync(
             if sku in existing_skus:
                 skipped += 1
                 continue
+            existing_skus.add(sku)
 
             name = ws.cell(r, name_col).value
             name = str(name).strip() if name else f"Товар {sku}"
@@ -679,6 +684,9 @@ async def upload_sync(
             )
             db.add(rule)
             synced += 1
+            
+            if synced % 50 == 0:
+                await db.flush()
 
     try:
         await db.flush()
