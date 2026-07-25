@@ -604,7 +604,7 @@ async def upload_sync(
 
         except Exception as e:
             logger.exception("Failed to parse Kaspi XML file: %s", e)
-            raise HTTPException(status_code=400, detail="Ошибка парсинга XML файла.")
+            raise HTTPException(status_code=400, detail=f"Ошибка парсинга XML файла: {str(e)}")
 
     else:
         # PARSE EXCEL FILE
@@ -620,14 +620,22 @@ async def upload_sync(
             if v is not None:
                 headers[str(v).strip().lower()] = c
 
-        if "sku" not in headers or "price" not in headers:
+        if not headers:
+            raise HTTPException(status_code=400, detail="Файл пуст или не содержит заголовков.")
+
+        sku_col = None
+        price_col = None
+        for h_key, h_col in headers.items():
+            if any(p in h_key for p in ["sku", "артикул", "код"]):
+                sku_col = h_col
+            if any(p in h_key for p in ["price", "цена"]):
+                price_col = h_col
+
+        if not sku_col or not price_col:
             raise HTTPException(
                 status_code=400,
-                detail="Неверный формат Excel: нет колонок SKU или price."
+                detail="Неверный формат Excel: нет колонок SKU (Артикул) или Цена."
             )
-
-        sku_col = headers["sku"]
-        price_col = headers["price"]
         
         name_col = None
         # Look for partial matches to catch 'название товара', 'наименование', etc.
@@ -672,7 +680,12 @@ async def upload_sync(
             db.add(rule)
             synced += 1
 
-    await db.flush()
+    try:
+        await db.flush()
+    except Exception as e:
+        logger.exception("Database flush error in upload_sync: %s", e)
+        raise HTTPException(status_code=400, detail=f"Ошибка базы данных при сохранении: {str(e)}")
+
     return {
         "synced": synced,
         "skipped": skipped,
@@ -868,7 +881,7 @@ async def process_excel(
                 
         except Exception as e:
             logger.exception("Failed to parse Kaspi XML file in process_excel: %s", e)
-            raise HTTPException(status_code=400, detail="Ошибка парсинга XML файла.")
+            raise HTTPException(status_code=400, detail=f"Ошибка парсинга XML файла: {str(e)}")
 
     else:
         # Excel processing
@@ -884,13 +897,22 @@ async def process_excel(
             if v is not None:
                 headers[str(v).strip().lower()] = c
 
-        if "sku" not in headers or "price" not in headers:
+        if not headers:
+            raise HTTPException(status_code=400, detail="Файл пуст или не содержит заголовков.")
+
+        sku_col = None
+        price_col = None
+        for h_key, h_col in headers.items():
+            if any(p in h_key for p in ["sku", "артикул", "код"]):
+                sku_col = h_col
+            if any(p in h_key for p in ["price", "цена"]):
+                price_col = h_col
+
+        if not sku_col or not price_col:
             raise HTTPException(
                 status_code=400,
-                detail="Неверный формат: в файле нет колонок SKU/price.",
+                detail="Неверный формат: в файле нет колонок SKU (Артикул) или Цена.",
             )
-
-        sku_col, price_col = headers["sku"], headers["price"]
         
         # Look for existing preorder column by partial match
         preorder_col = None
