@@ -115,6 +115,7 @@ class SellerSettingsRequest(BaseModel):
     kaspi_shop_name: str | None = None
     kaspi_xml_url: str | None = None
     nkt_api_key: str | None = None
+    health_monitor_enabled: bool | None = None
 
 
 class SellerSettingsResponse(BaseModel):
@@ -123,6 +124,7 @@ class SellerSettingsResponse(BaseModel):
     kaspi_shop_name: str | None = None
     kaspi_xml_url: str | None = None
     has_nkt_key: bool = False
+    health_monitor_enabled: bool = False
 
 
 class BulkImportRequest(BaseModel):
@@ -628,6 +630,7 @@ async def get_settings(current_user: User = Depends(get_current_user)):
             kaspi_shop_name=settings.kaspi_shop_name,
             kaspi_xml_url=settings.kaspi_xml_url,
             has_nkt_key=bool(settings.nkt_api_key),
+            health_monitor_enabled=bool(settings.health_monitor_enabled),
         )
 
 
@@ -644,6 +647,7 @@ async def save_settings(data: SellerSettingsRequest, current_user: User = Depend
                 kaspi_shop_name=settings.kaspi_shop_name,
                 kaspi_xml_url=settings.kaspi_xml_url,
                 has_nkt_key=bool(settings.nkt_api_key),
+                health_monitor_enabled=bool(settings.health_monitor_enabled),
             )
 
 @router.get("/templates", response_model=NtinTemplatesRequest)
