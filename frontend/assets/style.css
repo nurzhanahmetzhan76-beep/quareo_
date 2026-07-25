@@ -556,6 +556,18 @@ section {
   position: relative;
 }
 
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.35), rgba(96, 165, 250, 0) 70%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
 .card:hover {
   box-shadow:
     0 1px 2px rgba(37, 99, 235, 0.06),
