@@ -1,23 +1,23 @@
 <svg width="1200" height="1600" viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-  <rect width="1200" height="1600" fill="#050506"/>
+  <rect width="1200" height="1600" fill="#040405"/>
 
   <path d="M0,80 C180,20 360,180 560,120 C760,60 900,220 1200,140 L1200,0 L0,0 Z"
-        fill="#15151f" opacity="0.9"/>
+        fill="#0a0a0f" opacity="0.85"/>
 
   <path d="M0,260 C160,140 340,340 540,260 C760,170 940,400 1200,300 L1200,0 L0,0 Z"
-        fill="#1c1c2b" opacity="0.85"/>
+        fill="#0d0d14" opacity="0.8"/>
 
   <path d="M0,520 C200,380 380,600 620,500 C840,410 1000,640 1200,540 L1200,0 L0,0 Z"
-        fill="#232335" opacity="0.8"/>
+        fill="#11111a" opacity="0.75"/>
 
   <path d="M0,780 C220,620 420,860 660,760 C880,670 1020,900 1200,800 L1200,1600 L0,1600 Z"
-        fill="#141420" opacity="0.9"/>
+        fill="#08080c" opacity="0.85"/>
 
   <path d="M0,1040 C240,900 460,1120 700,1020 C900,930 1040,1140 1200,1050 L1200,1600 L0,1600 Z"
-        fill="#1e1e2e" opacity="0.85"/>
+        fill="#0c0c13" opacity="0.8"/>
 
   <path d="M0,1320 C260,1180 480,1400 720,1300 C920,1210 1060,1420 1200,1330 L1200,1600 L0,1600 Z"
-        fill="#0a0a10" opacity="0.9"/>
+        fill="#050507" opacity="0.85"/>
 
-  <ellipse cx="600" cy="40" rx="500" ry="280" fill="#2563EB" opacity="0.08"/>
+  <ellipse cx="600" cy="40" rx="500" ry="280" fill="#2563EB" opacity="0.04"/>
 </svg>
