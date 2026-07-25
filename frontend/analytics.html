@@ -13,7 +13,39 @@
 .tool-hero .section-tag { justify-content: center; margin-bottom: 1rem; }
 
 /* Форма сканирования */
-.scan-bar-wrapper { max-width: 600px; margin: 2rem auto; background: var(--bg); padding: 8px; border-radius: 99px; border: 1px solid var(--border); display: flex; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.scan-bar-wrapper {
+  max-width: 600px; margin: 2rem auto;
+  background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
+  padding: 8px; border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+  position: relative;
+}
+.scan-bar-wrapper::after {
+  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background: radial-gradient(circle at top right, rgba(96,165,250,.7), rgba(96,165,250,0) 65%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+}
+.cost-mgmt-box {
+  position: relative;
+  background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.cost-mgmt-box::after {
+  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background: radial-gradient(circle at top right, rgba(96,165,250,.7), rgba(96,165,250,0) 65%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+}
 .scan-bar-wrapper input { flex: 1; min-width: 0; background: transparent; border: none; padding: 0 1.5rem; font-family: var(--font-body); font-size: 1rem; color: var(--text-1); outline: none; }
 .scan-bar-wrapper .btn-primary { border-radius: 99px; padding: 12px 32px; font-weight: 600; white-space: nowrap; }
 
@@ -153,7 +185,7 @@
         <button class="btn-primary" onclick="verifySmsAndScan()">Подтвердить</button>
       </div>
 
-      <div style="margin-top: 3rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+      <div class="cost-mgmt-box" style="margin-top: 3rem; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left;">
         <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-1);">Управление себестоимостью (Для точного P&L)</h3>
         <p style="color: var(--text-2); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4;">Чтобы сканер считал чистую прибыль со 100% точностью, загрузите себестоимость ваших товаров. Вы можете выгрузить шаблон со своими товарами, заполнить цены и загрузить его обратно.</p>
         
