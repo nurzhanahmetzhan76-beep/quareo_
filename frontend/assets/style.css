@@ -53,7 +53,7 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   color: var(--text);
-  background: var(--bg) url('assets/bg-waves.svg') center top / cover no-repeat;
+  background: var(--bg) url('bg-waves.svg') center top / cover no-repeat;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
   overflow-x: hidden;
