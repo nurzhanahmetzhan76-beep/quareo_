@@ -53,10 +53,7 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   color: var(--text);
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -5%, rgba(37, 99, 235, 0.08), transparent 60%),
-    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(13, 13, 18, 0.6), transparent 70%),
-    var(--bg);
+  background: var(--bg) url('assets/bg-waves.svg') center top / cover no-repeat;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
   overflow-x: hidden;
