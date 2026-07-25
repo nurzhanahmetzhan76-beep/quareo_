@@ -705,7 +705,7 @@
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
         <!-- Base Tier -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 48px; display: flex; flex-direction: column;">
+        <div class="home-price-card">
           <span class="mono" style="color: var(--text-muted); font-size: 12px; margin-bottom: 16px;">NODE: STARTER</span>
           <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Базовый план</h3>
           <div style="font-size: 3.5rem; font-weight: 700; font-family: var(--font-mono); margin-bottom: 32px;">Free</div>
@@ -718,7 +718,7 @@
         </div>
 
         <!-- Pro Tier -->
-        <div style="background: linear-gradient(180deg, rgba(124, 58, 237, 0.05) 0%, var(--bg-card) 100%); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: var(--radius-lg); padding: 48px; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(124, 58, 237, 0.05);">
+        <div class="home-price-card home-price-card-featured">
           <span class="mono text-gradient" style="font-size: 12px; margin-bottom: 16px; font-weight: 600;">NODE: BUSINESS</span>
           <h3 style="font-size: 1.5rem; margin-bottom: 16px;">Для профи</h3>
           <div style="font-size: 3.5rem; font-weight: 700; font-family: var(--font-mono); margin-bottom: 32px;">12,000 ₸</div>
@@ -760,13 +760,49 @@
   </section>
   <style>
     .faq-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
+      position: relative;
+      background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: var(--radius-md);
       overflow: hidden;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
       transition: border-color 0.2s;
     }
-    .faq-item:hover { border-color: rgba(124, 58, 237, 0.3); }
+    .faq-item::after {
+      content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+      background: radial-gradient(circle at top right, rgba(96,165,250,.7), rgba(96,165,250,0) 65%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+    }
+    .faq-item:hover { border-color: rgba(96, 165, 250, 0.3); }
+
+    .home-price-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      display: flex; flex-direction: column;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .home-price-card::after {
+      content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+      background: radial-gradient(circle at top right, rgba(96,165,250,.9), rgba(96,165,250,0) 65%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+    }
+    .home-price-card-featured {
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.08) 0%, rgba(17,17,24,0.55) 100%);
+      box-shadow: 0 0 40px rgba(124, 58, 237, 0.08), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .home-price-card-featured::after {
+      background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.9), rgba(124, 58, 237, 0) 65%);
+    }
     .faq-item summary {
       padding: 24px;
       font-size: 16px;
