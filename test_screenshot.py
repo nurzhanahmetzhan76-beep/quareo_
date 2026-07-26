@@ -19,12 +19,25 @@ async def main():
 
         def _capture():
             page = ctx.new_page()
-            page.goto("https://kaspi.kz/shop/search/?text=bluetooth+speaker", timeout=45000)
-            page.wait_for_timeout(3000)  # Wait for cloudflare/variti to load
+            # iPhone 13 128GB
+            page.goto("https://kaspi.kz/shop/p/item-102298404/", timeout=45000)
+            page.wait_for_timeout(3000)
             
-            # Save screenshot and HTML
-            page.screenshot(path="kaspi_block.png")
-            with open("kaspi_block.html", "w", encoding="utf-8") as f:
+            # Click "Все продавцы"
+            try:
+                sellers_tab = page.locator(
+                    'a[data-tab="sellers"], '
+                    'button:has-text("продавц"), '
+                    'a:has-text("продавц")'
+                ).first
+                if sellers_tab.is_visible(timeout=3000):
+                    sellers_tab.click()
+                    page.wait_for_timeout(2000)
+            except Exception:
+                pass
+            
+            page.screenshot(path="kaspi_repricer_debug.png", full_page=True)
+            with open("kaspi_repricer_debug.html", "w", encoding="utf-8") as f:
                 f.write(page.content())
             
             page.close()

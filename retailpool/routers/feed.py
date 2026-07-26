@@ -138,10 +138,10 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
                 avails = avail_node.findall('availability')
                 if not avails:
                     # Fallback if no availabilities existed
-                    ET.SubElement(avail_node, 'availability', available="yes", store="yes", pickup="yes", delivery="yes", preorder=str(min(matched_rule.preorder_days, 30)))
+                    ET.SubElement(avail_node, 'availability', available="yes", store="yes", pickup="yes", delivery="yes", preOrder=str(min(matched_rule.preorder_days, 30)))
                 else:
                     for av in avails:
-                        av.set('preorder', str(min(matched_rule.preorder_days, 30)))
+                        av.set('preOrder', str(min(matched_rule.preorder_days, 30)))
 
     # 5. Output the secured, modified XML mirror
     # ET.tostring works fine here since we already used defusedxml to parse

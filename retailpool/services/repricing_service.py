@@ -80,15 +80,26 @@ async def scrape_competitor_prices(
                 page.goto(product_url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(3000)
 
+                # Handle City Selection Modal
+                try:
+                    city_almaty = page.locator('text="Алматы"').first
+                    if city_almaty.is_visible(timeout=3000):
+                        city_almaty.click()
+                        page.wait_for_timeout(3000) # Wait for page to refresh data for Almaty
+                except Exception:
+                    pass
+
                 # Click "Все продавцы" / "All sellers" tab if exists
                 try:
                     sellers_tab = page.locator(
                         'a[data-tab="sellers"], '
                         'button:has-text("продавц"), '
-                        'a:has-text("продавц")'
+                        'a:has-text("продавц"), '
+                        'li:has-text("Продавцы")'
                     ).first
                     if sellers_tab.is_visible(timeout=3000):
-                        sellers_tab.click()
+                        # Force click in case something is still slightly overlapping
+                        sellers_tab.click(force=True)
                         page.wait_for_timeout(2000)
                 except Exception:
                     pass
@@ -97,7 +108,9 @@ async def scrape_competitor_prices(
                 seller_items = page.locator(
                     '.sellers-table__row, '
                     '.offer__wrap, '
-                    '[data-merchant-id]'
+                    '[data-merchant-id], '
+                    'table tbody tr, '
+                    '.item-card__merchant'
                 ).all()
 
                 for item in seller_items:
@@ -106,7 +119,9 @@ async def scrape_competitor_prices(
                         name_el = item.locator(
                             '.sellers-table__cell--merchant a, '
                             '.offer__merchant-name, '
-                            '.merchant-name'
+                            '.merchant-name, '
+                            'td:nth-child(1) a, '
+                            'td a'
                         ).first
                         merchant_name = name_el.inner_text().strip() if name_el.is_visible(timeout=1000) else "Unknown"
 
@@ -114,7 +129,9 @@ async def scrape_competitor_prices(
                         price_el = item.locator(
                             '.sellers-table__price, '
                             '.offer__price, '
-                            '.price'
+                            '.price, '
+                            'td.sellers-table__cell--price, '
+                            'td:has-text("₸")'
                         ).first
                         price_text = price_el.inner_text().strip() if price_el.is_visible(timeout=1000) else ""
                         price = _parse_price(price_text)
