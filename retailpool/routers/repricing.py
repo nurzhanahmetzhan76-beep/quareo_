@@ -877,22 +877,35 @@ async def process_excel(
                     changed += 1
 
                 # Quantities
-                pp_stocks = {'PP1': 0, 'PP2': 0, 'PP3': 0, 'PP4': 0, 'PP5': 0}
+                pp_stocks = {'PP1': 'no', 'PP2': 'no', 'PP3': 'no', 'PP4': 'no', 'PP5': 'no'}
                 availabilities = offer.findall('.//availability')
                 for av in availabilities:
                     store_id = av.get('storeId', '')
-                    stock_val = av.get('stockCount', '0')
-                    try:
-                        stock = int(float(stock_val))
-                    except ValueError:
-                        stock = 0
-                    if 'PP1' in store_id: pp_stocks['PP1'] = stock
-                    elif 'PP2' in store_id: pp_stocks['PP2'] = stock
-                    elif 'PP3' in store_id: pp_stocks['PP3'] = stock
-                    elif 'PP4' in store_id: pp_stocks['PP4'] = stock
-                    elif 'PP5' in store_id: pp_stocks['PP5'] = stock
-                    elif 'PP6' in store_id: pp_stocks['PP1'] += stock
-                    else: pp_stocks['PP1'] += stock
+                    avail_attr = av.get('available', 'no').lower()
+                    stock_val = av.get('stockCount')
+                    
+                    val_to_write = avail_attr
+                    if stock_val is not None:
+                        try:
+                            val_to_write = int(float(stock_val))
+                        except ValueError:
+                            pass
+                    
+                    pp_key = None
+                    if 'PP1' in store_id: pp_key = 'PP1'
+                    elif 'PP2' in store_id: pp_key = 'PP2'
+                    elif 'PP3' in store_id: pp_key = 'PP3'
+                    elif 'PP4' in store_id: pp_key = 'PP4'
+                    elif 'PP5' in store_id: pp_key = 'PP5'
+                    elif 'PP6' in store_id: pp_key = 'PP1'
+                    else: pp_key = 'PP1'
+                    
+                    if pp_key:
+                        existing = pp_stocks[pp_key]
+                        if isinstance(existing, int) and isinstance(val_to_write, int):
+                            pp_stocks[pp_key] = existing + val_to_write
+                        elif val_to_write != 'no':
+                            pp_stocks[pp_key] = val_to_write
 
                 row = [
                     sku_str, model, brand, price,
@@ -1104,10 +1117,31 @@ async def generate_base_xml_from_excel(
             match = re.search(r'(pp\d+)', pp_name, re.IGNORECASE)
             store_id = match.group(1).upper() if match else "PP1"
             
-            if val and str(val).strip().lower() == "yes":
-                ET.SubElement(availabilities, "availability", available="yes", storeId=store_id)
-            else:
-                ET.SubElement(availabilities, "availability", available="no", storeId=store_id)
+            is_avail = False
+            stock_count_str = None
+            if val is not None:
+                val_str = str(val).strip().lower()
+                if val_str in ['yes', 'да', 'true', '+']:
+                    is_avail = True
+                elif val_str in ['no', 'нет', 'false', '-']:
+                    is_avail = False
+                else:
+                    try:
+                        f_val = float(val_str)
+                        if f_val > 0:
+                            is_avail = True
+                            stock_count_str = str(f_val)
+                        else:
+                            is_avail = False
+                            stock_count_str = "0.0"
+                    except ValueError:
+                        pass
+            
+            attrs = {"available": "yes" if is_avail else "no", "storeId": store_id}
+            if stock_count_str is not None:
+                attrs["stockCount"] = stock_count_str
+                
+            ET.SubElement(availabilities, "availability", **attrs)
                 
         if not has_pp:
             ET.SubElement(availabilities, "availability", available="no", storeId="PP1")

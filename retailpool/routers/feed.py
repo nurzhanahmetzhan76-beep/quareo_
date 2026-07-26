@@ -94,17 +94,18 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
         logger.error(f"Failed to parse source XML for {user_uuid}: {e}")
         raise HTTPException(status_code=502, detail="Source XML is invalid or malformed.")
 
-    # Remove namespace prefixes from tags for easier processing if present
-    for elem in root.iter():
-        if '}' in elem.tag:
-            elem.tag = elem.tag.split('}', 1)[1]
+    # Properly handle kaspiShopping namespace
+    ns = {'k': 'kaspiShopping'}
+    ET.register_namespace('', 'kaspiShopping')
 
-    offers = root.find('.//offers')
+    offers = root.find('.//k:offers', ns)
     if offers is None:
         offers = root
 
+    from retailpool.models.repricing import RepricingLog
+
     # 4. Process all offers, preserving assortment and enforcing floor limits
-    for offer in offers.findall('.//offer'):
+    for offer in offers.findall('.//k:offer', ns):
         sku = offer.get('sku') or offer.get('id')
         if not sku:
             continue
@@ -121,38 +122,76 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
                 matched_rule = rule_map[base_sku]
 
         if matched_rule and matched_rule.my_current_price:
-            # Enforcement: STRICT FLOOR PRICE CHECK
-            safe_price = max(matched_rule.my_current_price, matched_rule.min_price)
-            
-            price_node = offer.find('price')
-            if price_node is not None:
-                price_node.text = str(int(safe_price))
-            else:
-                cityprice = offer.find('.//cityprice')
-                if cityprice is not None:
-                    cityprice.text = str(int(safe_price))
-                else:
-                    new_price_node = ET.SubElement(offer, 'price')
-                    new_price_node.text = str(int(safe_price))
+            try:
+                # Get old price from XML
+                old_price_val = 0
+                price_node = offer.find('.//k:price', ns)
+                cityprice_node = offer.find('.//k:cityprice', ns)
+                target_node = price_node if price_node is not None else cityprice_node
+                
+                if target_node is not None and target_node.text:
+                    old_price_val = int(target_node.text)
 
-            # Handle preorder injection in availabilities
-            if matched_rule.preorder_days and matched_rule.preorder_days > 0:
-                avail_node = offer.find('availabilities')
-                if avail_node is None:
-                    avail_node = ET.SubElement(offer, 'availabilities')
+                # Enforcement: STRICT FLOOR PRICE CHECK
+                raw_new_price = matched_rule.my_current_price
+                min_price = matched_rule.min_price
+                safe_price = max(raw_new_price, min_price)
+                
+                if safe_price <= 0:
+                    continue # Skip invalid 0 prices silently
                     
-                # Mirror existing availabilities, just inject preorder attribute
-                avails = avail_node.findall('availability')
-                if not avails:
-                    # Fallback if no availabilities existed
-                    ET.SubElement(avail_node, 'availability', available="yes", store="yes", pickup="yes", delivery="yes", preOrder=str(min(matched_rule.preorder_days, 30)))
+                safe_price_int = int(safe_price)
+                
+                log_status = "undercut"
+                if raw_new_price < min_price:
+                    log_status = "floor_hit"
+
+                if target_node is not None:
+                    target_node.text = str(safe_price_int)
                 else:
-                    for av in avails:
-                        av.set('preOrder', str(min(matched_rule.preorder_days, 30)))
-                        # CRITICAL: If an item is on pre-order, it MUST be active, otherwise Kaspi keeps it archived.
-                        av.set('available', 'yes')
+                    new_price_node = ET.SubElement(offer, '{kaspiShopping}price')
+                    new_price_node.text = str(safe_price_int)
+
+                # Log to RepricingLog if price changed or hit floor
+                if old_price_val != safe_price_int or log_status == "floor_hit":
+                    audit_entry = RepricingLog(
+                        rule_id=matched_rule.id,
+                        old_price=float(old_price_val),
+                        new_price=float(safe_price_int),
+                        competitor_price=float(matched_rule.last_competitor_price or safe_price_int),
+                        action=log_status
+                    )
+                    db.add(audit_entry)
+
+                # Handle preorder injection in availabilities
+                if matched_rule.preorder_days and matched_rule.preorder_days > 0:
+                    avail_node = offer.find('.//k:availabilities', ns)
+                    if avail_node is None:
+                        avail_node = ET.SubElement(offer, '{kaspiShopping}availabilities')
+                        
+                    # Mirror existing availabilities, just inject preorder attribute
+                    avails = avail_node.findall('.//k:availability', ns)
+                    if not avails:
+                        # Fallback if no availabilities existed
+                        ET.SubElement(avail_node, '{kaspiShopping}availability', available="yes", store="yes", pickup="yes", delivery="yes", preOrder=str(min(matched_rule.preorder_days, 30)))
+                    else:
+                        for av in avails:
+                            av.set('preOrder', str(min(matched_rule.preorder_days, 30)))
+                            # CRITICAL: If an item is on pre-order, it MUST be active, otherwise Kaspi keeps it archived.
+                            av.set('available', 'yes')
+            except Exception as e:
+                logger.error(f"Error processing SKU {sku_str} in feed generation: {e}")
+                continue
+
+    # Commit the audit logs safely
+    try:
+        await db.commit()
+    except Exception as e:
+        logger.error(f"Failed to commit audit logs: {e}")
+        await db.rollback()
 
     # 5. Output the secured, modified XML mirror
-    # ET.tostring works fine here since we already used defusedxml to parse
     xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
+    # Kaspi often strictly expects UTF-8 in caps and double quotes
+    xml_str = xml_str.replace("<?xml version='1.0' encoding='utf-8'?>", '<?xml version="1.0" encoding="UTF-8"?>')
     return Response(content=xml_str, media_type="application/xml")
