@@ -71,10 +71,18 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
 
     # 3. Securely fetch and parse the original XML feed
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            resp = await client.get(settings.kaspi_xml_url)
-            resp.raise_for_status()
-            raw_xml = resp.content
+        import os
+        if "/assets/feeds/" in settings.kaspi_xml_url:
+            # Local generated feed: read from disk to avoid Docker/NAT loopback network errors
+            filename = settings.kaspi_xml_url.split("/")[-1]
+            local_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "assets", "feeds", filename))
+            with open(local_path, "rb") as f:
+                raw_xml = f.read()
+        else:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                resp = await client.get(settings.kaspi_xml_url)
+                resp.raise_for_status()
+                raw_xml = resp.content
     except Exception as e:
         logger.error(f"Failed to fetch original XML feed for {user_uuid}: {e}")
         raise HTTPException(status_code=502, detail="Failed to fetch source XML feed.")

@@ -1117,10 +1117,9 @@ async def generate_base_xml_from_excel(
         f.write(xml_str)
         
     # Update user settings
-    # URL will be accessible via Quareo static assets mount (e.g. http://localhost:8000/assets/feeds/{id}.xml)
-    # Using a local path or absolute URL based on environment. For now we use local absolute URL format.
-    # In production, this should be the public domain. For local/dev we use localhost.
-    local_url = f"http://127.0.0.1:8000/assets/feeds/{current_user.id}.xml"
+    # URL will be accessible via Quareo static assets mount
+    # Using public domain for production compatibility.
+    local_url = f"https://quareo.pro/assets/feeds/{current_user.id}.xml"
     
     stmt = select(UserSellerSettings).where(UserSellerSettings.user_id == current_user.id)
     result = await db.execute(stmt)
