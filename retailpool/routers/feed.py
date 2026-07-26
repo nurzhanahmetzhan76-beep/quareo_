@@ -52,11 +52,15 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
             detail="Source Kaspi XML URL is not configured in settings. Cannot generate feed."
         )
 
-    # 2. Get user's repricing rules (active only)
+    # 2. Get user's repricing rules (active OR has preorder)
+    from sqlalchemy import or_
     result = await db.execute(
         select(RepricingRule).where(
             RepricingRule.user_id == user_uuid,
-            RepricingRule.is_active == True
+            or_(
+                RepricingRule.is_active == True,
+                RepricingRule.preorder_days > 0
+            )
         )
     )
     rules = result.scalars().all()
@@ -121,49 +125,9 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
             if base_sku in rule_map:
                 matched_rule = rule_map[base_sku]
 
-        if matched_rule and matched_rule.my_current_price:
+        if matched_rule:
             try:
-                # Get old price from XML
-                old_price_val = 0
-                price_node = offer.find('.//k:price', ns)
-                cityprice_node = offer.find('.//k:cityprice', ns)
-                target_node = price_node if price_node is not None else cityprice_node
-                
-                if target_node is not None and target_node.text:
-                    old_price_val = int(target_node.text)
-
-                # Enforcement: STRICT FLOOR PRICE CHECK
-                raw_new_price = matched_rule.my_current_price
-                min_price = matched_rule.min_price
-                safe_price = max(raw_new_price, min_price)
-                
-                if safe_price <= 0:
-                    continue # Skip invalid 0 prices silently
-                    
-                safe_price_int = int(safe_price)
-                
-                log_status = "undercut"
-                if raw_new_price < min_price:
-                    log_status = "floor_hit"
-
-                if target_node is not None:
-                    target_node.text = str(safe_price_int)
-                else:
-                    new_price_node = ET.SubElement(offer, '{kaspiShopping}price')
-                    new_price_node.text = str(safe_price_int)
-
-                # Log to RepricingLog if price changed or hit floor
-                if old_price_val != safe_price_int or log_status == "floor_hit":
-                    audit_entry = RepricingLog(
-                        rule_id=matched_rule.id,
-                        old_price=float(old_price_val),
-                        new_price=float(safe_price_int),
-                        competitor_price=float(matched_rule.last_competitor_price or safe_price_int),
-                        action=log_status
-                    )
-                    db.add(audit_entry)
-
-                # Handle preorder injection in availabilities
+                # Handle preorder injection in availabilities (regardless of price)
                 if matched_rule.preorder_days and matched_rule.preorder_days > 0:
                     avail_node = offer.find('.//k:availabilities', ns)
                     if avail_node is None:
@@ -179,6 +143,47 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
                             av.set('preOrder', str(min(matched_rule.preorder_days, 30)))
                             # CRITICAL: If an item is on pre-order, it MUST be active, otherwise Kaspi keeps it archived.
                             av.set('available', 'yes')
+
+                # Handle price injection if repricer is active
+                if matched_rule.is_active and matched_rule.my_current_price:
+                    # Get old price from XML
+                    old_price_val = 0
+                    price_node = offer.find('.//k:price', ns)
+                    cityprice_node = offer.find('.//k:cityprice', ns)
+                    target_node = price_node if price_node is not None else cityprice_node
+                    
+                    if target_node is not None and target_node.text:
+                        old_price_val = int(target_node.text)
+
+                    # Enforcement: STRICT FLOOR PRICE CHECK
+                    raw_new_price = matched_rule.my_current_price
+                    min_price = matched_rule.min_price
+                    safe_price = max(raw_new_price, min_price)
+                    
+                    if safe_price > 0:
+                        safe_price_int = int(safe_price)
+                        
+                        log_status = "undercut"
+                        if raw_new_price < min_price:
+                            log_status = "floor_hit"
+
+                        if target_node is not None:
+                            target_node.text = str(safe_price_int)
+                        else:
+                            new_price_node = ET.SubElement(offer, '{kaspiShopping}price')
+                            new_price_node.text = str(safe_price_int)
+
+                        # Log to RepricingLog if price changed or hit floor
+                        if old_price_val != safe_price_int or log_status == "floor_hit":
+                            audit_entry = RepricingLog(
+                                rule_id=matched_rule.id,
+                                old_price=float(old_price_val),
+                                new_price=float(safe_price_int),
+                                competitor_price=float(matched_rule.last_competitor_price or safe_price_int),
+                                action=log_status
+                            )
+                            db.add(audit_entry)
+
             except Exception as e:
                 logger.error(f"Error processing SKU {sku_str} in feed generation: {e}")
                 continue

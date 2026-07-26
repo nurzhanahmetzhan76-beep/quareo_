@@ -76,5 +76,20 @@ services:
       api:
         condition: service_started
 
+  # ── Repricing Worker ────────────────────────────────────────
+  repricing-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.repricing-worker
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://retailpool:retailpool@postgres:5432/retailpool
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
 volumes:
   pgdata:

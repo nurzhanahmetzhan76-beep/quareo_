@@ -11,6 +11,8 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter, PageObject, Transformation
 import re
+from datetime import datetime
+import fitz  # PyMuPDF
 
 from retailpool.models.user import User
 from retailpool.services.auth_service import get_current_user
@@ -107,109 +109,118 @@ async def process_waybills(
                 raise HTTPException(status_code=400, detail="ZIP архив не содержит PDF файлов.")
                 
             parsed_files = []
-            for pdf_name in pdf_files:
+            for idx, pdf_name in enumerate(pdf_files):
                 pdf_bytes = z.read(pdf_name)
-                sort_date = (99, 99)
-                product_val = ""
-                quantity_val = 999
                 
-                if sort != "none":
+                metadata = {
+                    "original_index": idx,
+                    "order_time": datetime.min,
+                    "delivery_date": datetime.min,
+                    "quantity": 1,
+                    "product_name": ""
+                }
+                
+                if sort != "none" and sort != "no_sort":
                     try:
-                        reader = PdfReader(io.BytesIO(pdf_bytes))
-                        text = reader.pages[0].extract_text() or ""
+                        # Используем PyMuPDF (fitz) для надежного извлечения текста
+                        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+                        text = doc[0].get_text("text") or ""
+                        doc.close()
                         
-                        if sort in ["date", "product", "quantity"]:
-                            # Normalize whitespace to make regex matching more predictable
-                            text_clean = re.sub(r'\s+', ' ', text)
-                            
-                            # DATE EXTRACTION
-                            date_match = re.search(r"(?:дата доставки|доставки)[\s:]*(\d{1,2})\s*([а-яА-ЯёЁa-zA-Z]+)", text_clean, re.IGNORECASE)
-                            if date_match:
-                                sort_date = parse_date(date_match.group(1), date_match.group(2))
-                            else:
-                                alt_date = re.search(r"\b(\d{1,2})\s+(янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек)[a-zA-Zа-яА-ЯёЁ]*", text_clean, re.IGNORECASE)
-                                if alt_date:
-                                    sort_date = parse_date(alt_date.group(1), alt_date.group(2))
+                        # Убираем лишние пробелы для надежности Regex
+                        text_clean = re.sub(r'\s+', ' ', text)
+                        
+                        # 1. Парсинг даты доставки ("план дата доставки: 27 июл.")
+                        # Ожидаемый паттерн: "дата доставки: 27 июл." или просто "27 июл"
+                        alt_date = re.search(r"(\d{1,2})[\s\.]+(янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек)", text_clean, re.IGNORECASE)
+                        if alt_date:
+                            metadata["delivery_date"] = parse_date(alt_date.group(1), alt_date.group(2))
+                        else:
+                            # (99, 99) улетит в конец списка
+                            metadata["delivery_date"] = (99, 99)
                                 
-                            # PRODUCT EXTRACTION
-                            clean_filename = re.sub(r'^\d+[\s_-]*', '', pdf_name)
-                            clean_filename = re.sub(r'\.pdf$', '', clean_filename, flags=re.IGNORECASE).strip()
+                        # 2. Дата заказа - на термоэтикетках её часто нет, используем номер заказа из имени файла как order_time fallback
+                        order_id_match = re.search(r'\d+', pdf_name)
+                        if order_id_match:
+                            metadata["order_time"] = int(order_id_match.group())
+                        else:
+                            metadata["order_time"] = 999999999
                             
-                            if len(clean_filename) > 3:
-                                product_val = clean_filename
-                            else:
-                                prod_match = re.search(r"1\s*\.\s*(.*?)(?=\s+\d+\s*шт|\s+Итого|$)", text_clean, re.IGNORECASE)
-                                if prod_match:
-                                    product_val = prod_match.group(1).strip()
-                                else:
-                                    lines = [l.strip() for l in text.split('\n') if l.strip()]
-                                    longest = ""
-                                    for l in lines:
-                                        if len(l) > len(longest) and not re.search(r'(Kaspi|Доставка|Заказ|Покупатель|Продавец|Сумма|Итого)', l, re.IGNORECASE):
-                                            longest = l
-                                    if longest:
-                                        product_val = longest
-                                        
-                            # QUANTITY EXTRACTION
-                            qty_matches = re.findall(r"(\d+)\s*шт", text_clean, re.IGNORECASE)
-                            if qty_matches:
-                                quantity_val = sum(int(q) for q in qty_matches)
-                            else:
-                                quantity_val = 1
+                        # 3. Наименование товара ("1. Гребень 12x3 см ........................... 1 шт.")
+                        prod_match = re.search(r"1\s*[\.\,]\s*(.*?)(?=\s+\d+\s*шт|\.{3,}|$)", text_clean, re.IGNORECASE)
+                        if prod_match:
+                            metadata["product_name"] = re.sub(r'\.{3,}', '', prod_match.group(1)).strip()
+                        else:
+                            metadata["product_name"] = "Неизвестный товар"
+                            
+                        # 4. Парсинг количества
+                        qty_match = re.search(r"(\d+)\s*шт", text_clean, re.IGNORECASE)
+                        if qty_match:
+                            metadata["quantity"] = int(qty_match.group(1))
+                            
                     except Exception as e:
                         logger.warning(f"Error parsing PDF text for {pdf_name}: {e}")
+                        metadata["delivery_date"] = (99, 99)
+                        metadata["order_time"] = 999999999
                 
                 parsed_files.append({
                     "name": pdf_name,
                     "bytes": pdf_bytes,
-                    "date": sort_date,
-                    "product": product_val,
-                    "quantity": quantity_val
+                    **metadata
                 })
             
-            def get_order_id(name):
-                match = re.search(r'\d+', name)
-                return int(match.group()) if match else 0
+            # Маппинг старых значений из фронтенда на новые, если они остались старыми
+            sort_map = {
+                "none": "no_sort",
+                "time": "order_time_oldest_first",
+                "date": "delivery_date_nearest",
+                "quantity": "quantity_asc",
+                "product": "group_by_product",
+            }
+            mapped_sort = sort_map.get(sort, sort)
 
-            if sort == "date":
-                parsed_files.sort(key=lambda x: (x["date"][0], x["date"][1], x["product"]))
-            elif sort == "product":
-                parsed_files.sort(key=lambda x: (x["product"], x["date"][0], x["date"][1]))
-            elif sort == "quantity":
-                parsed_files.sort(key=lambda x: (x["quantity"], x["date"][0], x["date"][1]))
-            elif sort == "time":
-                parsed_files.sort(key=lambda x: get_order_id(x["name"]))
+            if mapped_sort == "order_time_oldest_first":
+                parsed_files.sort(key=lambda x: x["order_time"])
+            elif mapped_sort == "delivery_date_nearest":
+                parsed_files.sort(key=lambda x: x["delivery_date"])
+            elif mapped_sort == "quantity_asc":
+                parsed_files.sort(key=lambda x: (x["quantity"], x["product_name"]))
+            elif mapped_sort == "group_by_product":
+                parsed_files.sort(key=lambda x: (x["product_name"], x["quantity"]))
+            else:
+                parsed_files.sort(key=lambda x: x["original_index"])
 
             all_pages = []
             
-            # Read and extract the top-left quadrant of all pages in sorted order
+            # Read and extract all pages in sorted order
             for item in parsed_files:
                 reader = PdfReader(io.BytesIO(item["bytes"]))
                 for page in reader.pages:
-                    # Kaspi default label is on top-left of A4
-                    # Crop to A6 size (top-left quadrant)
-                    # Original A4: (0, 0) to (595.276, 842.0)
-                    # Target: (0, 421.0) to (297.638, 842.0)
-                    page.mediabox.upper_right = (297.638, 842.0)
-                    page.mediabox.lower_left = (0, 421.0)
+                    orig_w = float(page.mediabox.right - page.mediabox.left)
                     
-                    # Also update cropbox to match
-                    page.cropbox.upper_right = (297.638, 842.0)
-                    page.cropbox.lower_left = (0, 421.0)
-                    
-                    all_pages.append(page)
+                    if orig_w > 400:
+                        # Kaspi default label is on top-left of A4
+                        # Crop to A6 size (top-left quadrant)
+                        page.mediabox.upper_right = (297.638, 842.0)
+                        page.mediabox.lower_left = (0, 421.0)
+                        page.cropbox.upper_right = (297.638, 842.0)
+                        page.cropbox.lower_left = (0, 421.0)
+                        is_a4 = True
+                    else:
+                        is_a4 = False
+                        
+                    all_pages.append((page, is_a4))
                     
             if format == "thermal":
                 # For thermal printer, just output the cropped A6 pages
-                # Translate to (0,0) origin for better compatibility
-                for p in all_pages:
-                    # Shift down by 421
-                    p.add_transformation(Transformation().translate(tx=0, ty=-421.0))
-                    # Adjust box to 0-based
-                    p.mediabox.upper_right = (297.638, 421.0)
-                    p.mediabox.lower_left = (0, 0)
-                    p.cropbox.upper_right = (297.638, 421.0)
-                    p.cropbox.lower_left = (0, 0)
+                for p, is_a4 in all_pages:
+                    if is_a4:
+                        # Shift down by 421 and adjust to 0-based
+                        p.add_transformation(Transformation().translate(tx=0, ty=-421.0))
+                        p.mediabox.upper_right = (297.638, 421.0)
+                        p.mediabox.lower_left = (0, 0)
+                        p.cropbox.upper_right = (297.638, 421.0)
+                        p.cropbox.lower_left = (0, 0)
                     writer.add_page(p)
                     
             elif format == "a4":
@@ -219,20 +230,32 @@ async def process_waybills(
                     merged_page = PageObject.create_blank_page(width=A4_WIDTH, height=A4_HEIGHT)
                     
                     if len(chunk) > 0:
-                        # Top Left - No translation needed, it's already at y=421
-                        merged_page.merge_page(chunk[0])
+                        p, is_a4 = chunk[0]
+                        # If it's already a thermal label, we might need to shift it up to y=421
+                        if not is_a4:
+                            p.add_transformation(Transformation().translate(tx=0, ty=421.0))
+                        merged_page.merge_page(p)
                     if len(chunk) > 1:
-                        # Top Right - Shift Right by 297.638
-                        chunk[1].add_transformation(Transformation().translate(tx=297.638, ty=0))
-                        merged_page.merge_page(chunk[1])
+                        p, is_a4 = chunk[1]
+                        if is_a4:
+                            p.add_transformation(Transformation().translate(tx=297.638, ty=0))
+                        else:
+                            p.add_transformation(Transformation().translate(tx=297.638, ty=421.0))
+                        merged_page.merge_page(p)
                     if len(chunk) > 2:
-                        # Bottom Left - Shift Down by 421
-                        chunk[2].add_transformation(Transformation().translate(tx=0, ty=-421.0))
-                        merged_page.merge_page(chunk[2])
+                        p, is_a4 = chunk[2]
+                        if is_a4:
+                            p.add_transformation(Transformation().translate(tx=0, ty=-421.0))
+                        else:
+                            pass # Already at 0,0
+                        merged_page.merge_page(p)
                     if len(chunk) > 3:
-                        # Bottom Right - Shift Right and Down
-                        chunk[3].add_transformation(Transformation().translate(tx=297.638, ty=-421.0))
-                        merged_page.merge_page(chunk[3])
+                        p, is_a4 = chunk[3]
+                        if is_a4:
+                            p.add_transformation(Transformation().translate(tx=297.638, ty=-421.0))
+                        else:
+                            p.add_transformation(Transformation().translate(tx=297.638, ty=0))
+                        merged_page.merge_page(p)
                         
                     writer.add_page(merged_page)
             else:
