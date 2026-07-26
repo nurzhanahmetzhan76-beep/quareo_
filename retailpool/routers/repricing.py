@@ -1098,12 +1098,18 @@ async def generate_base_xml_from_excel(
         try: price = float(price_val) if price_val is not None else 0
         except (ValueError, TypeError): price = 0
             
-        name = ws.cell(r, name_col).value if name_col else f"Товар {sku}"
-        brand = ws.cell(r, brand_col).value if brand_col else "Без бренда"
+        name_val = ws.cell(r, name_col).value if name_col else None
+        brand_val = ws.cell(r, brand_col).value if brand_col else None
+        
+        name = str(name_val) if name_val is not None else f"Товар {sku}"
         
         offer = ET.SubElement(offers, "offer", sku=sku)
-        ET.SubElement(offer, "model").text = str(name)
-        ET.SubElement(offer, "brand").text = str(brand)
+        ET.SubElement(offer, "model").text = name
+        
+        brand_elem = ET.SubElement(offer, "brand")
+        if brand_val is not None:
+            brand_elem.text = str(brand_val)
+            
         ET.SubElement(offer, "price").text = str(int(price))
         
         availabilities = ET.SubElement(offer, "availabilities")
