@@ -715,6 +715,122 @@ async def upload_sync(
     }
 
 
+from typing import Optional
+
+@router.post(
+    "/upload_assortment",
+    summary="Onboarding: Единая загрузка Активных и Архивных товаров",
+)
+async def upload_assortment(
+    active_file: Optional[UploadFile] = File(None),
+    archive_file: Optional[UploadFile] = File(None),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Точка входа (Single Source of Truth) для новых селлеров.
+    Читает ACTIVE.xlsx и ARCHIVE.xlsx одновременно, объединяя их в БД.
+    Активные товары получают is_active=True, архивные is_active=False.
+    """
+    if not active_file and not archive_file:
+        raise HTTPException(status_code=400, detail="Необходимо загрузить хотя бы один файл (Актив или Архив).")
+
+    stmt = select(UserSellerSettings).where(UserSellerSettings.user_id == current_user.id)
+    result = await db.execute(stmt)
+    settings = result.scalar_one_or_none()
+    merchant_name = settings.kaspi_shop_name if settings else None
+
+    # Загружаем существующие SKU для защиты от дублей
+    existing_stmt = select(RepricingRule.kaspi_sku).where(RepricingRule.user_id == current_user.id)
+    existing_result = await db.execute(existing_stmt)
+    existing_skus = {row[0] for row in existing_result.all()}
+
+    stats = {"synced_active": 0, "synced_archive": 0, "skipped": 0}
+
+    async def process_excel_file(file: UploadFile, is_active: bool, stats_key: str):
+        raw = await file.read()
+        try:
+            wb = openpyxl.load_workbook(io.BytesIO(raw))
+        except Exception:
+            raise HTTPException(status_code=400, detail=f"Не удалось открыть файл {file.filename}. Проверьте формат.")
+
+        ws = wb.worksheets[0]
+        headers = {}
+        for c in range(1, ws.max_column + 1):
+            v = ws.cell(1, c).value
+            if v is not None:
+                headers[str(v).strip().lower()] = c
+
+        sku_col = next((h_col for h_key, h_col in headers.items() if any(p in h_key for p in ["sku", "артикул", "код"])), None)
+        price_col = next((h_col for h_key, h_col in headers.items() if any(p in h_key for p in ["price", "цена"])), None)
+        name_col = next((h_col for h_key, h_col in headers.items() if any(p in h_key for p in ["model", "name", "название", "наименовани", "title"])), sku_col)
+
+        if not sku_col or not price_col:
+            raise HTTPException(
+                status_code=400,
+                detail=f"В файле {file.filename} нет обязательных колонок (SKU или Цена)."
+            )
+
+        for r in range(2, ws.max_row + 1):
+            sku = ws.cell(r, sku_col).value
+            if sku is None:
+                continue
+            
+            sku_str = str(int(sku)) if isinstance(sku, float) else str(sku).strip()
+            
+            # Если товар уже загружен из другого файла или был в базе - пропускаем
+            if sku_str in existing_skus:
+                stats['skipped'] += 1
+                continue
+                
+            existing_skus.add(sku_str)
+
+            name_val = ws.cell(r, name_col).value if name_col else None
+            name = str(name_val)[:255] if name_val is not None else f"Товар {sku_str}"
+            
+            price_val = ws.cell(r, price_col).value
+            try:
+                price = float(price_val) if price_val is not None else 0
+            except (ValueError, TypeError):
+                price = 0
+
+            rule = RepricingRule(
+                user_id=current_user.id,
+                product_name=name,
+                kaspi_sku=sku_str,
+                my_merchant_name=merchant_name,
+                my_current_price=price,
+                min_price=price * 0.9 if price else 0, # По умолчанию дно -10% от текущей
+                base_price=price,
+                step_kzt=5,
+                is_active=is_active, # Вот тут творится магия
+            )
+            db.add(rule)
+            stats[stats_key] += 1
+            
+            if (stats['synced_active'] + stats['synced_archive']) % 50 == 0:
+                await db.flush()
+
+    if active_file:
+        await process_excel_file(active_file, is_active=True, stats_key='synced_active')
+        
+    if archive_file:
+        await process_excel_file(archive_file, is_active=False, stats_key='synced_archive')
+
+    try:
+        await db.commit()
+    except Exception as e:
+        logger.exception("Database commit error in upload_assortment: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка при сохранении ассортимента в базу данных.")
+
+    return {
+        "synced_active": stats['synced_active'],
+        "synced_archive": stats['synced_archive'],
+        "skipped": stats['skipped'],
+        "message": f"Успешно! Добавлено в Актив: {stats['synced_active']}, в Архив: {stats['synced_archive']}. Пропущено дублей: {stats['skipped']}."
+    }
+
+
 @router.post(
     "/sync_from_ntin",
     summary="Sync products from NTIN database",
