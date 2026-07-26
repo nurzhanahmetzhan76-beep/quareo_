@@ -231,10 +231,14 @@
         <div style="font-size:24px;margin-top:2px">⚡</div>
         <div style="width:100%">
           <h4 style="margin-bottom:6px">Автоматическое обновление (XML Фид)</h4>
-          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Скопируйте эту ссылку и вставьте её в Кабинете Kaspi (Управление товарами → Загрузить прайс-лист → <b>Указать ссылку (XML)</b>).<br>Kaspi будет сам забирать ваши актуальные цены и настройки предзаказа <b>каждый час</b> без вашего участия!</p>
-          <div style="display:flex;gap:10px;align-items:center">
-            <input type="text" id="xmlFeedUrl" readonly style="flex:1; padding:8px 12px; font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:4px; font-family:var(--font-mono); color:var(--text);">
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5;margin-bottom:12px">Скопируйте эту ссылку и вставьте её в Кабинете Kaspi (Управление товарами → Загрузить прайс-лист → <b>Указать ссылку (XML)</b>).<br>Kaspi будет сам забирать ваши актуальные цены и настройки предзаказа <b>каждый час</b> без вашего участия!<br><b>Нет своей XML ссылки?</b> Загрузите сюда свой Excel-прайс из Kaspi, и мы создадим ссылку для вас!</p>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+            <input type="text" id="xmlFeedUrl" readonly style="flex:1; padding:8px 12px; font-size:13px; background:var(--bg); border:1px solid var(--border); border-radius:4px; font-family:var(--font-mono); color:var(--text);" placeholder="Сгенерируйте ссылку...">
             <button class="btn-secondary" onclick="copyXmlLink()" style="padding:8px 16px;white-space:nowrap">📋 Скопировать</button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;background:var(--bg-2);padding:10px;border-radius:6px;border:1px dashed var(--border);">
+            <input type="file" id="xmlGenerateUpload" accept=".xlsx" style="font-size:13px">
+            <button class="btn-primary" onclick="generateBaseXml()" style="padding:6px 16px;white-space:nowrap;font-size:12px;">🔨 Создать свою XML-ссылку из Excel</button>
           </div>
         </div>
       </div>
@@ -481,6 +485,45 @@ async function processExcel() {
     document.body.removeChild(a);
     
     alert('Готово! Файл с обновленными ценами скачан. Теперь загрузите его в Kaspi.');
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    btn.textContent = oldText;
+    btn.disabled = false;
+  }
+}
+
+async function generateBaseXml() {
+  const fileInput = document.getElementById('xmlGenerateUpload');
+  if(!fileInput.files.length) {
+    alert('Пожалуйста, выберите Excel-файл от Kaspi (скачанный из кабинета)');
+    return;
+  }
+  
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const btn = event.target;
+  const oldText = btn.textContent;
+  btn.textContent = 'Создание...';
+  btn.disabled = true;
+  
+  try {
+    const resp = await fetch(API + '/generate_base_xml_from_excel', {
+      method: 'POST',
+      headers: rpAuthHeaders(),
+      body: formData
+    });
+    
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    
+    const data = await resp.json();
+    alert('Успешно! Ваша персональная базовая XML-ссылка создана.\nТеперь обновите страницу, и ваша главная ссылка автоматического фида заработает!');
+    window.location.reload();
   } catch(e) {
     alert('Ошибка: ' + e.message);
   } finally {

@@ -44,14 +44,13 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
     settings = result.scalar_one_or_none()
     
     if not settings or not settings.kaspi_xml_url:
-        # Fallback to empty catalog if no source XML is configured
-        root = ET.Element("kaspi_catalog")
-        root.set("date", "2024-01-01 00:00")
-        root.set("xmlns", "kaspiShopping")
-        root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-        root.set("xsi:schemaLocation", "kaspiShopping http://kaspi.kz/kaspishopping.xsd")
-        xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
-        return Response(content=xml_str, media_type="application/xml")
+        # CRITICAL SAFETY: Never return an empty catalog! 
+        # Kaspi interprets an empty catalog as "0 products in stock" and will unpublish everything.
+        # Returning an HTTP error forces Kaspi to keep the previous stock state intact.
+        raise HTTPException(
+            status_code=400, 
+            detail="Source Kaspi XML URL is not configured in settings. Cannot generate feed."
+        )
 
     # 2. Get user's repricing rules (active only)
     result = await db.execute(

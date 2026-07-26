@@ -1006,5 +1006,132 @@ async def process_excel(
     return StreamingResponse(
         out,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f'attachment; filename="{download_name}"'},
+        headers={"Content-Disposition": f'attachment; filename="{download_name}"'}
     )
+
+@router.post("/generate_base_xml_from_excel", summary="Создать базовый XML из Excel для автоматизации")
+async def generate_base_xml_from_excel(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Parses a Kaspi Excel file and generates a static Kaspi XML catalog.
+    Saves it locally and links it in UserSellerSettings so the user can use the automated feed feature
+    without needing an external 1C/MoiSklad system.
+    """
+    import os
+    import xml.etree.ElementTree as ET
+    
+    raw = await file.read()
+    try:
+        wb = openpyxl.load_workbook(io.BytesIO(raw))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Не удалось открыть файл. Загрузите Excel-прайс из Kaspi.")
+
+    ws = wb.worksheets[0]
+    headers = {}
+    for c in range(1, ws.max_column + 1):
+        v = ws.cell(1, c).value
+        if v is not None:
+            headers[str(v).strip().lower()] = c
+
+    sku_col = None
+    price_col = None
+    for h_key, h_col in headers.items():
+        if any(p in h_key for p in ["sku", "артикул", "код"]):
+            sku_col = h_col
+        if any(p in h_key for p in ["price", "цена"]):
+            price_col = h_col
+
+    if not sku_col or not price_col:
+        raise HTTPException(status_code=400, detail="В файле нет колонок SKU (Артикул) или Цена.")
+        
+    name_col = None
+    for h_key, h_col in headers.items():
+        if any(p in h_key for p in ["model", "name", "название", "наименовани", "title"]):
+            name_col = h_col
+            break
+    
+    brand_col = None
+    for h_key, h_col in headers.items():
+        if "brand" in h_key or "бренд" in h_key:
+            brand_col = h_col
+            break
+
+    pp_cols = {k: headers[k] for k in headers if k.startswith("pp")}
+
+    root = ET.Element("kaspi_catalog")
+    root.set("date", "2024-01-01 00:00")
+    root.set("xmlns", "kaspiShopping")
+    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    root.set("xsi:schemaLocation", "kaspiShopping http://kaspi.kz/kaspishopping.xsd")
+    
+    company = ET.SubElement(root, "company")
+    company.text = "Quareo Merchant"
+    merchantid = ET.SubElement(root, "merchantid")
+    merchantid.text = "1234567"
+    
+    offers = ET.SubElement(root, "offers")
+
+    for r in range(2, ws.max_row + 1):
+        sku = ws.cell(r, sku_col).value
+        if sku is None:
+            continue
+        if isinstance(sku, float): sku = str(int(sku))
+        else: sku = str(sku).strip()
+            
+        price_val = ws.cell(r, price_col).value
+        try: price = float(price_val) if price_val is not None else 0
+        except (ValueError, TypeError): price = 0
+            
+        name = ws.cell(r, name_col).value if name_col else f"Товар {sku}"
+        brand = ws.cell(r, brand_col).value if brand_col else "Без бренда"
+        
+        offer = ET.SubElement(offers, "offer", sku=sku)
+        ET.SubElement(offer, "model").text = str(name)
+        ET.SubElement(offer, "brand").text = str(brand)
+        ET.SubElement(offer, "price").text = str(int(price))
+        
+        availabilities = ET.SubElement(offer, "availabilities")
+        has_avail = False
+        for pp_name, col_idx in pp_cols.items():
+            val = ws.cell(r, col_idx).value
+            if val and str(val).strip().lower() == "yes":
+                store_id = pp_name.upper()
+                ET.SubElement(availabilities, "availability", available="yes", storeId=store_id)
+                has_avail = True
+                
+        if not has_avail:
+            ET.SubElement(availabilities, "availability", available="no", storeId="PP1")
+
+    xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
+    
+    # Save the file to frontend/assets/feeds/
+    # Ensure directory exists
+    feeds_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "frontend", "assets", "feeds")
+    os.makedirs(feeds_dir, exist_ok=True)
+    
+    file_path = os.path.join(feeds_dir, f"{current_user.id}.xml")
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(xml_str)
+        
+    # Update user settings
+    # URL will be accessible via Quareo static assets mount (e.g. http://localhost:8000/assets/feeds/{id}.xml)
+    # Using a local path or absolute URL based on environment. For now we use local absolute URL format.
+    # In production, this should be the public domain. For local/dev we use localhost.
+    local_url = f"http://127.0.0.1:8000/assets/feeds/{current_user.id}.xml"
+    
+    stmt = select(UserSellerSettings).where(UserSellerSettings.user_id == current_user.id)
+    result = await db.execute(stmt)
+    settings = result.scalar_one_or_none()
+    
+    if settings:
+        settings.kaspi_xml_url = local_url
+    else:
+        new_settings = UserSellerSettings(user_id=current_user.id, kaspi_xml_url=local_url)
+        db.add(new_settings)
+        
+    await db.commit()
+    
+    return {"status": "ok", "message": "Базовый XML фид успешно сгенерирован и привязан к профилю!", "url": local_url}
