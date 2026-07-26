@@ -1059,7 +1059,7 @@ async def generate_base_xml_from_excel(
             brand_col = h_col
             break
 
-    pp_cols = {k: headers[k] for k in headers if k.startswith("pp")}
+    pp_cols = {k: headers[k] for k in headers if any(f"pp{i}" in k for i in range(1, 10))}
 
     root = ET.Element("kaspi_catalog")
     root.set("date", "2024-01-01 00:00")
@@ -1094,15 +1094,22 @@ async def generate_base_xml_from_excel(
         ET.SubElement(offer, "price").text = str(int(price))
         
         availabilities = ET.SubElement(offer, "availabilities")
-        has_avail = False
+        has_pp = False
+        import re
         for pp_name, col_idx in pp_cols.items():
+            has_pp = True
             val = ws.cell(r, col_idx).value
+            
+            # Extract just "PP1", "PP2", etc from the column name
+            match = re.search(r'(pp\d+)', pp_name, re.IGNORECASE)
+            store_id = match.group(1).upper() if match else "PP1"
+            
             if val and str(val).strip().lower() == "yes":
-                store_id = pp_name.upper()
                 ET.SubElement(availabilities, "availability", available="yes", storeId=store_id)
-                has_avail = True
+            else:
+                ET.SubElement(availabilities, "availability", available="no", storeId=store_id)
                 
-        if not has_avail:
+        if not has_pp:
             ET.SubElement(availabilities, "availability", available="no", storeId="PP1")
 
     xml_str = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
