@@ -47,3 +47,5 @@ slowapi>=0.1.9
 openpyxl>=3.1
 defusedxml>=0.7.1
 curl_cffi>=0.7
+PyMuPDF>=1.24
+
