@@ -141,6 +141,8 @@ async def generate_kaspi_feed(feed_uuid: str, db: AsyncSession = Depends(get_db)
                 else:
                     for av in avails:
                         av.set('preOrder', str(min(matched_rule.preorder_days, 30)))
+                        # CRITICAL: If an item is on pre-order, it MUST be active, otherwise Kaspi keeps it archived.
+                        av.set('available', 'yes')
 
     # 5. Output the secured, modified XML mirror
     # ET.tostring works fine here since we already used defusedxml to parse
