@@ -197,8 +197,16 @@ async def clear_all_rules(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> None:
-    """Remove ALL products from the repricing bot for this user."""
-    from sqlalchemy import delete
+    from sqlalchemy import delete, select
+    
+    # Find all rule IDs for the user
+    rule_ids_stmt = select(RepricingRule.id).where(RepricingRule.user_id == current_user.id)
+    
+    # Delete all logs associated with those rules first (to prevent foreign key constraint violation)
+    logs_stmt = delete(RepricingLog).where(RepricingLog.rule_id.in_(rule_ids_stmt))
+    await db.execute(logs_stmt)
+    
+    # Delete the rules themselves
     stmt = delete(RepricingRule).where(RepricingRule.user_id == current_user.id)
     await db.execute(stmt)
     await db.flush()

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>О проекте — Quareo</title>
   <link rel="stylesheet" href="assets/style.css?v=3">
+  <link rel="stylesheet" href="assets/quareo.css?v=6">
   <link rel="icon" type="image/png" href="/assets/favicon.jpg">
   <style>
     .legal-content {
@@ -39,9 +40,9 @@
   </style>
 </head>
 
-<body>
+<body class="q-app">
   <!-- NAV -->
-  <nav id="mainNav">
+  <nav id="mainNav" class="q-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Quareo</a>
       <div class="nav-links">
@@ -84,32 +85,45 @@
   </nav>
 
   <main>
-    <section class="legal-content">
-      <h1>О проекте Quareo</h1>
-      <p class="hero-sub">Передовая платформа для селлеров и B2B-бизнеса в Казахстане.</p>
+    <section class="legal-content q-container">
+      <header class="q-page-header q-page-header--center">
+        <div class="q-eyebrow">О Quareo</div>
+        <h1>Инструменты для уверенного e-commerce</h1>
+        <p class="hero-sub">Передовая платформа для селлеров и B2B-бизнеса в Казахстане.</p>
+      </header>
 
-      <h2>Что мы делаем</h2>
-      <p><span class="accent">Quareo (RetailPool)</span> — это комплексная B2B SaaS-система, созданная специально для казахстанского рынка e-commerce. Наша главная цель — снять рутинную нагрузку с предпринимателей и предоставить им мощные инструменты аналитики и автоматизации.</p>
-      
-      <p>Мы работаем по трем ключевым направлениям:</p>
-      <ul>
-        <li><strong>Автоматизация НКТ (Национальный Каталог Товаров):</strong> Интеллектуальный PIM-модуль помогает селлерам переводить товары на государственный язык, автоматически подбирать ТН ВЭД коды и легально интегрироваться с API nationalcatalog.kz для получения штрихкодов NTIN.</li>
-        <li><strong>Глубокая аналитика:</strong> Наши алгоритмы помогают строить юнит-экономику, рассчитывать чистую прибыль, отслеживать динамику ниш и оптимизировать цены на основе ваших XML-прайсов и складских остатков.</li>
-        <li><strong>Инфраструктура бизнеса:</strong> Удобная генерация складских документов, накладных и управление товарными матрицами в едином окне.</li>
-      </ul>
+      <div class="q-about-grid">
+        <article class="q-card q-about-card q-about-card--wide">
+          <div class="q-about-icon" aria-hidden="true">↗</div>
+          <h2>Что мы делаем</h2>
+          <p><span class="accent">Quareo (RetailPool)</span> — это комплексная B2B SaaS-система, созданная специально для казахстанского рынка e-commerce. Наша главная цель — снять рутинную нагрузку с предпринимателей и предоставить им мощные инструменты аналитики и автоматизации.</p>
+          <p>Мы работаем по трем ключевым направлениям:</p>
+          <ul class="q-about-list">
+            <li><strong>Автоматизация НКТ (Национальный Каталог Товаров):</strong> Интеллектуальный PIM-модуль помогает селлерам переводить товары на государственный язык, автоматически подбирать ТН ВЭД коды и легально интегрироваться с API nationalcatalog.kz для получения штрихкодов NTIN.</li>
+            <li><strong>Глубокая аналитика:</strong> Наши алгоритмы помогают строить юнит-экономику, рассчитывать чистую прибыль, отслеживать динамику ниш и оптимизировать цены на основе ваших XML-прайсов и складских остатков.</li>
+            <li><strong>Инфраструктура бизнеса:</strong> Удобная генерация складских документов, накладных и управление товарными матрицами в едином окне.</li>
+          </ul>
+        </article>
 
-      <h2>Наша миссия</h2>
-      <p>Мы верим, что технологии должны работать на бизнес, а не наоборот. Quareo помогает малому и среднему бизнесу Казахстана выйти на новый уровень прозрачности, сократить издержки на логистику и документооборот, а также работать строго в правовом поле, соблюдая правила маркировки товаров.</p>
+        <article class="q-card q-about-card">
+          <div class="q-about-icon" aria-hidden="true">◎</div>
+          <h2>Наша миссия</h2>
+          <p>Мы верим, что технологии должны работать на бизнес, а не наоборот. Quareo помогает малому и среднему бизнесу Казахстана выйти на новый уровень прозрачности, сократить издержки на логистику и документооборот, а также работать строго в правовом поле, соблюдая правила маркировки товаров.</p>
+        </article>
 
-      <h2>Контакты</h2>
-      <p>Если вы хотите стать нашим партнером, интегрировать свой бизнес или задать вопрос, наша команда всегда на связи.</p>
-      <p>Telegram: <a href="https://t.me/Lulsiok" target="_blank">@Lulsiok</a></p>
-      <p>Служба поддержки: <a href="https://t.me/quareobot" target="_blank">@quareobot</a></p>
+        <article class="q-card q-about-card">
+          <div class="q-about-icon" aria-hidden="true">↗</div>
+          <h2>Контакты</h2>
+          <p>Если вы хотите стать нашим партнером, интегрировать свой бизнес или задать вопрос, наша команда всегда на связи.</p>
+          <p class="q-about-contact">Telegram: <a href="https://t.me/Lulsiok" target="_blank">@Lulsiok</a></p>
+          <p class="q-about-contact">Служба поддержки: <a href="https://t.me/quareobot" target="_blank">@quareobot</a></p>
+        </article>
+      </div>
     </section>
   </main>
 
   <!-- FOOTER -->
-  <footer>
+  <footer class="q-footer">
       <div class="footer-grid">
         <div>
           <div class="nav-logo" style="margin-bottom: 16px;">QUAREO</div>

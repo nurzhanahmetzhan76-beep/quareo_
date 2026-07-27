@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <title>Панель управления — Quareo</title>
 <link rel="stylesheet" href="assets/style.css?v=3">
 <link rel="stylesheet" href="assets/dashboard.css?v=3">
@@ -39,13 +42,15 @@
   </header>
 
   <!-- ═══════ PAGE: Profile (Личный кабинет) ═══════ -->
-  <section class="page active" id="page-connect" style=" padding: 2rem 3rem;">
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: var(--text);">Мой профиль</h2>
-    
-    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+  <section class="page active" id="page-connect">
+    <header class="page-section-header">
+      <h2>Мой профиль</h2>
+    </header>
+
+    <div class="feature-grid">
       <!-- API Tokens Card -->
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid var(--border); box-shadow: none;">
-        <h3 style="margin-bottom: 16px; font-size: 18px;">Подключение (API)</h3>
+      <article class="card">
+        <h3>Подключение (API)</h3>
         
         <div class="form-group">
           <label class="form-label">Kaspi API-ключ</label>
@@ -61,6 +66,11 @@
           <p style="font-size: 12px; color: var(--text-2); margin-top: 4px;">
             <a href="#" style="color: #2563EB;">Где взять токен НКТ?</a> Зайдите на nationalcatalog.kz -> Профиль -> Управление токенами.
           </p>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+          <label class="form-label">ID магазина Kaspi</label>
+          <input class="form-input" id="kaspiPhone" type="text" placeholder="Необязательно">
         </div>
         
         <div class="form-group" style="margin-top: 20px;">
@@ -87,12 +97,12 @@
 
         <button class="btn-primary" style="width:100%;padding:14px;margin-top:1.5rem" onclick="connectStore()">Сохранить настройки</button>
         <div id="connectStatus" style="margin-top:12px;font-size:13px"></div>
-      </div>
+      </article>
 
 
       <!-- Tariff Card -->
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; background: var(--bg-2); border: 1px solid var(--border); box-shadow: none;">
-        <h3 style="margin-bottom: 16px; font-size: 18px;">Текущий тариф</h3>
+      <aside class="card">
+        <h3>Текущий тариф</h3>
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
           <span id="profilePlanBadge" style="background: linear-gradient(135deg, #2563EB, #7C3AED); color: #fff; padding: 8px 16px; border-radius: 100px; font-weight: bold; text-transform: capitalize;">Free</span>
           <span id="profilePlanExpiry" style="font-size: 14px; color: var(--text-2);">Активен</span>
@@ -101,17 +111,19 @@
           <li>Базовый доступ</li>
         </ul>
         <button class="btn-action" style="margin-top: 20px; width: 100%; justify-content: center;" onclick="window.location.href='pricing.html'">Улучшить тариф</button>
-      </div>
+      </aside>
     </div>
   </section>
 
   <!-- ═══════ PAGE: Auto-Reply (Автоответчик) ═══════ -->
-  <section class="page" id="page-autoreply" style=" padding: 2rem 3rem;">
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px; color: var(--text);">ИИ-Автоответчик (Chrome Расширение)</h2>
-    
-    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-      <div class="card" style="flex: 1; min-width: 300px; padding: 2rem; border: 1px solid var(--border); box-shadow: none;">
-        <h3 style="margin-bottom: 16px; font-size: 18px;">Установка Автоответчика</h3>
+  <section class="page" id="page-autoreply">
+    <header class="page-section-header">
+      <h2>ИИ-Автоответчик (Chrome Расширение)</h2>
+    </header>
+
+    <div class="feature-grid">
+      <article class="card">
+        <h3>Установка Автоответчика</h3>
         <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Легкая программа, которая сама настроит расширение для работы с Kaspi (Отзывы и Чаты).</p>
         
         <div style="background: var(--brand-light); border: 1px solid var(--brand); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
@@ -132,7 +144,7 @@
             <button class="btn-action" onclick="copyExtToken('extTokenInput')" style="white-space: nowrap; flex-shrink: 0;">Копировать</button>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   </section>
 
@@ -209,9 +221,13 @@
 
   <!-- ═══════ PAGE: Scanner Kaspi ═══════ -->
   <section class="page" id="page-scanner">
-    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+    <header class="page-section-header">
+      <h2>Сканер Kaspi</h2>
+    </header>
+
+    <div class="feature-grid">
       <!-- Instructions -->
-      <div class="card" style="flex: 1; min-width: 300px;">
+      <article class="card">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
           <div class="ph-icon" style="margin:0; font-size: 32px;">🔍</div>
           <h3 style="margin: 0; font-size: 1.25rem;">Сканер Kaspi</h3>
@@ -232,23 +248,23 @@
           <input type="text" class="form-input" placeholder="https://kaspi.kz/shop/c/..." style="flex: 1;">
           <button class="btn-primary" onclick="window.location.href='scanner.html'">Перейти к сканеру</button>
         </div>
-      </div>
+      </article>
 
       <!-- Past Scans History -->
-      <div class="card" style="flex: 1; min-width: 300px;">
-        <h3 style="margin-bottom: 16px; font-size: 18px;">История сканирований</h3>
+      <aside class="card">
+        <h3>История сканирований</h3>
         <div style="display: flex; flex-direction: column; gap: 12px;" id="scanHistoryList">
           <div style="font-size: 13px; color: var(--text-2); text-align: center; padding: 1rem 0;">Загрузка истории...</div>
         </div>
-      </div>
+      </aside>
     </div>
   </section>
 
   <!-- ═══════ PAGE: Analytics ═══════ -->
   <section class="page" id="page-analytics">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h2 style="font-size: 24px; font-weight: bold; color: var(--text); margin: 0;">Аналитика</h2>
-    </div>
+    <header class="page-section-header">
+      <h2>Аналитика</h2>
+    </header>
 
     <!-- Stats row -->
     <div class="ntin-stats-row">
@@ -257,25 +273,25 @@
       <div class="mini-stat purple"><span class="mini-stat-val">1,240</span><span class="mini-stat-lbl">Продаж</span></div>
     </div>
 
-    <div class="card" style="margin-top: 24px;">
-      <h3 style="margin-bottom: 16px; font-size: 18px;">Последнее сканирование рынка</h3>
+    <article class="card">
+      <h3>Последнее сканирование рынка</h3>
       <div style="display: flex; flex-direction: column; gap: 12px;" id="latestScanBlock">
         <div style="font-size: 13px; color: var(--text-2); text-align: center; padding: 1rem 0;">Загрузка данных...</div>
       </div>
-    </div>
+    </article>
   </section>
 
 
 
   <!-- ═══════ PAGE: Kaspi Calculator ═══════ -->
-  <section class="page" id="page-calculator" style="background: var(--bg-2); padding: 2rem 3rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h2 style="font-size: 24px; font-weight: bold; color: var(--text); margin: 0;">Калькулятор прибыли Kaspi</h2>
-    </div>
-    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+  <section class="page" id="page-calculator">
+    <header class="page-section-header">
+      <h2>Калькулятор прибыли Kaspi</h2>
+    </header>
+    <div class="feature-grid">
       <!-- Ввод данных -->
-      <div class="card" style="flex: 1.5; min-width: 320px; border: 1px solid var(--border); box-shadow: none;">
-        <h3 style="margin-bottom: 20px; font-size: 18px;">Параметры товара</h3>
+      <article class="card">
+        <h3>Параметры товара</h3>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
           <div class="form-group">
@@ -328,11 +344,11 @@
             <input class="form-input calc-input" id="calcPackage" type="number" value="100" oninput="calculateProfit()">
           </div>
         </div>
-      </div>
+      </article>
 
       <!-- Результат -->
-      <div class="card" style="flex: 1; min-width: 300px; background: #fff; border: 1px solid var(--border); box-shadow: none;">
-        <h3 style="margin-bottom: 20px; font-size: 18px;">Юнит-экономика</h3>
+      <aside class="card">
+        <h3>Юнит-экономика</h3>
         
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-2);">
           <span>Выручка:</span>
@@ -372,7 +388,7 @@
             <div id="resRoi" style="font-size: 18px; font-weight: 700; color: #8B5CF6;">31.9%</div>
           </div>
         </div>
-      </div>
+      </aside>
     </div>
   </section>
 

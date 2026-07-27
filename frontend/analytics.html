@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kaspi Аналитика и Сканер Профиля — Quareo</title>
 <link rel="stylesheet" href="assets/style.css?v=3">
+<link rel="stylesheet" href="assets/quareo.css?v=6">
 <link rel="icon" type="image/png" href="/assets/favicon.jpg">
 <!-- Подключение Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,38 +16,22 @@
 /* Форма сканирования */
 .scan-bar-wrapper {
   max-width: 600px; margin: 2rem auto;
-  background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
+  background: var(--bg);
   padding: 8px; border-radius: 99px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   display: flex;
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow: var(--shadow-sm);
   position: relative;
-}
-.scan-bar-wrapper::after {
-  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
-  background: radial-gradient(circle at top right, rgba(96,165,250,.7), rgba(96,165,250,0) 65%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
 }
 .cost-mgmt-box {
   position: relative;
-  background: linear-gradient(135deg, rgba(17,17,24,0.55), rgba(13,13,18,0.4));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--canvas);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow: var(--shadow-sm);
 }
-.cost-mgmt-box::after {
-  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;
-  background: radial-gradient(circle at top right, rgba(96,165,250,.7), rgba(96,165,250,0) 65%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
-}
-.scan-bar-wrapper input { flex: 1; min-width: 0; background: transparent; border: none; padding: 0 1.5rem; font-family: var(--font-body); font-size: 1rem; color: var(--text-1); outline: none; }
+.scan-bar-wrapper input { flex: 1; min-width: 0; background: transparent; border: none; padding: 0 1.5rem; font-family: var(--font-body); font-size: 1rem; color: var(--text); outline: none; }
 .scan-bar-wrapper .btn-primary { border-radius: 99px; padding: 12px 32px; font-weight: 600; white-space: nowrap; }
 
 @media (max-width: 768px) {
@@ -96,7 +81,7 @@
 .product-card.loss { border-left: 4px solid var(--red); background: rgba(239, 68, 68, 0.02); }
 .p-info h4 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
 .p-metrics { display: flex; gap: 1rem; font-size: 0.9rem; color: var(--text-2); margin-bottom: 1rem; }
-.p-metric strong { color: var(--text-1); }
+.p-metric strong { color: var(--text); }
 .ai-advice { background: var(--bg-hover); padding: 1rem; border-radius: var(--radius-md); font-size: 0.9rem; line-height: 1.5; color: var(--text-2); display: flex; gap: 0.75rem; align-items: flex-start; }
 .ai-advice::before { content: '✨'; font-size: 1.2rem; }
 
@@ -118,8 +103,8 @@
 .chart-container { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin-top: 2rem; }
 </style>
 </head>
-<body>
-<nav id="mainNav">
+<body class="q-app">
+<nav id="mainNav" class="q-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Quareo</a>
       <div class="nav-links">
@@ -168,7 +153,7 @@
       <p style="color:var(--text-2); font-size:1.1rem; line-height:1.7; max-width:600px; margin:1rem auto;">Вставьте номер телефона конкурента для базового парсинга или свой Kaspi API-ключ для 100% точного P&L отчета и сезонных прогнозов.</p>
       
       <div class="scan-bar-wrapper" id="phoneInputWrapper">
-        <select id="periodSelect" style="background:transparent; border:none; border-right:1px solid var(--border); outline:none; padding: 0 1rem; color:var(--text-1); font-family:var(--font-body); font-weight:600; cursor:pointer;">
+        <select id="periodSelect" style="background:transparent; border:none; border-right:1px solid var(--border); outline:none; padding: 0 1rem; color:var(--text); font-family:var(--font-body); font-weight:600; cursor:pointer;">
             <option value="7d">7 дней</option>
             <option value="14d" selected>14 дней</option>
             <option value="1m">1 месяц</option>
@@ -186,16 +171,16 @@
       </div>
 
       <div class="cost-mgmt-box" style="margin-top: 3rem; max-width: 700px; margin-left: auto; margin-right: auto; text-align: left;">
-        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-1);">Управление себестоимостью (Для точного P&L)</h3>
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text);">Управление себестоимостью (Для точного P&L)</h3>
         <p style="color: var(--text-2); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4;">Чтобы сканер считал чистую прибыль со 100% точностью, загрузите себестоимость ваших товаров. Вы можете выгрузить шаблон со своими товарами, заполнить цены и загрузить его обратно.</p>
         
         <div class="cost-buttons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-          <button class="btn-secondary hover-bg" onclick="downloadTemplate()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text-1); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
+          <button class="btn-secondary hover-bg" onclick="downloadTemplate()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
             <div style="font-size: 1.5rem; margin-bottom: 6px;">📥</div>
             Шаг 1: Скачать товары<br><span style="font-size: 0.8rem; color: var(--text-3); font-weight: 400; margin-top: 4px;">(По введённому API ключу)</span>
           </button>
           
-          <button class="btn-secondary hover-bg" onclick="document.getElementById('xmlUploadInput').click()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text-1); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
+          <button class="btn-secondary hover-bg" onclick="document.getElementById('xmlUploadInput').click()" style="background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: var(--text); font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center;">
             <div style="font-size: 1.5rem; margin-bottom: 6px;">📄</div>
             Или из XML-фида<br><span style="font-size: 0.8rem; color: var(--text-3); font-weight: 400; margin-top: 4px;">(Сгенерировать шаблон)</span>
           </button>
@@ -225,7 +210,7 @@
         <div class="analytics-grid">
           <div class="a-card">
             <div class="a-card-label">Выручка (за период)</div>
-            <div class="a-card-val" id="totalRevenue" style="color:var(--text-1)">0 ₸</div>
+            <div class="a-card-val" id="totalRevenue" style="color:var(--text)">0 ₸</div>
           </div>
           <div class="a-card">
             <div class="a-card-label">Чистая прибыль (Estimated)</div>
@@ -256,7 +241,7 @@
         <div class="products-section">
           <h2 id="abcAnalysisTitle">ABC-анализ карточек товаров</h2>
           
-          <h3 style="margin: 2rem 0 1rem; color:var(--text-1)">🚨 В зоне риска (Убыток)</h3>
+          <h3 style="margin: 2rem 0 1rem; color:var(--text)">🚨 В зоне риска (Убыток)</h3>
           <div id="lossCards"></div>
 
           <h3 style="margin: 2rem 0 1rem; color:var(--green)">⭐ Сильные карточки (Категория A)</h3>
@@ -269,7 +254,7 @@
     </div>
   </section>
 </main>
-<footer>
+<footer class="q-footer">
       <div class="footer-grid">
         <div>
           <div class="nav-logo" style="margin-bottom: 16px;">QUAREO</div>
