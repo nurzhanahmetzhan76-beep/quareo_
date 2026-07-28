@@ -24,13 +24,32 @@
     return resp.json();
   }
 
+  const LOGO_MAP = {
+    kaspi: 'assets/logos/kaspi.png',
+    wildberries: 'assets/logos/wb.png',
+    ozon: 'assets/logos/ozon.png',
+  };
+
+  function marketplaceLogoKey(marketplace) {
+    const key = (marketplace || '').toLowerCase();
+    if (key.includes('kaspi')) return 'kaspi';
+    if (key.includes('wildberries')) return 'wildberries';
+    if (key.includes('ozon')) return 'ozon';
+    return null;
+  }
+
   function renderOffer(offer, index) {
     const ratingBlock = offer.rating
       ? `<span class="offer-card__rating">★ ${escapeHtml(offer.rating)}${offer.review_count ? ` (${escapeHtml(offer.review_count)})` : ''}</span>`
       : '';
+    const logoKey = marketplaceLogoKey(offer.marketplace);
+    const letterFallback = escapeHtml(offer.marketplace[0]);
+    const markInner = logoKey
+      ? `<img src="${LOGO_MAP[logoKey]}" alt="${escapeHtml(offer.marketplace)}" loading="lazy" onerror="this.replaceWith(document.createTextNode('${letterFallback}'))">`
+      : letterFallback;
     return `<article class="q-card offer-card${offer.best ? ' offer-card--best' : ''}">
       ${offer.best ? '<span class="q-tag q-tag--success offer-card__badge">Лучшая цена</span>' : ''}
-      <div class="offer-card__top"><span class="marketplace-name"><i class="marketplace-name__mark">${escapeHtml(offer.marketplace[0])}</i>${escapeHtml(offer.marketplace)}</span>${ratingBlock}</div>
+      <div class="offer-card__top"><span class="marketplace-name"><i class="marketplace-name__mark">${markInner}</i>${escapeHtml(offer.marketplace)}</span>${ratingBlock}</div>
       <h4 class="offer-card__title">${escapeHtml(offer.title)}</h4>
       <div class="offer-card__price">${formatPrice(offer.price_kzt)}</div>
       <div class="offer-card__details"><span>${escapeHtml(offer.seller || 'Продавец не указан')}</span></div>
