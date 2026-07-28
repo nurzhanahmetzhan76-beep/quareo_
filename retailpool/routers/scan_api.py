@@ -824,14 +824,16 @@ async def scan_ozon_niche(
 
     try:
         from retailpool.scraper.ozon_scraper import OzonScraper
-        
+
         ozon_products = []
         total_found = 0
-        
-        # Hardcoding the key from the screenshot for immediate testing
-        zenrows_key = "c6bc7254d563bc03cad885311962fbcdedbf8606"
-        scraper = OzonScraper(api_key=zenrows_key)
-        
+
+        if not settings.ZENROWS_API_KEY:
+            logger.warning("ZENROWS_API_KEY not configured — skipping real Ozon scrape.")
+            raise ValueError("ZenRows API key not configured")
+
+        scraper = OzonScraper(api_key=settings.ZENROWS_API_KEY)
+
         ozon_products, total_found = await scraper.scrape_search(query, max_products=15)
             
         # Fallback to mock data if ZenRows blocked the request or timed out
