@@ -215,6 +215,7 @@ def _serve_page(filename: str):
 _PAGE_ROUTES = [
     ("/",            "index.html"),
     ("/scanner",     "scanner.html"),
+    ("/search",      "search.html"),
     ("/pricing",     "pricing.html"),
     ("/checkout",    "checkout.html"),
     ("/auth",        "auth.html"),

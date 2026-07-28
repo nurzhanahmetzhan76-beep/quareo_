@@ -73,6 +73,22 @@
     .nav-links { position: relative; display: flex; min-height: 42px; align-items: center; gap: 25px; }
     .nav-links a { position: relative; z-index: 2; color: #34415c; font-size: 13px; font-weight: 600; transition: color .18s var(--ease); }
     .nav-links a:hover { color: var(--blue); }
+    .nav-tools { position: relative; z-index: 10; }
+    .nav-tools summary { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; color: #34415c; cursor: pointer; border-radius: 8px; font-size: 13px; font-weight: 700; list-style: none; transition: color .18s var(--ease), background .18s var(--ease); }
+    .nav-tools summary::-webkit-details-marker { display: none; }
+    .nav-tools summary::after { color: var(--ink-faint); content: '⌄'; font-size: 14px; font-weight: 700; transition: transform .18s var(--ease); }
+    .nav-tools[open] summary { color: var(--blue); background: var(--blue-pale); }
+    .nav-tools[open] summary::after { color: var(--blue); transform: rotate(180deg); }
+    .tools-panel { position: absolute; top: calc(100% + 13px); left: -10px; width: 332px; padding: 8px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-md); }
+    .tools-group { padding: 10px 8px; }
+    .tools-group + .tools-group { border-top: 1px solid var(--line); }
+    .tools-group-title { display: block; margin: 0 0 7px; color: var(--ink-faint); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .tools-group a { display: flex; align-items: center; min-height: 30px; padding: 5px 7px; color: var(--ink-soft); border-radius: 7px; font-size: 13px; font-weight: 600; }
+    .tools-group a:hover { color: var(--blue); background: var(--blue-pale); }
+    .tools-search { display: block !important; padding: 11px !important; color: var(--blue) !important; background: var(--blue-pale); border: 1px solid #d9e1ff; border-radius: 9px !important; }
+    .tools-search strong { display: flex; align-items: center; justify-content: space-between; color: var(--ink); font-size: 14px; }
+    .tools-search em { padding: 3px 6px; color: var(--blue); background: var(--paper); border: 1px solid #d9e1ff; border-radius: 5px; font-size: 9px; font-style: normal; font-weight: 800; letter-spacing: .06em; }
+    .tools-search small { display: block; margin-top: 5px; color: var(--ink-soft); font-size: 11px; font-weight: 500; line-height: 1.45; }
     .nav-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
     .nav-login, .auth-dash-link { padding: 10px 12px; color: #34415c; font-size: 13px; font-weight: 600; border-radius: 9px; transition: color .18s, background .18s; }
     .nav-login:hover, .auth-dash-link:hover { color: var(--blue); background: var(--blue-pale); }
@@ -97,6 +113,14 @@
     .hero-title-accent { color: var(--blue); }
     .hero-text { max-width: 520px; margin: 24px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.72; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .intent-label { margin: 28px 0 10px; color: var(--ink); font-size: 13px; font-weight: 700; }
+    .intent-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 570px; }
+    .intent-choice { display: grid; min-height: 116px; grid-template-columns: 33px 1fr; gap: 10px; padding: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease); }
+    .intent-choice:hover { border-color: #bdcdfd; box-shadow: var(--shadow-md); transform: translateY(-3px); }
+    .intent-choice__icon { width: 33px; height: 33px; display: grid; place-items: center; color: var(--blue); background: var(--blue-pale); border-radius: 10px; font-size: 17px; }
+    .intent-choice__copy strong { display: block; color: var(--ink); font: 700 14px/1.25 Manrope, Inter, sans-serif; letter-spacing: -.025em; }
+    .intent-choice__copy span { display: block; margin-top: 4px; color: var(--blue); font-size: 12px; font-weight: 700; }
+    .intent-choice__copy small { display: block; margin-top: 8px; color: var(--ink-soft); font-size: 11px; line-height: 1.4; }
     .hero-note { display: flex; align-items: center; gap: 10px; margin-top: 28px; color: var(--ink-soft); font-size: 13px; }
     .avatars { display: flex; padding-left: 5px; }
     .avatar { width: 27px; height: 27px; margin-left: -5px; display: grid; place-items: center; color: #fff; border: 2px solid var(--canvas); border-radius: 50%; font-size: 9px; font-weight: 700; }
@@ -167,6 +191,31 @@
     .trust-stat b { display: block; color: var(--ink); font: 700 22px/1 Manrope, sans-serif; letter-spacing: -.05em; }
     .trust-stat span { display: block; margin-top: 6px; color: var(--ink-soft); font-size: 10px; line-height: 1.2; }
 
+    /* Quareo Search product introduction */
+    .search-intro { padding: 88px 0; background: #fff; }
+    .search-intro-grid { display: grid; grid-template-columns: .82fr 1.18fr; align-items: center; gap: 56px; }
+    .search-intro .section-heading { max-width: 570px; }
+    .search-intro .section-lead { max-width: 500px; }
+    .search-intro .button { margin-top: 28px; }
+    .search-demo { padding: 13px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-md); }
+    .search-demo__bar { display: flex; align-items: center; justify-content: space-between; padding: 7px 8px 14px; }
+    .search-demo__title { display: flex; align-items: center; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 700; }
+    .search-demo__title b { width: 18px; height: 18px; display: grid; place-items: center; color: #fff; background: var(--blue); border-radius: 6px; font-size: 11px; }
+    .search-demo__status { color: var(--green); font-size: 10px; font-weight: 700; }
+    .search-demo__body { padding: 18px; background: var(--canvas); border: 1px solid #ebeff6; border-radius: 13px; }
+    .search-demo__input { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 6px; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; }
+    .search-demo__query { display: flex; align-items: center; gap: 9px; min-height: 39px; padding: 0 8px; color: var(--ink); font-size: 13px; font-weight: 600; }
+    .search-demo__query::before { color: var(--ink-faint); content: '⌕'; font-size: 18px; }
+    .search-demo__button { display: grid; min-width: 77px; place-items: center; color: #fff; background: var(--blue); border-radius: 7px; font-size: 11px; font-weight: 700; }
+    .search-demo__caption { display: flex; align-items: center; justify-content: space-between; margin: 18px 0 10px; color: var(--ink-faint); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .search-demo__caption span:last-child { color: var(--green); letter-spacing: 0; text-transform: none; }
+    .search-demo__offer { display: grid; grid-template-columns: 31px 1fr auto; align-items: center; gap: 10px; padding: 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 9px; }
+    .search-demo__offer + .search-demo__offer { margin-top: 7px; }
+    .search-demo__mark { display: grid; width: 31px; height: 31px; place-items: center; color: var(--blue); background: var(--blue-pale); border-radius: 8px; font: 800 11px/1 Manrope, sans-serif; }
+    .search-demo__offer b { display: block; color: var(--ink); font-size: 11px; }
+    .search-demo__offer small { display: block; margin-top: 2px; color: var(--ink-faint); font-size: 9px; }
+    .search-demo__price { color: var(--ink); font: 700 14px/1 Manrope, Inter, sans-serif; letter-spacing: -.04em; }
+
     /* Workflow */
     .workflow { background: var(--paper); }
     .section-top { display: flex; justify-content: space-between; align-items: end; gap: 30px; }
@@ -219,12 +268,15 @@
 
     /* Modules */
     .modules { background: #fff; }
-    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 48px; }
+    .module-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 48px; }
     .module-card { min-height: 340px; padding: 28px; display: flex; flex-direction: column; background: #fbfcff; border: 1px solid var(--line); border-radius: 19px; transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
     .module-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
     .module-icon { width: 48px; height: 48px; display: grid; place-items: center; color: var(--blue); background: var(--blue-pale); border: 1px solid #e0e6ff; border-radius: 14px; font-size: 22px; }
     .module-card:nth-child(2) .module-icon { color: #0c8c62; background: var(--green-pale); border-color: #d8f3e8; }
     .module-card:nth-child(3) .module-icon { color: #a26415; background: var(--amber-pale); border-color: #fce4be; }
+    .module-card--search { position: relative; border-color: #cbd6fe; background: #f8faff; }
+    .module-card--search .module-icon { color: var(--blue); background: var(--blue-pale); border-color: #d9e1ff; }
+    .module-card--new { position: absolute; top: 21px; right: 21px; padding: 5px 7px; color: var(--blue); background: var(--blue-pale); border-radius: 5px; font-size: 9px; font-weight: 800; letter-spacing: .06em; }
     .module-card h3 { margin: 28px 0 10px; font: 700 22px/1.2 Manrope, sans-serif; letter-spacing: -.05em; }
     .module-card > p { max-width: 290px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
     .module-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 22px 0 25px; }
@@ -308,6 +360,8 @@
       .hero-grid { display: block; min-height: 0; }
       .hero-copy { max-width: 610px; }
       .hero-stage { width: 650px; max-width: 114%; min-height: 490px; margin: 12px -7% -16px auto; transform: scale(.9); transform-origin: right top; }
+      .search-intro-grid { grid-template-columns: 1fr; gap: 34px; }
+      .search-demo { max-width: 650px; }
       .trust-strip { grid-template-columns: repeat(3, 1fr); gap: 19px 0; }
       .trust-brands { grid-column: 1 / -1; }
       .trust-stat:first-of-type { padding-left: 0; border: 0; }
@@ -339,6 +393,8 @@
       h1 { font-size: clamp(38px, 10.4vw, 48px); letter-spacing: -.06em; }
       .hero-text { margin-top: 19px; font-size: 16px; }
       .hero-actions { display: grid; grid-template-columns: 1fr; margin-top: 26px; }
+      .intent-choices { grid-template-columns: 1fr; }
+      .intent-choice { min-height: 94px; }
       .button { width: 100%; min-height: 50px; }
       .hero-note { margin-top: 22px; }
       .hero-stage { width: 580px; max-width: none; min-height: 426px; margin: 8px -198px -52px auto; transform: scale(.72); transform-origin: right top; }
@@ -373,6 +429,11 @@
       .insight + .insight { margin-top: 9px; }
       .module-card { min-height: 285px; padding: 23px; }
       .module-card h3 { margin-top: 22px; }
+      .module-card--new { top: 18px; right: 18px; }
+      .search-intro { padding: 64px 0; }
+      .search-demo__body { padding: 12px; }
+      .search-demo__input { grid-template-columns: 1fr; }
+      .search-demo__button { min-height: 39px; }
       .results { padding: 67px 0; }
       .result-stats { grid-template-columns: 1fr 1fr; }
       .result-stat { min-height: 119px; }
@@ -396,6 +457,9 @@
     @media (max-width: 768px) {
       .nav-links.mobile-open { background: rgba(255,255,255,.98) !important; border-bottom: 1px solid var(--line); box-shadow: 0 16px 28px rgba(24,40,82,.12); }
       .nav-links.mobile-open a { color: var(--ink) !important; }
+      .nav-links.mobile-open .nav-tools { width: 100%; }
+      .nav-links.mobile-open .nav-tools summary { width: 100%; justify-content: space-between; padding: 12px; font-size: 16px; }
+      .nav-links.mobile-open .tools-panel { position: static; width: 100%; margin: 4px 0 8px; box-shadow: none; }
       .mobile-nav-toggle span { background-color: var(--ink) !important; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -415,7 +479,33 @@
         </span>Quareo
       </a>
       <div class="nav-links" aria-label="Разделы сайта">
-        <a href="#workspace">Продукт</a>
+        <details class="nav-tools">
+          <summary>Инструменты</summary>
+          <div class="tools-panel">
+            <div class="tools-group">
+              <span class="tools-group-title">Сканеры</span>
+              <a href="scanner.html">Kaspi Scanner</a>
+              <a href="wb_scanner.html">WB Scanner</a>
+              <a href="ozon_scanner.html">Ozon Scanner</a>
+              <a href="blue_ocean.html">Blue Ocean</a>
+            </div>
+            <div class="tools-group">
+              <span class="tools-group-title">Поиск</span>
+              <a class="tools-search" href="search.html"><strong>Quareo Search <em>НОВОЕ</em></strong><small>Сравнение цен · AI-анализ отзывов · поиск по маркетплейсам</small></a>
+            </div>
+            <div class="tools-group">
+              <span class="tools-group-title">Автоматизация</span>
+              <a href="ntin.html">NTIN</a>
+              <a href="waybills.html">Накладные</a>
+              <a href="kaspi-bot.html">Репрайсер</a>
+              <a href="dashboard.html" onclick="localStorage.setItem('rp_dashboard_tab', 'autoreply')">Автоответчик</a>
+            </div>
+            <div class="tools-group">
+              <span class="tools-group-title">Аналитика</span>
+              <a href="analytics.html">Аналитика</a>
+            </div>
+          </div>
+        </details>
         <a href="#workflow">Решения</a>
         <a href="#pricing">Тарифы</a>
         <a href="about.html">О нас</a>
@@ -423,7 +513,7 @@
       <div class="nav-right">
         <div id="navAuth" style="display:block"><a class="nav-login" href="auth.html?view=login">Войти</a></div>
         <div id="navUser" style="display:none">
-          <a class="auth-dash-link" href="dashboard.html">Рабочее пространство</a>
+          <a class="auth-dash-link" href="dashboard.html">Открыть Workspace</a>
           <button class="nav-logout" type="button" onclick="rpLogout()">Выйти</button>
         </div>
         <a class="button button-primary top-cta" href="auth.html?view=register">Начать бесплатно</a>
@@ -435,14 +525,15 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <div class="hero-badge"><span class="badge-dot" aria-hidden="true"></span>Для продавцов на Kaspi</div>
-          <h1 id="hero-title">Ваш магазин —<br>в <span class="hero-title-accent">одном рабочем<br>пространстве.</span></h1>
-          <p class="hero-text">Quareo помогает готовить карточки, следить за ценами и оформлять операции — чтобы вы тратили время на рост, а не на рутину.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="auth.html?view=register">Начать бесплатно <span aria-hidden="true">→</span></a>
-            <a class="button button-secondary" href="#workspace">Посмотреть, как работает</a>
+          <div class="hero-badge"><span class="badge-dot" aria-hidden="true"></span>Одна экосистема для покупок и e-commerce</div>
+          <h1 id="hero-title">Что вы хотите<br><span class="hero-title-accent">сделать сегодня?</span></h1>
+          <p class="hero-text">Quareo помогает найти выгодный товар или управлять работой на маркетплейсах — без лишних сервисов и вкладок.</p>
+          <p class="intent-label">Выберите свой сценарий</p>
+          <div class="intent-choices">
+            <a class="intent-choice" href="search.html"><span class="intent-choice__icon" aria-hidden="true">⌕</span><span class="intent-choice__copy"><strong>Найти лучший товар</strong><span>Quareo Search</span><small>Сравнить цены, отзывы и продавцов</small></span></a>
+            <a class="intent-choice" href="scanner.html"><span class="intent-choice__icon" aria-hidden="true">↗</span><span class="intent-choice__copy"><strong>Продавать на маркетплейсах</strong><span>Открыть инструменты</span><small>Сканеры, NTIN, операции и аналитика</small></span></a>
           </div>
-          <div class="hero-note"><div class="avatars" aria-hidden="true"><span class="avatar">A</span><span class="avatar">D</span><span class="avatar">N</span><span class="avatar">M</span></div><span>Уже помогает более 4 200 продавцам</span></div>
+          <div class="hero-note"><div class="avatars" aria-hidden="true"><span class="avatar">A</span><span class="avatar">D</span><span class="avatar">N</span><span class="avatar">M</span></div><span>Всё нужное — в понятном следующем шаге</span></div>
         </div>
 
         <div class="hero-stage" aria-label="Превью рабочего пространства Quareo">
@@ -481,6 +572,27 @@
       </div>
     </section>
 
+    <section class="search-intro" aria-labelledby="search-intro-title">
+      <div class="container search-intro-grid">
+        <div>
+          <p class="section-kicker">Новое в Quareo</p>
+          <h2 class="section-heading" id="search-intro-title">Ищите товары сразу на всех маркетплейсах</h2>
+          <p class="section-lead">Quareo сравнивает цены, отзывы и продавцов за несколько секунд.</p>
+          <a class="button button-primary" href="search.html">Попробовать поиск <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="search-demo" aria-label="Превью Quareo Search">
+          <div class="search-demo__bar"><div class="search-demo__title"><b>Q</b>Quareo Search</div><span class="search-demo__status">● 3 маркетплейса</span></div>
+          <div class="search-demo__body">
+            <div class="search-demo__input"><div class="search-demo__query">Dyson V15</div><a class="search-demo__button" href="search.html">Найти</a></div>
+            <div class="search-demo__caption"><span>Лучшие цены</span><span>27 предложений</span></div>
+            <div class="search-demo__offer"><span class="search-demo__mark">K</span><span><b>Kaspi</b><small>Доставка завтра</small></span><span class="search-demo__price">319 990 ₸</span></div>
+            <div class="search-demo__offer"><span class="search-demo__mark">W</span><span><b>Wildberries</b><small>Доставка 2–3 дня</small></span><span class="search-demo__price">327 490 ₸</span></div>
+            <div class="search-demo__offer"><span class="search-demo__mark">O</span><span><b>Ozon</b><small>Доставка 3–5 дней</small></span><span class="search-demo__price">331 990 ₸</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="workflow section" id="workflow" aria-labelledby="workflow-title">
       <div class="container">
         <div class="section-top"><div><p class="section-kicker">Рабочий день продавца</p><h2 class="section-heading" id="workflow-title">От товара до продажи — в понятном потоке.</h2></div><p class="section-lead">Не переключайтесь между таблицами и разными сервисами. Quareo показывает следующий полезный шаг в нужный момент.</p></div>
@@ -514,9 +626,10 @@
         <p class="section-kicker">Всё нужное — на своём месте</p>
         <h2 class="section-heading" id="modules-title">Организуйте работу вокруг задач, а не инструментов.</h2>
         <div class="module-grid">
-          <article class="module-card"><div class="module-icon">▣</div><h3>Товары и контент</h3><p>Подготовьте карточку к публикации и убедитесь, что покупателю хватает информации.</p><div class="module-list"><span>Сканер карточек</span><span>NTIN</span><span>Проверка данных</span></div><a class="module-link" href="scanner.html">Работать с товарами</a></article>
-          <article class="module-card"><div class="module-icon">↗</div><h3>Рынок и цены</h3><p>Смотрите, что меняется на рынке, и выбирайте цену с учётом спроса и конкурентов.</p><div class="module-list"><span>Аналитика</span><span>Репрайсер</span><span>Рекомендации</span></div><a class="module-link" href="analytics.html">Открыть аналитику</a></article>
-          <article class="module-card"><div class="module-icon">▤</div><h3>Операции</h3><p>Оформляйте накладные и предзаказы без ручного переноса данных между сервисами.</p><div class="module-list"><span>Накладные</span><span>Предзаказы</span><span>Документы</span></div><a class="module-link" href="waybills.html">Перейти к операциям</a></article>
+          <article class="module-card module-card--search"><span class="module-card--new">НОВОЕ</span><div class="module-icon">⌕</div><h3>Quareo Search</h3><p>Находите лучшее предложение по цене, отзывам, доставке и надёжности продавца.</p><div class="module-list"><span>Kaspi</span><span>Wildberries</span><span>Ozon</span></div><a class="module-link" href="search.html">Найти товар</a></article>
+          <article class="module-card"><div class="module-icon">⌕</div><h3>Сканеры</h3><p>Находите ниши, проверяйте карточки и изучайте конкурентов на маркетплейсах.</p><div class="module-list"><span>Kaspi Scanner</span><span>WB Scanner</span><span>Ozon Scanner</span><span>Blue Ocean</span></div><a class="module-link" href="scanner.html">Открыть сканеры</a></article>
+          <article class="module-card"><div class="module-icon">▤</div><h3>Автоматизация</h3><p>Снимайте ручную работу с подготовки товаров, документов и коммуникаций.</p><div class="module-list"><span>NTIN</span><span>Накладные</span><span>Репрайсер</span><span>Автоответчик</span></div><a class="module-link" href="ntin.html">Открыть автоматизацию</a></article>
+          <article class="module-card"><div class="module-icon">↗</div><h3>Аналитика</h3><p>Следите за рынком, ценами и возможностями для роста вашего магазина.</p><div class="module-list"><span>Рынок</span><span>Цены</span><span>Рекомендации</span></div><a class="module-link" href="analytics.html">Открыть аналитику</a></article>
         </div>
       </div>
     </section>
@@ -541,7 +654,20 @@
     <section class="final-cta"><div class="container"><div class="cta-panel"><p class="section-kicker">Первый шаг</p><h2 class="section-heading">Посмотрите, какие задачи есть у вашего магазина сегодня.</h2><p>Создайте бесплатный аккаунт и начните с проверки первой карточки.</p><a class="button button-primary" href="auth.html?view=register">Начать бесплатно <span aria-hidden="true">→</span></a></div></div></section>
   </main>
 
-  <footer><div class="container"><div class="footer-top"><div><a class="nav-logo" href="index.html"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M14 2.5a11.5 11.5 0 1 0 0 23 11.4 11.4 0 0 0 7.6-2.86l-4.35-4.37A5.4 5.4 0 1 1 19.4 14h6.1A11.5 11.5 0 0 0 14 2.5Z" fill="#101c3d"/><path d="M19.4 14a5.4 5.4 0 0 1-2.15 4.27l4.35 4.37A11.46 11.46 0 0 0 25.5 14h-6.1Z" fill="#3157F6"/></svg></span>Quareo</a><p class="footer-desc">Рабочее пространство для продавцов: товары, цены и операции в одном месте.</p></div><div class="footer-col"><h3>Продукт</h3><a href="scanner.html">Проверка карточек</a><a href="analytics.html">Аналитика</a><a href="ntin.html">NTIN</a><a href="waybills.html">Накладные</a></div><div class="footer-col"><h3>Компания</h3><a href="about.html">О нас</a><a href="pricing.html">Тарифы</a><a href="https://t.me/Lulsiok">Связаться с нами</a></div><div class="footer-col"><h3>Документы</h3><a href="privacy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a></div></div><div class="footer-bottom"><span>© 2026 Quareo. Все права защищены.</span><span>Сделано для продавцов в Казахстане</span></div></div></footer>
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a class="nav-logo" href="index.html"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M14 2.5a11.5 11.5 0 1 0 0 23 11.4 11.4 0 0 0 7.6-2.86l-4.35-4.37A5.4 5.4 0 1 1 19.4 14h6.1A11.5 11.5 0 0 0 14 2.5Z" fill="#101c3d"/><path d="M19.4 14a5.4 5.4 0 0 1-2.15 4.27l4.35 4.37A11.46 11.46 0 0 0 25.5 14h-6.1Z" fill="#3157F6"/></svg></span>Quareo</a>
+          <p class="footer-desc">Рабочее пространство для продавцов: товары, цены и операции в одном месте.</p>
+        </div>
+        <div class="footer-col"><h3>Продукт</h3><a href="search.html">Quareo Search</a><a href="scanner.html">Проверка карточек</a><a href="analytics.html">Аналитика</a><a href="ntin.html">NTIN</a><a href="waybills.html">Накладные</a></div>
+        <div class="footer-col"><h3>Компания</h3><a href="about.html">О нас</a><a href="pricing.html">Тарифы</a><a href="https://t.me/Lulsiok">Связаться с нами</a></div>
+        <div class="footer-col"><h3>Документы</h3><a href="privacy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Quareo. Все права защищены.</span><span>Сделано для продавцов в Казахстане</span></div>
+    </div>
+  </footer>
   <script src="assets/common.js?v=4"></script>
 </body>
 </html>
