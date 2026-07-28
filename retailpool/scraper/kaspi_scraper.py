@@ -188,75 +188,57 @@ class KaspiScraper:
                 return [], 0
 
             result_data = page.evaluate("""() => {
-                // Find all links to products
-                const links = Array.from(document.querySelectorAll('a[href*="/shop/p/"]'));
-                
-                // Group by actual product href to avoid duplicates (image link vs title link)
-                const uniqueLinks = [];
-                const seenHrefs = new Set();
-                for (const link of links) {
-                    const href = link.getAttribute('href');
-                    if (!seenHrefs.has(href)) {
-                        seenHrefs.add(href);
-                        uniqueLinks.push(link);
-                    }
-                }
+                // Each real product tile is a div.item-card with a stable
+                // data-product-id attribute — anchor on THAT, not on
+                // "climb N parents from a link", which used to grab
+                // neighbouring cards' text by mistake.
+                const cards = Array.from(document.querySelectorAll('div.item-card[data-product-id]'));
 
-                const items = uniqueLinks.map(link => {
-                    // Go up a few levels to find the product container
-                    let card = link.parentElement;
-                    for(let i=0; i<4; i++) {
-                        if (card && card.parentElement && card.parentElement.tagName !== 'BODY') {
-                            card = card.parentElement;
+                const items = cards.map(card => {
+                    const nameLink = card.querySelector('a.item-card__name-link');
+                    if (!nameLink) return null;
+                    const title = nameLink.textContent.trim();
+                    if (!title || title.length < 3) return null;
+
+                    let href = nameLink.getAttribute('href') || '';
+                    href = href.split('?')[0];
+                    const fullUrl = href.startsWith('http') ? href : ('https://kaspi.kz' + href);
+
+                    // Real price lives specifically in .item-card__debet —
+                    // NEVER read from .item-card__instalment (that's the
+                    // per-month payment, a much smaller misleading number).
+                    const priceEl = card.querySelector('.item-card__debet .item-card__prices-price');
+                    if (!priceEl) return null;
+                    const priceDigits = priceEl.textContent.replace(/[^\\d]/g, '');
+                    const price = priceDigits ? parseInt(priceDigits, 10) : 0;
+                    if (!price) return null;
+
+                    // Rating is encoded in the class name itself, e.g.
+                    // class="rating _small _49" means 4.9 out of 5.
+                    let rating = null;
+                    const ratingEl = card.querySelector('span.rating');
+                    if (ratingEl) {
+                        for (const cls of ratingEl.classList) {
+                            const m = cls.match(/^_(\\d)(\\d)$/);
+                            if (m) { rating = parseFloat(m[1] + '.' + m[2]); break; }
                         }
                     }
-                    
-                    const titleEl = card.querySelector(
-                        '.item-card__name, .product-card__title, [data-product-name], .item-card__name-link'
-                    ) || link;
-                    
-                    // Try to find price
-                    const priceEls = Array.from(card.querySelectorAll('*')).filter(el => {
-                        const txt = el.textContent.replace(/\\s/g, '');
-                        return txt.includes('₸') && /\\d+₸/.test(txt);
-                    });
-                    const priceEl = priceEls.length > 0 ? priceEls[0] : null;
-                    
-                    // Try to find rating/reviews
-                    const reviewEls = Array.from(card.querySelectorAll('*')).filter(el => {
-                        return el.textContent.includes('отзыв') || el.classList.contains('reviews') || el.classList.contains('rating');
-                    });
-                    const reviewEl = reviewEls.length > 0 ? reviewEls[0] : null;
 
-                    const href = link.getAttribute('href');
-                    const productId = card.getAttribute('data-product-id')
-                        || (href && href.match(/\\/p\\/([^/?]+)/)
-                            ? href.match(/\\/p\\/([^/?]+)/)[1] : '') || '';
-                            
-                    const text = priceEl ? priceEl.textContent : '0';
-                    const match = text.replace(/\\s+/g, '').match(/\\d+/);
-                    const priceText = match ? match[0] : '0';
-                    
-                    const title = titleEl ? titleEl.textContent.trim() : '';
-                    if (!title || title.length < 3) return null;
-                    
-                    let fullUrl = '';
-                    if (href) {
-                        fullUrl = href.startsWith('http') ? href : 'https://kaspi.kz' + href;
-                    }
-                        
                     let reviewCount = 0;
-                    if (reviewEl) {
-                        const revMatch = reviewEl.textContent.replace(/\\s/g, '').match(/\\(([^)]+)\\)|(\\d+)отз/);
-                        if (revMatch) reviewCount = parseInt(revMatch[1] || revMatch[2]) || 0;
+                    const reviewLink = card.querySelector('.item-card__rating a');
+                    if (reviewLink) {
+                        const revMatch = reviewLink.textContent.match(/(\\d[\\d\\s]*)\\s*отзыв/);
+                        if (revMatch) reviewCount = parseInt(revMatch[1].replace(/\\s/g, ''), 10) || 0;
                     }
+
+                    const productId = card.getAttribute('data-product-id') || '';
 
                     return {
                         kaspi_id: productId || ('search-' + Math.random().toString(36).substr(2, 9)),
                         title: title.substring(0, 200),
                         url: fullUrl,
-                        price: parseInt(priceText) || 0,
-                        rating: null,
+                        price: price,
+                        rating: rating,
                         review_count: reviewCount,
                     };
                 }).filter(item => item !== null);
