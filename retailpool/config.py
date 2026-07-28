@@ -105,6 +105,10 @@ class Settings(BaseSettings):
         default="",
         description="API key for the proxy provider.",
     )
+    ZENROWS_API_KEY: str = Field(
+        default="",
+        description="API key for ZenRows (used by the Ozon scraper). Set in Railway Variables — never hardcode.",
+    )
     PROXY_COUNTRY: str = Field(
         default="kz",
         description="Target country code for residential/mobile proxies. Kazakhstan = kz.",
