@@ -46,6 +46,7 @@ from retailpool.routers.autoreply import router as autoreply_router
 from retailpool.routers.extension import router as extension_router
 from retailpool.routers.blue_ocean import router as blue_ocean_router
 from retailpool.routers.feed import router as feed_router
+from retailpool.routers.product_search import router as product_search_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -155,6 +156,7 @@ app.include_router(autoreply_router)
 app.include_router(extension_router)
 app.include_router(blue_ocean_router)
 app.include_router(feed_router)
+app.include_router(product_search_router)
 
 # ── Static assets (CSS, JS) ─────────────────────────────────────────────
 if FRONTEND_DIR.exists():
