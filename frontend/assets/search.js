@@ -100,7 +100,7 @@
       <article class="q-card"><p>${escapeHtml(err.message || 'Попробуйте ещё раз через минуту.')}</p></article>`;
   }
 
-  async function showResults(query, options = {}) {
+  async function showResults(query) {
     const resultRoot = $('#searchResults');
     const input = $('#productSearchInput');
     const normalizedQuery = query.trim() || DEFAULT_QUERY;
@@ -108,8 +108,6 @@
 
     resultRoot.setAttribute('aria-busy', 'true');
     resultRoot.innerHTML = renderLoading();
-
-    if (options.scroll) $('#search-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     try {
       const result = await fetchSearchResult(normalizedQuery);
@@ -125,17 +123,26 @@
   document.addEventListener('DOMContentLoaded', () => {
     const form = $('#productSearchForm');
     const input = $('#productSearchInput');
+    const submitButton = form?.querySelector('button[type="submit"]');
+
     showResults(input.value);
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      showResults(input.value, { scroll: true });
+      showResults(input.value);
     });
+
+    if (submitButton) {
+      submitButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        form.requestSubmit();
+      });
+    }
 
     document.querySelectorAll('[data-query]').forEach((button) => {
       button.addEventListener('click', () => {
         input.value = button.dataset.query;
-        showResults(input.value, { scroll: true });
+        showResults(input.value);
       });
     });
   });
