@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css?v=3">
   <link rel="stylesheet" href="assets/quareo.css?v=1">
-  <link rel="stylesheet" href="assets/waybills.css?v=1">
+  <link rel="stylesheet" href="assets/waybills.css?v=2">
   <link rel="icon" type="image/png" href="/assets/favicon.jpg">
 </head>
 
@@ -80,7 +80,7 @@
           <div class="q-toolbar waybills-workspace__header">
             <div>
               <h2>Загрузка накладных</h2>
-              <p class="q-card__description">Добавьте ZIP-архив, выберите порядок и формат печати.</p>
+              <p class="q-card__description">Добавьте ZIP-архив — Quareo автоматически оставит только новые накладные.</p>
             </div>
             <div class="q-toolbar__actions">
               <button class="q-button-secondary" onclick="document.getElementById('zipInput').click()">📁 Выбрать ZIP-файл</button>
@@ -91,25 +91,36 @@
           <div id="uploadArea" class="q-upload-card">
             <div class="q-upload-art" aria-hidden="true"><i></i></div>
             <h3 id="uploadTitle">Загрузите ZIP-архив с накладными Kaspi</h3>
-            <p>Мы автоматически объединим PDF-файлы и подготовим их для печати.</p>
+            <p>Мы сразу проверим накладные, исключим уже обработанные и подготовим новые к печати.</p>
             <div class="q-upload-card__meta">Поддерживается <span>ZIP</span> с PDF-накладными</div>
+          </div>
+
+          <div id="analysisLoadingArea" class="q-loading-state" style="display:none;">
+            <div class="q-spinner"></div>
+            <h3>Проверяем накладные</h3>
+            <p>Сравниваем архив с уже обработанными заказами.</p>
           </div>
 
           <div id="formatSelection" class="q-card q-card--subtle" style="display:none;">
             <div class="waybills-options">
-              <div id="sortSelection">
-                <label class="q-field-label" for="sortSelect">Сортировка накладных</label>
-                <select id="sortSelect" class="q-select">
-                  <option value="none">Без сортировки (стандартно)</option>
-                  <option value="time">По времени поступления заказа (сначала старые)</option>
-                  <option value="date">По дате доставки (сначала ближайшие)</option>
-                  <option value="quantity">По количеству (сначала 1 шт, затем 2 шт и т.д.)</option>
-                  <option value="product">По одинаковым товарам (группировка)</option>
-                </select>
+              <div class="waybills-smart-print">
+                <div class="waybills-summary" aria-live="polite">
+                  <div class="waybills-summary__item"><span>Архив содержит</span><strong id="archiveTotal">0</strong><small>накладных</small></div>
+                  <div class="waybills-summary__divider" aria-hidden="true"></div>
+                  <div class="waybills-summary__item"><span>Уже обработано</span><strong id="archiveProcessed">0</strong></div>
+                  <div class="waybills-summary__divider" aria-hidden="true"></div>
+                  <div class="waybills-summary__item waybills-summary__item--new"><span>Новых</span><strong id="archiveNew">0</strong></div>
+                </div>
+                <label class="waybills-smart-print__toggle">
+                  <input id="smartPrintToggle" type="checkbox" checked onchange="updateSmartPrintAction()">
+                  <span><b>Smart Print</b><small>Печатать только новые накладные</small></span>
+                </label>
+                <p class="waybills-sort-note">Сортировка: по времени поступления заказов.</p>
+                <p id="noNewMessage" class="waybills-no-new" style="display:none;">Все накладные из архива уже были обработаны ранее. Новых документов нет.</p>
               </div>
 
               <div class="waybills-options__formats">
-                <h3>Выберите формат печати</h3>
+                <h3 id="printTitle">Выберите формат печати</h3>
                 <div class="waybills-options__actions">
                   <button class="q-button-secondary" id="btnFormatThermal" onclick="processWaybills('thermal')">🖨️ Для термопринтера (1 на страницу)</button>
                   <button class="q-button-secondary" id="btnFormatA4" onclick="processWaybills('a4')">📄 4 накладные на 1 листе A4</button>
@@ -127,7 +138,7 @@
           <div id="resultArea" class="q-empty-state waybills-result" style="display:none;">
             <div class="q-empty-state__icon">✓</div>
             <h3>Готово!</h3>
-            <p>Накладные успешно объединены и готовы к печати.</p>
+            <p id="resultText">Накладные успешно объединены и готовы к печати.</p>
             <div class="waybills-result__actions">
               <a id="downloadLink" href="#" target="_blank" class="q-button">⬇️ Скачать PDF для печати</a>
               <button class="q-button-secondary" onclick="resetForm()">Загрузить другой ZIP</button>
@@ -138,21 +149,22 @@
         <div class="waybills-guidance">
           <article class="q-card q-card--compact waybills-guidance__card">
             <h3>Как это работает</h3>
-            <p class="q-card__description">Весь процесс занимает один короткий рабочий шаг.</p>
+            <p class="q-card__description">Загрузите архив — Smart Print автоматически оставит только новые документы.</p>
             <ol class="q-steps" style="--q-step-count: 3;">
               <li class="q-step"><span class="q-step__number">01</span><span class="q-step__text">Загрузите ZIP-архив</span></li>
-              <li class="q-step"><span class="q-step__number">02</span><span class="q-step__text">Выберите порядок и формат</span></li>
+              <li class="q-step"><span class="q-step__number">02</span><span class="q-step__text">Quareo проверит новые накладные</span></li>
               <li class="q-step"><span class="q-step__number">03</span><span class="q-step__text">Скачайте готовый PDF</span></li>
             </ol>
           </article>
 
           <article class="q-card q-card--compact waybills-guidance__card">
-            <h3>История файлов</h3>
-            <p class="q-card__description">Сохранённые сборки появятся здесь.</p>
-            <div class="q-empty-state waybills-history">
+            <h3>История обработок</h3>
+            <p class="q-card__description">Результаты автоматической проверки каждого ZIP-архива.</p>
+            <div id="historyEmpty" class="q-empty-state waybills-history">
               <div class="q-empty-state__icon">◷</div>
-              <div><strong>Пока нет обработанных архивов</strong><br><span>Первая готовая сборка будет доступна для скачивания выше.</span></div>
+              <div><strong>Пока нет загруженных архивов</strong><br><span>Здесь появятся результаты следующих проверок.</span></div>
             </div>
+            <div id="historyList" class="waybills-history-list" style="display:none;"></div>
           </article>
         </div>
       </div>
@@ -258,6 +270,7 @@
       }
     }
   </script>
+  <script src="assets/waybills-smart-print.js?v=1"></script>
 </body>
 
 </html>

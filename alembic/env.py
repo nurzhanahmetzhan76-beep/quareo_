@@ -23,6 +23,7 @@ import retailpool.bot.models      # noqa: F401
 import retailpool.models.ntin     # noqa: F401
 import retailpool.models.autoreply  # noqa: F401
 import retailpool.models.repricing  # noqa: F401
+import retailpool.models.waybill  # noqa: F401
 # ── Alembic Config object ────────────────────────────────────────────────
 config = context.config
 
