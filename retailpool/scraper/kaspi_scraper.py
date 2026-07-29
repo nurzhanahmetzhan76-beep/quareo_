@@ -175,11 +175,20 @@ class KaspiScraper:
                 pass
 
 
-            # Wait for product links instead of specific card classes
+            # Wait for the EXACT structure our extractor reads — the price
+            # element inside a real product card. Waiting for just any
+            # product link was firing too early (before prices/ratings
+            # finished rendering), causing intermittent 0-result scrapes.
             try:
-                page.wait_for_selector('a[href*="/shop/p/"]', timeout=20000)
+                page.wait_for_selector(
+                    'div.item-card[data-product-id] .item-card__prices-price',
+                    timeout=20000,
+                )
+                # Small settle delay: give any late-loading cards a beat
+                # to finish rendering before we snapshot the DOM.
+                page.wait_for_timeout(600)
             except Exception:
-                logger.warning("No product links found on search page")
+                logger.warning("No priced product cards found on search page")
                 content = page.content()
                 if is_blocked(content, 200):
                     logger.error("Search page appears to be blocked")
